@@ -2,17 +2,23 @@
 
 use Illuminate\Support\Facades\Route;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
-*/
+use App\Http\Controllers\AdminLoginController;
+use App\Http\Controllers\CustomerLoginController;
 
-Route::get('/', function () {
-    return view('welcome');
+// Trang chủ cho khách hàng (không cần login)
+Route::get('/', fn() => view('welcome'));
+
+// -------- ADMIN ----------//
+Route::get('/admin', [AdminLoginController::class, 'showLoginForm'])->name('admin.login');
+Route::post('/admin/login', [AdminLoginController::class, 'login'])->name('admin.login.submit');
+Route::post('/admin/logout', [AdminLoginController::class, 'logout'])->name('admin.logout');
+
+Route::middleware(['auth', 'is_admin'])->prefix('admin')->group(function () {
+    Route::get('/dashboard', fn() => view('admin.dashboard'))->name('admin.dashboard');
+    // thêm route admin khác tại đây
 });
+
+// -------- CUSTOMER ----------//
+Route::get('/login', [CustomerLoginController::class, 'showLoginForm'])->name('customer.login');
+Route::post('/login', [CustomerLoginController::class, 'login'])->name('customer.login.submit');
+Route::post('/logout', [CustomerLoginController::class, 'logout'])->name('customer.logout');
