@@ -22,3 +22,6 @@ Route::middleware(['auth', 'is_admin'])->prefix('admin')->group(function () {
 Route::get('/login', [CustomerLoginController::class, 'showLoginForm'])->name('customer.login');
 Route::post('/login', [CustomerLoginController::class, 'login'])->name('customer.login.submit');
 Route::post('/logout', [CustomerLoginController::class, 'logout'])->name('customer.logout');
+
+// Test front end
+Route::get('/test-layout', [CustomerLoginController::class, 'testLayout'])->name('customer.testLayout');
