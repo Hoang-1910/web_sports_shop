@@ -31,4 +31,9 @@ class CustomerLoginController extends Controller
         Auth::logout();
         return redirect('/');
     }
+
+    //test layout
+    public function testLayout() {
+        return view('customer.layouts.app');
+    }
 }
