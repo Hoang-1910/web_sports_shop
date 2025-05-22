@@ -34,6 +34,6 @@ class CustomerLoginController extends Controller
 
     //test layout
     public function testLayout() {
-        return view('customer.layouts.app');
+        return view('customer.home');
     }
 }
