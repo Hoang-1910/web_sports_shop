@@ -21,6 +21,19 @@
         .login-box h3 {
             margin-bottom: 25px;
         }
+        @media (max-width: 991.98px) {
+            .product-card-custom {
+                flex: 1 1 calc(50% - 1.25rem);
+                min-width: 0;
+            }
+        }
+        @media (max-width: 767.98px) {
+            .product-card-custom {
+                flex: 1 1 100%;
+                margin-bottom: 1.5rem;
+                min-width: 0;
+            }
+        }
     </style>
 </head>
 <body>
