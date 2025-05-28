@@ -7,7 +7,7 @@
   width: 50px;
   height: 50px;
   border-radius: 8px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #dc3545 0%, #fd7e14 100%);
 }
 
 .logo-img {
@@ -41,8 +41,8 @@
 }
 
 .search-input:focus {
-  border-color: #667eea;
-  box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+  border-color: #dc3545;
+  box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
 }
 
 .search-btn {
@@ -59,7 +59,44 @@
 
 .search-btn:hover {
   background: #f8f9fa;
-  color: #667eea;
+  color: #dc3545;
+}
+
+/* Mobile Search Styles - Fixed */
+.mobile-search-container {
+  border-top: 1px solid #dee2e6;
+  background: #f8f9fa;
+}
+
+.search-form-mobile {
+  width: 100%;
+}
+
+.mobile-search-input {
+  border: 2px solid #dee2e6;
+  border-radius: 8px 0 0 8px;
+  padding: 12px 16px;
+  font-size: 16px; /* Prevents zoom on iOS */
+  transition: all 0.3s ease;
+}
+
+.mobile-search-input:focus {
+  border-color: #dc3545;
+  box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+}
+
+.mobile-search-btn {
+  border-radius: 0 8px 8px 0;
+  padding: 12px 16px;
+  border: 2px solid #dc3545;
+  background: #dc3545;
+  color: white;
+  transition: all 0.3s ease;
+}
+
+.mobile-search-btn:hover {
+  background: #c82333;
+  border-color: #c82333;
 }
 
 /* Navigation Links */
@@ -71,7 +108,7 @@
 }
 
 .nav-link:hover {
-  color: #667eea !important;
+  color: #dc3545 !important;
 }
 
 .nav-link::after {
@@ -81,7 +118,7 @@
   height: 2px;
   bottom: 0;
   left: 50%;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #dc3545 0%, #fd7e14 100%);
   transition: all 0.3s ease;
 }
 
@@ -105,7 +142,7 @@
 }
 
 .dropdown-item:hover {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #dc3545 0%, #fd7e14 100%);
   color: white;
 }
 
@@ -122,7 +159,7 @@
 }
 
 .nav-icon-link:hover {
-  color: #667eea;
+  color: #dc3545;
   background: #f8f9fa;
 }
 
@@ -130,7 +167,7 @@
   position: absolute;
   top: -2px;
   right: -2px;
-  background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+  background: linear-gradient(135deg, #dc3545 0%, #fd7e14 100%);
   color: white;
   border-radius: 50%;
   font-size: 0.7rem;
@@ -147,6 +184,18 @@
 .search-toggle {
   border-radius: 8px;
   padding: 8px 12px;
+  border-color: #dc3545;
+  color: #dc3545;
+}
+
+.search-toggle:hover {
+  background: #dc3545;
+  border-color: #dc3545;
+  color: white;
+}
+
+.mobile-menu {
+  width: 280px !important;
 }
 
 .mobile-nav {
@@ -165,8 +214,8 @@
 }
 
 .mobile-nav-link:hover {
-  background: #f8f9fa;
-  color: #667eea;
+  background: linear-gradient(135deg, rgba(220, 53, 69, 0.1) 0%, rgba(253, 126, 20, 0.1) 100%);
+  color: #dc3545;
 }
 
 .mobile-nav-section {
@@ -183,8 +232,8 @@
 }
 
 .mobile-nav-header:hover {
-  background: #f8f9fa;
-  color: #667eea;
+  background: linear-gradient(135deg, rgba(220, 53, 69, 0.1) 0%, rgba(253, 126, 20, 0.1) 100%);
+  color: #dc3545;
 }
 
 .mobile-nav-sublink {
@@ -197,8 +246,8 @@
 }
 
 .mobile-nav-sublink:hover {
-  background: #f8f9fa;
-  color: #667eea;
+  background: linear-gradient(135deg, rgba(220, 53, 69, 0.05) 0%, rgba(253, 126, 20, 0.05) 100%);
+  color: #dc3545;
   padding-left: 55px;
 }
 
@@ -219,6 +268,24 @@
   .offcanvas {
     width: 280px;
   }
+  
+  /* Fix mobile search layout */
+  .mobile-search-container .input-group {
+    display: flex;
+    width: 100%;
+  }
+  
+  .mobile-search-container .form-control {
+    flex: 1;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+  
+  .mobile-search-container .btn {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    white-space: nowrap;
+  }
 }
 
 @media (max-width: 575.98px) {
@@ -230,8 +297,80 @@
     width: 40px;
     height: 40px;
   }
+  
+  .mobile-search-container {
+    padding: 0.75rem 0;
+  }
+  
+  .mobile-search-input {
+    font-size: 16px; /* Prevents zoom on mobile */
+    padding: 10px 12px;
+  }
+  
+  .mobile-search-btn {
+    padding: 10px 12px;
+    min-width: 50px;
+  }
 }
 
+/* Enhanced hover effects */
+.btn-outline-danger:hover {
+  background: linear-gradient(135deg, #dc3545 0%, #fd7e14 100%);
+  border-color: #dc3545;
+  color: white;
+}
+
+.btn-danger {
+  background: linear-gradient(135deg, #dc3545 0%, #fd7e14 100%);
+  border-color: #dc3545;
+}
+
+.btn-danger:hover {
+  background: linear-gradient(135deg, #c82333 0%, #e8590c 100%);
+  border-color: #c82333;
+}
+
+/* Animation improvements */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.mobile-search-container {
+  animation: fadeIn 0.3s ease-out;
+}
+
+.dropdown-menu {
+  animation: fadeIn 0.2s ease-out;
+}
+
+/* Fix for Bootstrap input group in mobile */
+@media (max-width: 767.98px) {
+  .input-group > .form-control:not(:last-child) {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+  
+  .input-group > .btn:not(:first-child) {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+  }
+  
+  .input-group {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+  }
+  
+  .input-group > * {
+    margin: 0 !important;
+  }
+}
 /* Footer Styles */
 .main-footer {
     position: relative;

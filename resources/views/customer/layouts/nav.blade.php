@@ -8,23 +8,23 @@
   <div class="container-fluid px-3 px-lg-4">
     <nav class="navbar navbar-expand-lg navbar-light p-0">
       <!-- Logo -->
-      <a class="navbar-brand d-flex align-items-center me-4" href=" ">
+      <a class="navbar-brand d-flex align-items-center me-4" href="">
         <div class="logo-container d-flex align-items-center justify-content-center">
-          <img src="{{ asset('customer/images/logo.svg') }}" alt="Logo" class="logo-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+          <img src="{{ asset('customer/images/logo.jpg') }}" alt="Logo" class="logo-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
           <div class="logo-placeholder d-none align-items-center justify-content-center">
-            <i class="bi bi-shop text-primary fs-2"></i>
+            <i class="bi bi-shop text-white fs-2"></i>
           </div>
         </div>
         <span class="brand-text ms-2 fw-bold text-dark d-none d-md-inline">YourBrand</span>
       </a>
 
       <!-- Mobile Search Toggle -->
-      <button class="btn btn-outline-secondary d-lg-none me-2 search-toggle" type="button" data-bs-toggle="collapse" data-bs-target="#mobileSearch">
+      <button class="btn btn-outline-danger d-lg-none me-2 search-toggle" type="button" data-bs-toggle="collapse" data-bs-target="#mobileSearch" aria-expanded="false" aria-controls="mobileSearch">
         <i class="bi bi-search"></i>
       </button>
 
       <!-- Mobile Menu Toggle -->
-      <button class="navbar-toggler border-0 p-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileMenu">
+      <button class="navbar-toggler border-0 p-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileMenu" aria-controls="mobileMenu">
         <span class="navbar-toggler-icon"></span>
       </button>
 
@@ -36,7 +36,7 @@
             <a class="nav-link fw-medium" href="">Trang chủ</a>
           </li>
           <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle fw-medium" href="#" id="productsDropdown" role="button" data-bs-toggle="dropdown">
+            <a class="nav-link dropdown-toggle fw-medium" href="#" id="productsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
               Sản phẩm
             </a>
             <ul class="dropdown-menu shadow border-0">
@@ -48,7 +48,7 @@
             </ul>
           </li>
           <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle fw-medium" href="#" id="brandsDropdown" role="button" data-bs-toggle="dropdown">
+            <a class="nav-link dropdown-toggle fw-medium" href="#" id="brandsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
               Thương hiệu
             </a>
             <ul class="dropdown-menu shadow border-0">
@@ -85,7 +85,7 @@
           <!-- User Account -->
           @auth
             <div class="dropdown">
-              <a class="nav-icon-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
+              <a class="nav-icon-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                 <i class="bi bi-person-circle fs-5"></i>
               </a>
               <ul class="dropdown-menu dropdown-menu-end shadow border-0">
@@ -125,25 +125,27 @@
       </div>
     </nav>
 
-    <!-- Mobile Search Bar -->
-    <div class="collapse d-lg-none mt-3" id="mobileSearch">
-      <form class="search-form-mobile" role="search" action="" method="GET">
-        <div class="input-group">
-          <input class="form-control" type="search" name="q" placeholder="Tìm kiếm sản phẩm..." value="{{ request('q') }}">
-          <button class="btn btn-primary" type="submit">
-            <i class="bi bi-search"></i>
-          </button>
-        </div>
-      </form>
+    <!-- Mobile Search Bar - Fixed Layout -->
+    <div class="collapse mobile-search-container" id="mobileSearch">
+      <div class="py-3">
+        <form class="search-form-mobile" role="search" action="" method="GET">
+          <div class="input-group">
+            <input class="form-control mobile-search-input" type="search" name="q" placeholder="Tìm kiếm sản phẩm..." value="{{ request('q') }}">
+            <button class="btn btn-danger mobile-search-btn" type="submit">
+              <i class="bi bi-search"></i>
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   </div>
 </header>
 
 <!-- Mobile Offcanvas Menu -->
-<div class="offcanvas offcanvas-start" tabindex="-1" id="mobileMenu">
-  <div class="offcanvas-header border-bottom">
+<div class="offcanvas offcanvas-start mobile-menu" tabindex="-1" id="mobileMenu">
+  <div class="offcanvas-header border-bottom bg-danger text-white">
     <h5 class="offcanvas-title fw-bold">Menu</h5>
-    <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
   </div>
   <div class="offcanvas-body p-0">
     <!-- Mobile User Section -->
@@ -151,7 +153,7 @@
       @auth
         <div class="d-flex align-items-center">
           <div class="user-avatar me-3">
-            <i class="bi bi-person-circle fs-2 text-primary"></i>
+            <i class="bi bi-person-circle fs-2 text-danger"></i>
           </div>
           <div>
             <h6 class="mb-1">{{ Auth::user()->name }}</h6>
@@ -160,8 +162,8 @@
         </div>
       @else
         <div class="d-grid gap-2">
-          <a href="" class="btn btn-primary">Đăng nhập</a>
-          <a href="" class="btn btn-outline-primary">Đăng ký</a>
+          <a href="" class="btn btn-danger">Đăng nhập</a>
+          <a href="" class="btn btn-outline-danger">Đăng ký</a>
         </div>
       @endauth
     </div>
@@ -173,7 +175,7 @@
       </a>
       
       <div class="mobile-nav-section">
-        <div class="mobile-nav-header" data-bs-toggle="collapse" data-bs-target="#mobileProducts">
+        <div class="mobile-nav-header" data-bs-toggle="collapse" data-bs-target="#mobileProducts" aria-expanded="false" aria-controls="mobileProducts">
           <i class="bi bi-grid me-3"></i>Sản phẩm
           <i class="bi bi-chevron-down ms-auto"></i>
         </div>
@@ -186,7 +188,7 @@
       </div>
 
       <div class="mobile-nav-section">
-        <div class="mobile-nav-header" data-bs-toggle="collapse" data-bs-target="#mobileBrands">
+        <div class="mobile-nav-header" data-bs-toggle="collapse" data-bs-target="#mobileBrands" aria-expanded="false" aria-controls="mobileBrands">
           <i class="bi bi-award me-3"></i>Thương hiệu
           <i class="bi bi-chevron-down ms-auto"></i>
         </div>
@@ -213,13 +215,13 @@
     <div class="mobile-actions p-3 border-top mt-auto">
       <div class="row g-2">
         <div class="col-4">
-          <a href="" class="btn btn-outline-primary w-100 d-flex flex-column align-items-center">
+          <a href="" class="btn btn-outline-danger w-100 d-flex flex-column align-items-center">
             <i class="bi bi-heart"></i>
             <small>Yêu thích</small>
           </a>
         </div>
         <div class="col-4">
-          <a href="" class="btn btn-outline-primary w-100 d-flex flex-column align-items-center position-relative">
+          <a href="" class="btn btn-outline-danger w-100 d-flex flex-column align-items-center position-relative">
             <i class="bi bi-cart"></i>
             <small>Giỏ hàng</small>
             @if(isset($cartCount) && $cartCount > 0)
@@ -231,12 +233,12 @@
         </div>
         <div class="col-4">
           @auth
-            <a href="" class="btn btn-outline-primary w-100 d-flex flex-column align-items-center">
+            <a href="" class="btn btn-outline-danger w-100 d-flex flex-column align-items-center">
               <i class="bi bi-bag"></i>
               <small>Đơn hàng</small>
             </a>
           @else
-            <a href="" class="btn btn-outline-primary w-100 d-flex flex-column align-items-center">
+            <a href="" class="btn btn-outline-danger w-100 d-flex flex-column align-items-center">
               <i class="bi bi-person"></i>
               <small>Tài khoản</small>
             </a>
