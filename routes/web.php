@@ -6,7 +6,7 @@ use App\Http\Controllers\AdminLoginController;
 use App\Http\Controllers\CustomerLoginController;
 
 // Trang chủ cho khách hàng (không cần login)
-Route::get('/', fn() => view('welcome'));
+Route::get('/', fn() => view('customer.home'))->name('customer.home');
 
 // -------- ADMIN ----------//
 Route::get('/admin', [AdminLoginController::class, 'showLoginForm'])->name('admin.login');
