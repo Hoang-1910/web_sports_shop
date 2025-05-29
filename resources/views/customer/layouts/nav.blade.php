@@ -109,7 +109,7 @@
                             </ul>
                         </div>
                     @else
-                        <a href="{{ route('login') }}" class="nav-icon-link" title="Đăng nhập" aria-label="Login">
+                        <a href="{{ route('customer.login') }}" class="nav-icon-link" title="Đăng nhập" aria-label="Login">
                             <i class="bi bi-person fs-4"></i>
                         </a>
                     @endauth
@@ -184,8 +184,8 @@
                 </div>
             @else
                 <div class="d-grid gap-2">
-                    <a href="{{ route('login') }}" class="btn btn-danger">Đăng nhập</a>
-                    <a href="{{ route('register') }}" class="btn btn-outline-danger">Đăng ký</a>
+                    <a href="{{ route('customer.login') }}" class="btn btn-danger">Đăng nhập</a>
+                    <a href="{{ route('customer.register') }}" class="btn btn-outline-danger">Đăng ký</a>
                 </div>
             @endauth
         </div>

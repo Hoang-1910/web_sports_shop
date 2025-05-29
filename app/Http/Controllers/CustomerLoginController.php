@@ -32,8 +32,4 @@ class CustomerLoginController extends Controller
         return redirect('/');
     }
 
-    //test layout
-    public function index() {
-        return view('customer.home');
-    }
 }
