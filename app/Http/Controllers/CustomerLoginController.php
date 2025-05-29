@@ -33,7 +33,7 @@ class CustomerLoginController extends Controller
     }
 
     //test layout
-    public function testLayout() {
+    public function index() {
         return view('customer.home');
     }
 }

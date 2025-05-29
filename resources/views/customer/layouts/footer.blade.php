@@ -1,3 +1,5 @@
+<!-- Font Awesome -->
+
 <footer class="main-footer pt-5 pb-3" style="background: linear-gradient(135deg, #151d29 0%, #1a2332 100%);">
     <div class="container">
         <div class="row gy-4">
