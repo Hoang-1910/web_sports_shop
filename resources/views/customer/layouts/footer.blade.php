@@ -1,3 +1,5 @@
+<!-- Font Awesome -->
+
 <footer class="main-footer pt-5 pb-3" style="background: linear-gradient(135deg, #151d29 0%, #1a2332 100%);">
     <div class="container">
         <div class="row gy-4">
@@ -131,7 +133,7 @@
             </div>
 
             <!-- Đăng ký nhận tin -->
-            <div class="col-12 col-lg-3 col-md-6">
+            <div class="col-12 col-md-6 col-lg-3">
                 <div class="footer-section">
                     <h5 class="fw-bold text-white mb-3 position-relative">
                         Đăng ký nhận tin
@@ -140,16 +142,16 @@
                     <p class="text-white-50 mb-3">
                         Nhận khuyến mãi và cập nhật mới nhất về sản phẩm, bộ sưu tập!
                     </p>
-                    
+
                     <form class="footer-newsletter-form" id="newsletter-form">
-                        <div class="input-group mb-3">
+                        <div class="d-flex flex-column flex-sm-row align-items-stretch gap-2 mb-3">
                             <input type="email" 
-                                   class="form-control newsletter-input" 
-                                   placeholder="Email của bạn" 
-                                   required
-                                   aria-label="Email address">
+                                class="form-control newsletter-input flex-grow-1" 
+                                placeholder="Email của bạn" 
+                                required
+                                aria-label="Email address">
                             <button type="submit" 
-                                    class="btn btn-danger newsletter-btn"
+                                    class="btn btn-danger newsletter-btn w-100 w-sm-auto"
                                     id="newsletter-submit">
                                 <span class="submit-text">
                                     <i class="fas fa-paper-plane me-1"></i>
@@ -163,7 +165,7 @@
                         </div>
                         <div id="newsletter-message" class="d-none"></div>
                     </form>
-                    
+
                     <!-- Trust Badges -->
                     <div class="trust-badges mt-4">
                         <div class="text-white-50 small mb-2">Chúng tôi chấp nhận:</div>
@@ -181,7 +183,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+
 
         <!-- Footer Bottom -->
         <hr class="footer-divider my-4">
