@@ -1,0 +1,101 @@
+/* Filter Sidebar Styles */
+.filters-sidebar {
+    position: sticky;
+    top: 100px;
+}
+
+.filter-group {
+    border-bottom: 1px solid #eee;
+    padding-bottom: 1rem;
+}
+
+.filter-group:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+/* Size and Color Buttons */
+.size-buttons .btn,
+.color-buttons .btn {
+    transition: all 0.3s ease;
+}
+
+.size-buttons .btn:hover,
+.color-buttons .btn:hover {
+    transform: translateY(-2px);
+}
+
+.size-buttons .btn.active {
+    background-color: #dc3545;
+    color: white;
+    border-color: #dc3545;
+}
+
+.color-buttons .btn.active {
+    transform: scale(1.1);
+    box-shadow: 0 0 0 2px #fff, 0 0 0 4px #dc3545;
+}
+
+/* Product Card Styles */
+.product-card-custom {
+    transition: all 0.3s ease;
+}
+
+.product-card-custom:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1) !important;
+}
+
+.product-hover-effect:hover .add-to-cart-btn {
+    opacity: 1 !important;
+    transform: translateY(0) !important;
+}
+
+/* Pagination Styles */
+.pagination .page-link {
+    color: #dc3545;
+    border: none;
+    margin: 0 5px;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.pagination .page-item.active .page-link {
+    background-color: #dc3545;
+    color: white;
+}
+
+.pagination .page-link:hover {
+    background-color: #dc3545;
+    color: white;
+    transform: translateY(-2px);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 991.98px) {
+    .filters-sidebar {
+        position: static;
+        margin-bottom: 2rem;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .products-header {
+        text-align: center;
+    }
+    
+    .products-header .dropdown,
+    .products-header .btn-group {
+        width: 100%;
+        margin-top: 1rem;
+    }
+    
+    .products-header .dropdown-toggle {
+        width: 100%;
+    }
+}

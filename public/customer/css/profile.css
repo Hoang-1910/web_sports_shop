@@ -1,0 +1,33 @@
+.profile-section {
+    background: linear-gradient(135deg, #f8f9fa 60%, #ffeaea 100%);
+    min-height: 60vh;
+}
+.profile-avatar img {
+    box-shadow: 0 4px 16px rgba(220,53,69,0.08);
+    background: #fff;
+}
+.card {
+    border: none;
+}
+.btn-outline-danger {
+    border-radius: 2rem;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+.btn-outline-danger:hover {
+    background: linear-gradient(135deg, #e53935 0%, #c62828 100%);
+    color: #fff;
+    border-color: #e53935;
+}
+@media (max-width: 767.98px) {
+    .profile-avatar img {
+        width: 72px;
+        height: 72px;
+    }
+    .profile-section {
+        padding: 1rem 0;
+    }
+    .card {
+        padding: 1.5rem 1rem;
+    }
+}

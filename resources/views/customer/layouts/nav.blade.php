@@ -91,30 +91,64 @@
 
                 <!-- Desktop Action Icons -->
                 <div class="d-none d-lg-flex align-items-center gap-3">
-                    @auth
+                    {{-- @auth --}}
                         <div class="dropdown">
-                            <a class="nav-icon-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                <i class="bi bi-person-circle fs-4"></i>
+                            <a class="nav-icon-link dropdown-toggle d-flex align-items-center gap-2" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <div class="user-avatar">
+                                    <img src="{{ asset('customer/images/avatar.jpg') }}" alt="Avatar" class="rounded-circle" width="32" height="32">
+                                </div>
+                                <span class="user-name">{{-- Auth::user()->name --}}</span>
                             </a>
-                            <ul class="dropdown-menu dropdown-menu-end shadow border-0" aria-labelledby="userDropdown">
-                                <li><a class="dropdown-item" href="{{ route('profile') }}">Tài khoản</a></li>
-                                <li><a class="dropdown-item" href="{{ route('orders') }}">Đơn hàng</a></li>
+                            <ul class="dropdown-menu dropdown-menu-end shadow border-0 rounded-3" aria-labelledby="userDropdown">
+                                <li>
+                                    <div class="dropdown-header">
+                                        <div class="d-flex align-items-center gap-2 mb-2">
+                                            <img src="{{ asset('customer/images/avatar.jpg') }}" alt="Avatar" class="rounded-circle" width="48" height="48">
+                                            <div>
+                                                <h6 class="mb-0">{{-- Auth::user()->name --}}</h6>
+                                                <small class="text-muted">{{-- Auth::user()->email --}}</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <a class="dropdown-item d-flex align-items-center gap-2" href="{{ route('profile') }}">
+                                        <i class="bi bi-person"></i>
+                                        <span>Tài khoản của tôi</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item d-flex align-items-center gap-2" href="{{ route('orders') }}">
+                                        <i class="bi bi-bag"></i>
+                                        <span>Đơn hàng</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item d-flex align-items-center gap-2" href="{{ route('wishlist.index') }}">
+                                        <i class="bi bi-heart"></i>
+                                        <span>Danh sách yêu thích</span>
+                                    </a>
+                                </li>
                                 <li><hr class="dropdown-divider"></li>
                                 <li>
                                     <form action="{{ route('logout') }}" method="POST">
                                         @csrf
-                                        <button type="submit" class="dropdown-item">Đăng xuất</button>
+                                        <button type="submit" class="dropdown-item d-flex align-items-center gap-2 text-danger">
+                                            <i class="bi bi-box-arrow-right"></i>
+                                            <span>Đăng xuất</span>
+                                        </button>
                                     </form>
                                 </li>
                             </ul>
                         </div>
-                    @else
+                    {{-- @else
                         <a href="{{ route('customer.login') }}" class="nav-icon-link" title="Đăng nhập" aria-label="Login">
                             <i class="bi bi-person fs-4"></i>
                         </a>
-                    @endauth
+                    @endauth --}}
 
-                    <a href="{{ route('wishlist') }}" class="nav-icon-link position-relative" title="Yêu thích" aria-label="Wishlist">
+                    <a href="{{ route('wishlist.index') }}" class="nav-icon-link position-relative" title="Yêu thích" aria-label="Wishlist">
                         <i class="bi bi-heart fs-4"></i>
                         <span class="nav-badge badge bg-danger rounded-pill position-absolute top-0 start-100 translate-middle">3</span>
                     </a>
@@ -245,7 +279,7 @@
         <div class="mobile-actions p-3 border-top mt-auto">
             <div class="row g-2">
                 <div class="col-4">
-                    <a href="{{ route('wishlist') }}" class="btn btn-outline-danger w-100 d-flex flex-column align-items-center position-relative">
+                    <a href="{{ route('wishlist.index') }}" class="btn btn-outline-danger w-100 d-flex flex-column align-items-center position-relative">
                         <i class="bi bi-heart fs-5"></i>
                         <small>Yêu thích</small>
                         <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.7rem;">3</span>
@@ -291,7 +325,7 @@ function toggleMobileSearch() {
         overlay.classList.remove('d-none');
         searchIcon.classList.add('d-none');
         closeIcon.classList.remove('d-none');
-        document.body.classList.add('mobile-search-active');
+        document.body.style.overflow = 'hidden';
         isSearchOpen = true;
         
         // Focus input sau khi animation hoàn thành
@@ -315,7 +349,7 @@ function closeMobileSearch() {
     overlay.classList.add('d-none');
     searchIcon.classList.remove('d-none');
     closeIcon.classList.add('d-none');
-    document.body.classList.remove('mobile-search-active');
+    document.body.style.overflow = '';
     isSearchOpen = false;
     
     // Reset input value

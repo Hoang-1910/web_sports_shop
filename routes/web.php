@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminLoginController;
 use App\Http\Controllers\CustomerLoginController;
 use App\Http\Controllers\Customer\ProductController;
+use App\Http\Controllers\Customer\WishlistController;
 
 
 // -------- ADMIN ----------//
@@ -24,10 +25,11 @@ Route::post('/logout', [CustomerLoginController::class, 'logout'])->name('custom
 
 
 // Test front end
+
+//đăng kí
 Route::get('/register', function() {
     return view('customer.register');
 })->name('customer.register');
-
 Route::post('/register', [CustomerLoginController::class, 'register'])->name('customer.register.submit');
 
 
@@ -38,18 +40,35 @@ Route::get('/', function () {
 
 // Sản phẩm
 Route::get('/products', [ProductController::class, 'index'])->name('products.index');
+//Chi tiết sản phẩm
+Route::get('/products/{product}', [ProductController::class, 'show'])->name('products.show');
 
 // Giỏ hàng
 Route::get('/cart', function () {
     return view('customer.cart');
 })->name('cart');
 
+//profile
+Route::get('/profile', function() {
+    return view('customer.profile');
+})->name('profile');
+
+Route::get('/orders', function() {
+    return view('customer.orders');
+})->name('orders');
+
+Route::get('/orders/{code}', function($code) {
+    return view('customer.order-detail', ['code' => $code]);
+})->name('orders.detail');
+
+
 Route::get('/products/category/{slug}', [ProductController::class, 'category'])->name('products.category');
 Route::get('/products/brand/{slug}', [ProductController::class, 'brand'])->name('products.brand');
 Route::get('/products/search', [ProductController::class, 'search'])->name('products.search');
-Route::get('/wishlist', [WishlistController::class, 'index'])->name('wishlist');
-Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
-Route::get('/orders', [OrderController::class, 'index'])->name('orders');
+Route::get('/wishlist', [WishlistController::class, 'index'])->name('wishlist.index');  
+Route::post('/wishlist/add', [WishlistController::class, 'add'])->name('wishlist.add');
+Route::post('/wishlist/remove', [WishlistController::class, 'remove'])->name('wishlist.remove');
+
 Route::get('/promotions', [PromotionController::class, 'index'])->name('promotions');
 Route::get('/blog', [BlogController::class, 'index'])->name('blog');
 Route::get('/contact', [ContactController::class, 'index'])->name('contact');

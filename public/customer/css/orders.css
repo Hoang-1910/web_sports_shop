@@ -1,0 +1,36 @@
+.orders-section {
+    background: linear-gradient(135deg, #f8f9fa 60%, #ffeaea 100%);
+    min-height: 60vh;
+}
+.card {
+    border: none;
+}
+.table th, .table td {
+    vertical-align: middle;
+}
+.table .badge {
+    font-size: 0.95em;
+    padding: 0.5em 1em;
+    border-radius: 1rem;
+}
+.btn-outline-danger {
+    border-radius: 2rem;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+.btn-outline-danger:hover, .btn-danger:hover {
+    background: linear-gradient(135deg, #e53935 0%, #c62828 100%);
+    color: #fff;
+    border-color: #e53935;
+}
+@media (max-width: 767.98px) {
+    .orders-section {
+        padding: 1rem 0;
+    }
+    .card {
+        padding: 1.5rem 1rem;
+    }
+    .table-responsive {
+        font-size: 0.95em;
+    }
+}

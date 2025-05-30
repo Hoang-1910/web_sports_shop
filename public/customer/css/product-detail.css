@@ -1,0 +1,113 @@
+/* Product Images */
+.main-image {
+    aspect-ratio: 1;
+    overflow: hidden;
+}
+
+.main-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.thumbnail-images {
+    overflow-x: auto;
+    padding-bottom: 10px;
+}
+
+.thumbnail {
+    width: 80px;
+    height: 80px;
+    cursor: pointer;
+    border: 2px solid transparent;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.thumbnail.active {
+    border-color: #dc3545;
+}
+
+.thumbnail img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Size and Color Buttons */
+.size-btn,
+.color-btn {
+    min-width: 60px;
+    transition: all 0.3s ease;
+}
+
+.size-btn:hover,
+.color-btn:hover {
+    transform: translateY(-2px);
+}
+
+.size-btn.active,
+.color-btn.active {
+    background-color: #dc3545;
+    color: white;
+    border-color: #dc3545;
+}
+
+/* Quantity Input */
+#quantity {
+    -moz-appearance: textfield;
+    appearance: none;
+}
+
+#quantity::-webkit-outer-spin-button,
+#quantity::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Product Tabs */
+.nav-tabs {
+    border-bottom: 2px solid #dee2e6;
+}
+
+.nav-tabs .nav-link {
+    border: none;
+    color: #6c757d;
+    padding: 1rem 2rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.nav-tabs .nav-link:hover {
+    border: none;
+    color: #dc3545;
+}
+
+.nav-tabs .nav-link.active {
+    border: none;
+    color: #dc3545;
+    border-bottom: 2px solid #dc3545;
+}
+
+/* Review Stars */
+.stars {
+    font-size: 0.875rem;
+}
+
+/* Action Buttons */
+.btn-danger {
+    background: linear-gradient(135deg, #e53935 0%, #c62828 100%);
+    border: none;
+    transition: all 0.3s ease;
+}
+
+.btn-danger:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(229, 57, 53, 0.3);
+}
+
+.btn-outline-danger:hover {
+    background: linear-gradient(135deg, #e53935 0%, #c62828 100%);
+    border-color: transparent;
+}
