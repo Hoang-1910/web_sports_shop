@@ -6,51 +6,51 @@
     <title>Admin Dashboard - Sports Shop</title>
     <!-- Tailwind CSS -->
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <!-- Material Icons (Optional) -->
+    <!-- Material Icons -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
-<body class="bg-gray-100 text-gray-800">
+<body class="bg-gradient-to-br from-purple-100 via-white to-purple-200 min-h-screen">
 
     {{-- Navbar --}}
-    <header class="bg-white shadow px-6 py-4 flex justify-between items-center">
-        <h1 class="text-xl font-bold text-purple-700">SportsShop Admin</h1>
-
+    <header class="bg-white shadow-lg px-8 py-5 flex justify-between items-center">
+        <h1 class="text-2xl font-extrabold text-purple-700 tracking-wide flex items-center gap-2">
+            <span class="material-icons text-purple-600">sports_soccer</span>
+            SportsShop Admin
+        </h1>
         <div class="flex items-center space-x-4">
-            <span class="text-gray-600">Welcome, {{ Auth::user()->name }}</span>
-            <img src="https://i.pravatar.cc/40" alt="Avatar" class="w-10 h-10 rounded-full">
+            <span class="text-gray-700 font-medium">Welcome, {{ Auth::user()->name }}</span>
+            <img src="https://i.pravatar.cc/40" alt="Avatar" class="w-11 h-11 rounded-full border-2 border-purple-300 shadow">
         </div>
     </header>
 
-    {{-- Nội dung chính --}}
+    {{-- Main Content --}}
     <main>
-        <div class="flex h-screen bg-gray-100">
+        <div class="flex min-h-[calc(100vh-80px)]">
             {{-- Sidebar --}}
-            <aside class="w-64 bg-white shadow-md p-4">
-        
-                <nav class="space-y-2">
-                    <a href="#" class="flex items-center text-gray-700 hover:text-purple-700">
-                        Sản phẩm
+            <aside class="w-72 bg-white shadow-2xl p-6 flex flex-col justify-between rounded-tr-3xl rounded-br-3xl mt-2">
+                <nav class="space-y-3">
+                    <a href="{{ route('admin.products.index') }}" class="flex items-center gap-3 px-4 py-2 rounded-lg text-gray-700 hover:bg-purple-100 hover:text-purple-700 transition">
+                        <span class="material-icons">inventory_2</span>
+                        <span class="font-semibold">Sản phẩm</span>
                     </a>
-                    <a href="#" class="flex items-center text-gray-700 hover:text-purple-700">
-                        Danh mục sản phẩm
+                    <a href="{{ route('admin.categories.index') }}" class="flex items-center gap-3 px-4 py-2 rounded-lg text-gray-700 hover:bg-purple-100 hover:text-purple-700 transition">
+                        <span class="material-icons">category</span>
+                        <span class="font-semibold">Danh mục sản phẩm</span>
                     </a>
-                    <a href="#" class="flex items-center text-gray-700 hover:text-purple-700">
-                        <span class="material-icons mr-2">message</span> Messages
+                    <a href="#" class="flex items-center gap-3 px-4 py-2 rounded-lg text-gray-700 hover:bg-purple-100 hover:text-purple-700 transition">
+                        <span class="material-icons">people</span>
+                        <span class="font-semibold">Danh mục tài khoản</span>
                     </a>
-                    <a href="#" class="flex items-center text-gray-700 hover:text-purple-700">
-                        <span class="material-icons mr-2">bar_chart</span> Statistics
+                    <a href="#" class="flex items-center gap-3 px-4 py-2 rounded-lg text-gray-700 hover:bg-purple-100 hover:text-purple-700 transition">
+                        <span class="material-icons">shopping_cart</span>
+                        <span class="font-semibold">Danh mục đơn hàng</span>
                     </a>
                 </nav>
-        
-                <div class="mt-8">
-                    <h2 class="text-sm text-gray-500 uppercase mb-2">Projects on Deadlines</h2>
-                    <div class="bg-red-100 text-red-700 px-3 py-2 rounded-md text-sm">
-                        Develop Chat Application
-                    </div>
-                </div>
             </aside>
-        
-            @yield('content')
+
+            <section class="flex-1 p-8">
+                @yield('content')
+            </section>
         </div>
     </main>
 
