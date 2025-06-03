@@ -139,35 +139,6 @@
 </div>
 
 @push('styles')
-<style>
-    .card {
-        background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
-    }
-    
-    .input-group-text {
-        border-color: #dee2e6;
-    }
-    
-    .form-control:focus {
-        border-color: #dc3545;
-        box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.25);
-    }
-    
-    .btn-danger {
-        background: linear-gradient(135deg, #e53935 0%, #c62828 100%);
-        border: none;
-        transition: all 0.3s ease;
-    }
-    
-    .btn-danger:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 25px rgba(229, 57, 53, 0.3);
-    }
-    
-    .btn-outline-danger:hover {
-        background: linear-gradient(135deg, #e53935 0%, #c62828 100%);
-        border-color: transparent;
-    }
-</style>
+<link href="{{ asset('customer/css/register.css') }}" rel="stylesheet">
 @endpush
 @endsection 
