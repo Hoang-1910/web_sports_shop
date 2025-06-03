@@ -9,7 +9,7 @@ class ProductVariant extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['product_id', 'size', 'color', 'price', 'stock'];
+    protected $fillable = ['product_id', 'size', 'color', 'price']; // Bỏ 'stock'
 
     public function product()
     {
@@ -24,5 +24,10 @@ class ProductVariant extends Model
     public function orderDetails()
     {
         return $this->hasMany(OrderDetail::class);
+    }
+
+    public function images()
+    {
+        return $this->hasMany(ProductVariantImage::class);
     }
 }

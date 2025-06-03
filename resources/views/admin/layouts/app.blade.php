@@ -8,6 +8,8 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <!-- Material Icons -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- SweetAlert2 CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body class="bg-gradient-to-br from-purple-100 via-white to-purple-200 min-h-screen">
 
@@ -29,6 +31,10 @@
             {{-- Sidebar --}}
             <aside class="w-72 bg-white shadow-2xl p-6 flex flex-col justify-between rounded-tr-3xl rounded-br-3xl mt-2">
                 <nav class="space-y-3">
+                    <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-3 px-4 py-2 rounded-lg text-gray-700 hover:bg-purple-100 hover:text-purple-700 transition">
+                        <span class="material-icons">dashboard</span>
+                        <span class="font-semibold">Bảng điều khiển</span>
+                    </a>
                     <a href="{{ route('admin.products.index') }}" class="flex items-center gap-3 px-4 py-2 rounded-lg text-gray-700 hover:bg-purple-100 hover:text-purple-700 transition">
                         <span class="material-icons">inventory_2</span>
                         <span class="font-semibold">Sản phẩm</span>
@@ -54,5 +60,6 @@
         </div>
     </main>
 
+    @yield('scripts')
 </body>
 </html>

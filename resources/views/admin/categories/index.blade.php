@@ -28,7 +28,7 @@
             <tbody>
                 @foreach ($categories as $category)
                 <tr class="border-t hover:bg-purple-50 transition">
-                    <td class="p-4">{{ $category->id }}</td>
+                    <td class="p-4">{{ $loop->iteration }}</td>
                     <td class="p-4 font-medium text-gray-900">{{ $category->name }}</td>
                     <td class="p-4 text-gray-700">{{ $category->description }}</td>
                     <td class="p-4">
