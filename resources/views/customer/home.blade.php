@@ -176,7 +176,7 @@
     <div class="container">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h2 id="featured-products-title" class="section-title mb-0">Sản phẩm nổi bật</h2>
-            <a href="{{ route('products.index') }}" class="text-danger text-decoration-none">
+            <a href="#" class="text-danger text-decoration-none">
                 Xem tất cả <i class="fas fa-arrow-right ms-1" aria-hidden="true"></i>
             </a>
         </div>

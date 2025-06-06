@@ -24,14 +24,13 @@
                     <th class="p-4 text-left font-semibold text-gray-700">Tên</th>
                     <th class="p-4 text-left font-semibold text-gray-700">Giá</th>
                     <th class="p-4 text-left font-semibold text-gray-700">Giảm giá</th>
-                    <th class="p-4 text-left font-semibold text-gray-700">Kho</th>
                     <th class="p-4 text-left font-semibold text-gray-700">Thao tác</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach ($products as $product)
                 <tr class="border-t hover:bg-purple-50 transition">
-                    <td class="p-4">{{ $product->id }}</td>
+                    <td class="p-4">{{ $loop->iteration }}</td>
                     <td class="p-4">
                         @if($product->image)
                             <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" class="w-16 h-16 object-cover rounded shadow">
@@ -47,23 +46,20 @@
                         </span>
                     </td>
                     <td class="p-4">
-                        <span class="bg-blue-100 text-blue-700 px-2 py-1 rounded text-xs font-semibold">
-                            {{ $product->stock }}
-                        </span>
-                    </td>
-                    <td class="p-4">
                         <div class="flex items-center gap-2">
+                            <a href="{{ route('admin.products.show', $product->id) }}"
+                               class="inline-flex items-center px-3 py-1 bg-blue-100 text-blue-700 rounded hover:bg-blue-200 transition text-sm font-medium shadow-sm">
+                                <span class="material-icons text-base mr-1">visibility</span> Xem chi tiết
+                            </a>
                             <a href="{{ route('admin.products.edit', $product->id) }}"
                                class="inline-flex items-center px-3 py-1 bg-yellow-100 text-yellow-700 rounded hover:bg-yellow-200 transition text-sm font-medium shadow-sm">
                                 <span class="material-icons text-base mr-1">edit</span> Sửa
                             </a>
-                            <form action="{{ route('admin.products.destroy', $product->id) }}" method="POST" onsubmit="return confirm('Xóa sản phẩm này?')">
+                            <form action="{{ route('admin.products.destroy', $product) }}" method="POST" class="d-inline delete-form">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit"
-                                    class="inline-flex items-center px-3 py-1 bg-red-100 text-red-700 rounded hover:bg-red-200 transition text-sm font-medium shadow-sm">
-                                    <span class="material-icons text-base mr-1">delete</span> Xóa
-                                </button>
+                                <button type="button" class="btn btn-danger btn-delete inline-flex items-center px-3 py-1 bg-red-100 text-red-700 rounded hover:bg-red-200 transition text-sm font-medium shadow-sm">
+                                    <span class="material-icons text-base mr-1">delete</span> Xóa</button>
                             </form>
                         </div>
                     </td>
@@ -73,4 +69,29 @@
         </table>
     </div>
 </div>
+@endsection
+
+@section('scripts')
+<script>
+document.querySelectorAll('.btn-delete').forEach(btn => {
+    btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        const form = this.closest('form');
+        Swal.fire({
+            title: 'Bạn chắc chắn muốn xóa?',
+            text: "Hành động này không thể hoàn tác!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Xóa',
+            cancelButtonText: 'Hủy'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                form.submit();
+            }
+        });
+    });
+});
+</script>
 @endsection

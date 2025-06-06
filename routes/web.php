@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminLoginController;
 use App\Http\Controllers\CustomerLoginController;
 use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Admin\ProductVariantController;
+use App\Http\Controllers\Admin\ProductVariantImageController;
 
 // Trang chủ cho khách hàng (không cần login)
 Route::get('/', fn() => view('customer.home'))->name('customer.home');
@@ -22,7 +24,26 @@ Route::middleware(['auth', 'is_admin'])->prefix('admin')->group(function () {
     Route::post('/products', [ProductController::class, 'store'])->name('admin.products.store');
     Route::get('/products/{product}/edit', [ProductController::class, 'edit'])->name('admin.products.edit');
     Route::put('/products/{product}', [ProductController::class, 'update'])->name('admin.products.update');
+    Route::get('/products/{product}', [ProductController::class, 'show'])->name('admin.products.show');
     Route::delete('/products/{product}', [ProductController::class, 'destroy'])->name('admin.products.destroy');
+    Route::post('/admin/products/import', [ProductController::class, 'import'])->name('admin.products.import');
+
+    // Route Product Variants
+    Route::get('/products/{product}/variants/create', [ProductVariantController::class, 'create'])->name('admin.variants.create');
+    Route::post('/products/{product}/variants', [ProductVariantController::class, 'store'])->name('admin.variants.store');
+    Route::get('/variants/{variant}/edit', [ProductVariantController::class, 'edit'])->name('admin.variants.edit');
+    Route::put('/variants/{variant}', [ProductVariantController::class, 'update'])->name('admin.variants.update');
+    Route::delete('/variants/{variant}', [ProductVariantController::class, 'destroy'])->name('admin.variants.destroy');
+    Route::post('/variants/{variant}/images', [ProductVariantImageController::class, 'store'])->name('admin.variants.images.store');
+    Route::delete('/variants/images/{id}', [ProductVariantImageController::class, 'destroy'])->name('admin.variants.images.destroy');
+    Route::get('/variants/{variant}/images', [ProductVariantImageController::class, 'index'])->name('admin.variants.images.index');
+    Route::get('/variants/{variant}/images/create', [ProductVariantImageController::class, 'create'])->name('admin.variants.images.create');
+    Route::post('/variants/{variant}/images/store', [ProductVariantImageController::class, 'store'])->name('admin.variants.images.store');
+    Route::get('/variants/{variant}/images/{image}/edit', [ProductVariantImageController::class, 'edit'])->name('admin.variants.images.edit');
+    Route::put('/variants/images/{image}', [ProductVariantImageController::class, 'update'])->name('admin.variants.images.update');
+    Route::delete('/variants/images/{image}', [ProductVariantImageController::class, 'destroy'])->name('admin.variants.images.destroy');
+    Route::get('/variants/{variant}/images/{image}/show', [ProductVariantImageController::class, 'show'])->name('admin.variants.images.show');
+    Route::get('/variants/{variant}/images/{image}/edit', [ProductVariantImageController::class, 'edit'])->name('admin.variants.images.edit');
 
     //Route Categories
     Route::get('/categories', [\App\Http\Controllers\Admin\CategoryController::class, 'index'])->name('admin.categories.index');
@@ -70,8 +91,8 @@ Route::get('/register', function () {
 // Route::get('/blog', [BlogController::class, 'index'])->name('blog');
 // Route::get('/contact', [ContactController::class, 'index'])->name('contact');
 // Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-// //Route::get('/login', [AuthController::class, 'login'])->name('login');
-// //Route::get('/register', [AuthController::class, 'register'])->name('register');
+//Route::get('/login', [AuthController::class, 'login'])->name('login');
+//Route::get('/register', [AuthController::class, 'register'])->name('register');
 // Route::get('/brands', function () {
 //     return view('customer.test-layout');
 // })->name('brands.index'); // Added brands.index route

@@ -8,7 +8,7 @@
     <div class="container-fluid px-3 px-lg-5">
         <nav class="navbar navbar-expand-lg navbar-light p-0">
             <!-- Logo -->
-            <a class="navbar-brand d-flex align-items-center me-4" href="{{ route('home') }}">
+            <a class="navbar-brand d-flex align-items-center me-4" href="#">
                 <div class="logo-container d-flex align-items-center justify-content-center">
                     <img src="{{ asset('customer/images/logo.jpg') }}" alt="SportShop Logo" class="logo-img" loading="lazy" onerror="this.classList.add('d-none'); this.nextElementSibling.classList.remove('d-none')">
                     <div class="logo-placeholder d-none align-items-center justify-content-center bg-danger rounded-circle">
@@ -34,21 +34,21 @@
                 <!-- Main Navigation Links -->
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link fw-medium {{ request()->routeIs('home') ? 'active' : '' }}" href="{{ route('home') }}">Trang chủ</a>
+                        <a class="nav-link fw-medium" href="#">Trang chủ</a>
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle fw-medium" href="#" id="productsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             Sản phẩm
                         </a>
                         <ul class="dropdown-menu shadow border-0" aria-labelledby="productsDropdown">
-                            <li><a class="dropdown-item" href="{{ route('products.index') }}">Tất cả sản phẩm</a></li>
+                            <li><a class="dropdown-item" href="#">Tất cả sản phẩm</a></li>
                             <li><hr class="dropdown-divider"></li>
                             @foreach([
                                 ['name' => 'Giày thể thao', 'slug' => 'giay-the-thao'],
                                 ['name' => 'Quần áo thể thao', 'slug' => 'quan-ao-the-thao'],
                                 ['name' => 'Phụ kiện', 'slug' => 'phu-kien']
                             ] as $category)
-                                <li><a class="dropdown-item" href="{{ route('products.category', $category['slug']) }}">{{ $category['name'] }}</a></li>
+                                <li><a class="dropdown-item" href="#</a></li>
                             @endforeach
                         </ul>
                     </li>
@@ -57,31 +57,31 @@
                             Thương hiệu
                         </a>
                         <ul class="dropdown-menu shadow border-0" aria-labelledby="brandsDropdown">
-                            <li><a class="dropdown-item" href="{{ route('brands.index') }}">Tất cả thương hiệu</a></li>
+                            <li><a class="dropdown-item" href="#">Tất cả thương hiệu</a></li>
                             <li><hr class="dropdown-divider"></li>
                             @foreach([
                                 ['name' => 'Nike', 'slug' => 'nike'],
                                 ['name' => 'Adidas', 'slug' => 'adidas'],
                                 ['name' => 'Puma', 'slug' => 'puma']
                             ] as $brand)
-                                <li><a class="dropdown-item" href="{{ route('products.brand', $brand['slug']) }}">{{ $brand['name'] }}</a></li>
+                                <li><a class="dropdown-item" href="#">{{ $brand['name'] }}</a></li>
                             @endforeach
                         </ul>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link fw-medium {{ request()->routeIs('promotions') ? 'active' : '' }}" href="{{ route('promotions') }}">Khuyến mãi</a>
+                        <a class="nav-link fw-medium {{ request()->routeIs('promotions') ? 'active' : '' }}" href="#">Khuyến mãi</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link fw-medium {{ request()->routeIs('blog') ? 'active' : '' }}" href="{{ route('blog') }}">Blog</a>
+                        <a class="nav-link fw-medium {{ request()->routeIs('blog') ? 'active' : '' }}" href="#">Blog</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link fw-medium {{ request()->routeIs('contact') ? 'active' : '' }}" href="{{ route('contact') }}">Liên hệ</a>
+                        <a class="nav-link fw-medium {{ request()->routeIs('contact') ? 'active' : '' }}" href="#">Liên hệ</a>
                     </li>
                 </ul>
 
                 <!-- Desktop Search Bar -->
                 <div class="d-none d-lg-flex me-4 flex-grow-1 justify-content-center">
-                    <form class="search-form position-relative w-50" role="search" action="{{ route('products.search') }}" method="GET">
+                    <form class="search-form position-relative w-50" role="search" action="#" method="GET">
                         <input class="form-control search-input rounded-pill" type="search" name="q" placeholder="Tìm kiếm sản phẩm..." value="{{ request('q') }}" aria-label="Search products">
                         <button class="search-btn position-absolute end-0 top-50 translate-middle-y me-2 border-0 bg-transparent" type="submit">
                             <i class="bi bi-search"></i>
@@ -99,40 +99,12 @@
                                 </div>
                                 <span class="user-name">{{-- Auth::user()->name --}}</span>
                             </a>
-                            <ul class="dropdown-menu dropdown-menu-end shadow border-0 rounded-3" aria-labelledby="userDropdown">
-                                <li>
-                                    <div class="dropdown-header">
-                                        <div class="d-flex align-items-center gap-2 mb-2">
-                                            <img src="{{ asset('customer/images/avatar.jpg') }}" alt="Avatar" class="rounded-circle" width="48" height="48">
-                                            <div>
-                                                <h6 class="mb-0">{{-- Auth::user()->name --}}</h6>
-                                                <small class="text-muted">{{-- Auth::user()->email --}}</small>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </li>
+                            <ul class="dropdown-menu dropdown-menu-end shadow border-0" aria-labelledby="userDropdown">
+                                <li><a class="dropdown-item" href="#">Tài khoản</a></li>
+                                <li><a class="dropdown-item" href="#">Đơn hàng</a></li>
                                 <li><hr class="dropdown-divider"></li>
                                 <li>
-                                    <a class="dropdown-item d-flex align-items-center gap-2" href="{{ route('profile') }}">
-                                        <i class="bi bi-person"></i>
-                                        <span>Tài khoản của tôi</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item d-flex align-items-center gap-2" href="{{ route('orders') }}">
-                                        <i class="bi bi-bag"></i>
-                                        <span>Đơn hàng</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item d-flex align-items-center gap-2" href="{{ route('wishlist.index') }}">
-                                        <i class="bi bi-heart"></i>
-                                        <span>Danh sách yêu thích</span>
-                                    </a>
-                                </li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li>
-                                    <form action="{{ route('logout') }}" method="POST">
+                                    <form action="#" method="POST">
                                         @csrf
                                         <button type="submit" class="dropdown-item d-flex align-items-center gap-2 text-danger">
                                             <i class="bi bi-box-arrow-right"></i>
@@ -142,18 +114,18 @@
                                 </li>
                             </ul>
                         </div>
-                    {{-- @else
-                        <a href="{{ route('customer.login') }}" class="nav-icon-link" title="Đăng nhập" aria-label="Login">
+                    @else
+                        <a href="#" class="nav-icon-link" title="Đăng nhập" aria-label="Login">
                             <i class="bi bi-person fs-4"></i>
                         </a>
                     @endauth --}}
 
-                    <a href="{{ route('wishlist.index') }}" class="nav-icon-link position-relative" title="Yêu thích" aria-label="Wishlist">
+                    <a href="#" class="nav-icon-link position-relative" title="Yêu thích" aria-label="Wishlist">
                         <i class="bi bi-heart fs-4"></i>
                         <span class="nav-badge badge bg-danger rounded-pill position-absolute top-0 start-100 translate-middle">3</span>
                     </a>
 
-                    <a href="{{ route('cart') }}" class="nav-icon-link position-relative" title="Giỏ hàng" aria-label="Cart">
+                    <a href="#" class="nav-icon-link position-relative" title="Giỏ hàng" aria-label="Cart">
                         <i class="bi bi-cart fs-4"></i>
                         <span class="nav-badge badge bg-danger rounded-pill position-absolute top-0 start-100 translate-middle">2</span>
                     </a>
@@ -171,7 +143,7 @@
                     </button>
                 </div>
                 
-                <form class="search-form-mobile" role="search" action="{{ route('products.search') }}" method="GET">
+                <form class="search-form-mobile" role="search" action="#" method="GET">
                     <div class="mobile-search-group">
                         <input class="form-control mobile-search-input" type="search" name="q" placeholder="Tìm kiếm sản phẩm..." value="{{ request('q') }}" aria-label="Search products" autofocus>
                         <button class="btn btn-danger mobile-search-btn" type="submit">
@@ -218,15 +190,15 @@
                 </div>
             @else
                 <div class="d-grid gap-2">
-                    <a href="{{ route('customer.login') }}" class="btn btn-danger">Đăng nhập</a>
-                    <a href="{{ route('customer.register') }}" class="btn btn-outline-danger">Đăng ký</a>
+                    <a href="#" class="btn btn-danger">Đăng nhập</a>
+                    <a href="#" class="btn btn-outline-danger">Đăng ký</a>
                 </div>
             @endauth
         </div>
 
         <!-- Mobile Navigation Links -->
         <nav class="mobile-nav">
-            <a href="{{ route('home') }}" class="mobile-nav-link {{ request()->routeIs('home') ? 'active' : '' }}">
+            <a href="#" class="mobile-nav-link {{ request()->routeIs('home') ? 'active' : '' }}">
                 <i class="bi bi-house me-3"></i>Trang chủ
             </a>
             
@@ -236,13 +208,13 @@
                     <i class="bi bi-chevron-down ms-auto"></i>
                 </div>
                 <div class="collapse" id="mobileProducts">
-                    <a href="{{ route('products.index') }}" class="mobile-nav-sublink">Tất cả sản phẩm</a>
+                    <a href="#" class="mobile-nav-sublink">Tất cả sản phẩm</a>
                     @foreach([
                         ['name' => 'Giày thể thao', 'slug' => 'giay-the-thao'],
                         ['name' => 'Quần áo thể thao', 'slug' => 'quan-ao-the-thao'],
                         ['name' => 'Phụ kiện', 'slug' => 'phu-kien']
                     ] as $category)
-                        <a href="{{ route('products.category', $category['slug']) }}" class="mobile-nav-sublink">{{ $category['name'] }}</a>
+                        <a href="#" class="mobile-nav-sublink">{{ $category['name'] }}</a>
                     @endforeach
                 </div>
             </div>
@@ -253,24 +225,24 @@
                     <i class="bi bi-chevron-down ms-auto"></i>
                 </div>
                 <div class="collapse" id="mobileBrands">
-                    <a href="{{ route('brands.index') }}" class="mobile-nav-sublink">Tất cả thương hiệu</a>
+                    <a href="#" class="mobile-nav-sublink">Tất cả thương hiệu</a>
                     @foreach([
                         ['name' => 'Nike', 'slug' => 'nike'],
                         ['name' => 'Adidas', 'slug' => 'adidas'],
                         ['name' => 'Puma', 'slug' => 'puma']
                     ] as $brand)
-                        <a href="{{ route('products.brand', $brand['slug']) }}" class="mobile-nav-sublink">{{ $brand['name'] }}</a>
+                        <a href="#" class="mobile-nav-sublink">{{ $brand['name'] }}</a>
                     @endforeach
                 </div>
             </div>
 
-            <a href="{{ route('promotions') }}" class="mobile-nav-link {{ request()->routeIs('promotions') ? 'active' : '' }}">
+            <a href="#" class="mobile-nav-link {{ request()->routeIs('promotions') ? 'active' : '' }}">
                 <i class="bi bi-percent me-3"></i>Khuyến mãi
             </a>
-            <a href="{{ route('blog') }}" class="mobile-nav-link {{ request()->routeIs('blog') ? 'active' : '' }}">
+            <a href="#" class="mobile-nav-link {{ request()->routeIs('blog') ? 'active' : '' }}">
                 <i class="bi bi-journal-text me-3"></i>Blog
             </a>
-            <a href="{{ route('contact') }}" class="mobile-nav-link {{ request()->routeIs('contact') ? 'active' : '' }}">
+            <a href="#" class="mobile-nav-link {{ request()->routeIs('contact') ? 'active' : '' }}">
                 <i class="bi bi-envelope me-3"></i>Liên hệ
             </a>
         </nav>
@@ -279,14 +251,14 @@
         <div class="mobile-actions p-3 border-top mt-auto">
             <div class="row g-2">
                 <div class="col-4">
-                    <a href="{{ route('wishlist.index') }}" class="btn btn-outline-danger w-100 d-flex flex-column align-items-center position-relative">
+                    <a href="#" class="btn btn-outline-danger w-100 d-flex flex-column align-items-center position-relative">
                         <i class="bi bi-heart fs-5"></i>
                         <small>Yêu thích</small>
                         <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.7rem;">3</span>
                     </a>
                 </div>
                 <div class="col-4">
-                    <a href="{{ route('cart') }}" class="btn btn-outline-danger w-100 d-flex flex-column align-items-center position-relative">
+                    <a href="#" class="btn btn-outline-danger w-100 d-flex flex-column align-items-center position-relative">
                         <i class="bi bi-cart fs-5"></i>
                         <small>Giỏ hàng</small>
                         <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.7rem;">2</span>
@@ -294,12 +266,12 @@
                 </div>
                 <div class="col-4">
                     @auth
-                        <a href="{{ route('orders') }}" class="btn btn-outline-danger w-100 d-flex flex-column align-items-center">
+                        <a href="#" class="btn btn-outline-danger w-100 d-flex flex-column align-items-center">
                             <i class="bi bi-bag fs-5"></i>
                             <small>Đơn hàng</small>
                         </a>
                     @else
-                        <a href="{{ route('profile') }}" class="btn btn-outline-danger w-100 d-flex flex-column align-items-center">
+                        <a href="#" class="btn btn-outline-danger w-100 d-flex flex-column align-items-center">
                             <i class="bi bi-person fs-5"></i>
                             <small>Tài khoản</small>
                         </a>
