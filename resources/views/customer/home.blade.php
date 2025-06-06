@@ -7,7 +7,7 @@
 <section class="hero-bg-section position-relative w-100 overflow-hidden" role="banner">
     <!-- Background Image -->
     <div class="hero-background position-absolute top-0 start-0 w-100 h-100" 
-         style="background: url('/customer/images/hero-bg.jpg') center center/cover no-repeat;"
+         style="background: url('{{ asset('/customer/images/hero-bg.jpg') }}') center center/cover no-repeat;"
          aria-hidden="true"></div>
     
     <!-- Gradient Overlay -->
@@ -19,19 +19,19 @@
     <div class="hero-floating-elements position-absolute top-0 start-0 w-100 h-100" aria-hidden="true">
         <div class="floating-shoe position-absolute" 
              style="top: 20%; right: 10%; animation: float 6s ease-in-out infinite;">
-            <img src="/customer/images/product1.jpg" alt="" class="rounded-4 shadow-lg" 
+            <img src="{{ asset('/customer/images/category-shoes.jpg') }}" alt="" class="rounded-4 shadow-lg"    
                  style="width: 120px; height: 120px; object-fit: cover; opacity: 0.8;">
         </div>
         
         <div class="floating-accessory position-absolute" 
              style="top: 60%; left: 8%; animation: float 8s ease-in-out infinite reverse;">
-            <img src="/customer/images/category-accessories.jpg" alt="" class="rounded-circle shadow-lg" 
+            <img src="{{ asset('/customer/images/category-accessories.jpg') }}" alt="" class="rounded-circle shadow-lg" 
                  style="width: 80px; height: 80px; object-fit: cover; opacity: 0.7;">
         </div>
         
         <div class="floating-gym position-absolute" 
              style="bottom: 25%; right: 15%; animation: float 7s ease-in-out infinite;">
-            <img src="/customer/images/category-gym.jpg" alt="" class="rounded-4 shadow-lg" 
+            <img src="{{ asset('/customer/images/category-gym.jpg') }}" alt="" class="rounded-4 shadow-lg" 
                  style="width: 100px; height: 100px; object-fit: cover; opacity: 0.6;">
         </div>
     </div>
@@ -123,39 +123,13 @@
 
 
 <!-- Danh mục nổi bật -->
-<section class="featured-categories py-5" aria-labelledby="featured-categories-title">
+{{-- <section class="featured-categories py-5" aria-labelledby="featured-categories-title">
     <div class="container">
         <h2 id="featured-categories-title" class="section-title text-center mb-4">Danh mục nổi bật</h2>
         <div class="row g-4">
-            @php
-            $categories = [
-                [
-                    'title' => 'Giày thể thao',
-                    'image' => '/customer/images/category-shoes.jpg',
-                    //'link' => route('category', 'shoes'),
-                    'alt' => 'Bộ sưu tập giày thể thao cao cấp'
-                ],
-                [
-                    'title' => 'Quần áo tập gym',
-                    'image' => '/customer/images/category-gym.jpg', 
-                    //'link' => route('category', 'gym-wear'),
-                    'alt' => 'Quần áo tập gym chuyên nghiệp'
-                ],
-                [
-                    'title' => 'Phụ kiện thể thao',
-                    'image' => '/customer/images/category-accessories.jpg',
-                    //'link' => route('category', 'accessories'),
-                    'alt' => 'Phụ kiện thể thao đa dạng'
-                ]
-            ];
-            @endphp
-            
             @foreach($categories as $category)
             <div class="col-lg-4 col-md-4 col-sm-6 col-12">
                 <article class="category-card-custom position-relative h-100" style="min-height: 280px;">
-                    <div class="category-bg position-absolute top-0 start-0 w-100 h-100 rounded-4" 
-                         style="background: url('{{ $category['image'] }}') center center/cover no-repeat;"
-                         role="img" aria-label="{{ $category['alt'] }}"></div>
                     <div class="category-gradient position-absolute top-0 start-0 w-100 h-100 rounded-4"></div>
                     <div class="category-content position-absolute bottom-0 start-0 p-4 text-white">
                         <h3 class="fw-bold mb-2 h4">{{ $category['title'] }}</h3>
@@ -168,7 +142,8 @@
             @endforeach
         </div>
     </div>
-</section>
+</section> --}}
+
 
 
 <!-- Sản phẩm nổi bật -->
@@ -180,47 +155,7 @@
                 Xem tất cả <i class="fas fa-arrow-right ms-1" aria-hidden="true"></i>
             </a>
         </div>
-        
         <div class="row g-4" id="featured-products-list">
-            @php
-            $featuredProducts = [
-                [
-                    'id' => 1,
-                    'name' => 'Nike Air Zoom Pegasus 38',
-                    'image' => '/customer/images/product1.jpg',
-                    'price' => 2450000,
-                    'original_price' => 2900000,
-                    'badges' => ['NEW', 'SALE'],
-                    'background' => '#d8a14a'
-                ],
-                [
-                    'id' => 2,
-                    'name' => 'Adidas Ultraboost 21',
-                    'image' => '/customer/images/product2.jpg',
-                    'price' => 3200000,
-                    'badges' => ['NEW'],
-                    'background' => '#181818'
-                ],
-                [
-                    'id' => 3,
-                    'name' => 'Puma RS-X³ Puzzle',
-                    'image' => '/customer/images/product3.jpg',
-                    'price' => 1990000,
-                    'original_price' => 2500000,
-                    'badges' => ['SALE'],
-                    'background' => '#c6e94a'
-                ],
-                [
-                    'id' => 4,
-                    'name' => 'Under Armour HOVR Phantom',
-                    'image' => '/customer/images/product4.jpg',
-                    'price' => 3100000,
-                    'badges' => [],
-                    'background' => '#222'
-                ]
-            ];
-            @endphp
-            
             @foreach($featuredProducts as $product)
             <div class="col-xl-3 col-lg-4 col-md-6 col-12">
                 <article class="product-card-custom position-relative bg-white rounded-4 overflow-hidden shadow-sm h-100 product-hover-effect">
@@ -234,19 +169,19 @@
                     </div>
                     
                     <!-- Wishlist Button -->
-                    <button class="btn btn-light btn-sm position-absolute top-0 end-0 m-2 z-3 wishlist-btn" 
-                            data-product-id="{{ $product['id'] }}" 
+                    <button class="btn btn-light btn-sm position-absolute top-0 end-0 m-2 z-3 wishlist-btn"
+                            data-product-id="{{ $product['id'] }}"
                             aria-label="Thêm vào danh sách yêu thích">
                         <i class="far fa-heart" aria-hidden="true"></i>
                     </button>
                     
                     <!-- Product Image -->
-                    <div class="product-img-box position-relative w-100" style="aspect-ratio: 1.1/1; background: {{ $product['background'] }};">
-                        <img src="{{ $product['image'] }}" 
-                             class="w-100 h-100 object-fit-cover" 
+                    <div class="product-img-box position-relative w-100" style="aspect-ratio: 1.1/1;">
+                        <img src="{{ asset('storage/' . $product['image']) }}"
+                             class="w-100 h-100 object-fit-cover"
                              alt="{{ $product['name'] }}"
                              loading="lazy">
-                        <button class="btn btn-danger add-to-cart-btn position-absolute start-0 bottom-0 w-100 rounded-0 opacity-0 translate-y-100 transition-all" 
+                        <button class="btn btn-danger add-to-cart-btn position-absolute start-0 bottom-0 w-100 rounded-0 opacity-0 translate-y-100 transition-all"
                                 data-product-id="{{ $product['id'] }}">
                             <i class="fas fa-shopping-cart me-2" aria-hidden="true"></i>Thêm vào giỏ
                         </button>
@@ -255,7 +190,7 @@
                     <!-- Product Info -->
                     <div class="p-3">
                         <h3 class="fw-semibold mb-2 h6">
-                            <a href="" class="text-decoration-none text-dark">
+                            <a href="#" class="text-decoration-none text-dark">
                                 {{ $product['name'] }}
                             </a>
                         </h3>
@@ -263,13 +198,13 @@
                             <span class="text-danger fw-bold h6 mb-0">
                                 {{ number_format($product['price']) }}đ
                             </span>
-                            @if(isset($product['original_price']))
+                            @if(isset($product['original_price']) && $product['original_price'])
                             <span class="text-muted text-decoration-line-through small">
                                 {{ number_format($product['original_price']) }}đ
                             </span>
                             @endif
                         </div>
-                        @if(isset($product['original_price']))
+                        @if(isset($product['original_price']) && $product['original_price'])
                         <div class="text-success small">
                             Tiết kiệm {{ number_format($product['original_price'] - $product['price']) }}đ
                         </div>
@@ -279,8 +214,6 @@
             </div>
             @endforeach
         </div>
-        
-        <!-- Loading State -->
         <div id="products-loading" class="text-center py-4 d-none">
             <div class="spinner-border text-danger" role="status">
                 <span class="visually-hidden">Đang tải...</span>
@@ -288,7 +221,6 @@
         </div>
     </div>
 </section>
-
 
 <!-- Banner Bộ sưu tập mới -->
 <section class="collection-banner my-5" aria-labelledby="collection-banner-title">
@@ -349,20 +281,10 @@
             
 
 <!-- Thương hiệu nổi tiếng -->
-<section class="famous-brands py-5" aria-labelledby="brands-title">
+{{-- <section class="famous-brands py-5" aria-labelledby="brands-title">
     <div class="container">
         <h2 id="brands-title" class="section-title text-center mb-5">Thương hiệu nổi tiếng</h2>
         <div class="row g-4 justify-content-center align-items-center">
-            @php
-            $brands = [
-                ['name' => 'Nike', 'logo' => '/customer/images/brand-nike.png'],
-                ['name' => 'Adidas', 'logo' => '/customer/images/brand-adidas.png'],
-                ['name' => 'Puma', 'logo' => '/customer/images/brand-puma.png'],
-                ['name' => 'Under Armour', 'logo' => '/customer/images/brand-underarmour.png'],
-                ['name' => 'New Balance', 'logo' => '/customer/images/brand-newbalance.png']
-            ];
-            @endphp
-            
             @foreach($brands as $brand)
             <div class="col-6 col-sm-4 col-md-3 col-lg-2">
                 <div class="brand-card bg-white rounded-4 d-flex align-items-center justify-content-center p-4 shadow-sm brand-hover-effect" 
@@ -377,10 +299,10 @@
             @endforeach
         </div>
     </div>
-</section>
+</section> --}}
 
 <!-- Tin tức thể thao -->
-<section class="sports-news py-5 bg-light" aria-labelledby="news-title">
+{{-- <section class="sports-news py-5 bg-light" aria-labelledby="news-title">
     <div class="container">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h2 id="news-title" class="section-title mb-0">Tin tức thể thao</h2>
@@ -389,32 +311,6 @@
             </a>
         </div>
         <div class="row g-4">
-            @php
-            $news = [
-                [
-                    'title' => '5 bài tập cardio hiệu quả tại nhà không cần dụng cụ',
-                    'date' => '15/05/2025',
-                    'image' => '/customer/images/category-shoes.jpg',
-                    'excerpt' => 'Khám phá những bài tập cardio đơn giản nhưng hiệu quả để giữ dáng tại nhà.',
-                    'slug' => '5-bai-tap-cardio-hieu-qua-tai-nha'
-                ],
-                [
-                    'title' => 'Cách chọn giày chạy bộ phù hợp với dáng bàn chân',
-                    'date' => '10/05/2025',
-                    'image' => '/customer/images/category-gym.jpg',
-                    'excerpt' => 'Hướng dẫn chi tiết cách lựa chọn giày chạy bộ phù hợp với từng loại bàn chân.',
-                    'slug' => 'cach-chon-giay-chay-bo-phu-hop'
-                ],
-                [
-                    'title' => 'Chế độ dinh dưỡng cho người tập gym tăng cơ giảm mỡ',
-                    'date' => '05/05/2025',
-                    'image' => '/customer/images/category-accessories.jpg',
-                    'excerpt' => 'Menu dinh dưỡng khoa học giúp tối ưu hóa quá trình tập luyện và phục hồi.',
-                    'slug' => 'che-do-dinh-duong-tap-gym'
-                ]
-            ];
-            @endphp
-            
             @foreach($news as $article)
             <div class="col-12 col-md-4">
                 <article class="news-card bg-white rounded-4 overflow-hidden h-100 shadow-sm news-hover-effect">
@@ -447,7 +343,7 @@
             @endforeach
         </div>
     </div>
-</section>
+</section> --}}
 
 <!-- Đăng ký nhận tin -->
 <section class="newsletter-section py-5" style="background: linear-gradient(135deg, #e53935 0%, #c62828 100%);">

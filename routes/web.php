@@ -7,9 +7,10 @@ use App\Http\Controllers\CustomerLoginController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\ProductVariantController;
 use App\Http\Controllers\Admin\ProductVariantImageController;
+use App\Http\Controllers\Customer\HomeController;
 
 // Trang chủ cho khách hàng (không cần login)
-Route::get('/', fn() => view('customer.home'))->name('customer.home');
+Route::get('/', [HomeController::class, 'index'])->name('customer.home');
 
 // -------- ADMIN ----------//
 Route::get('/admin', [AdminLoginController::class, 'showLoginForm'])->name('admin.login');
