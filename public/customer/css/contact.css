@@ -1,0 +1,16 @@
+.contact-info-card {
+    transition: transform 0.3s ease;
+}
+.contact-info-card:hover {
+    transform: translateY(-5px);
+}
+.contact-icon {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(229, 57, 53, 0.1);
+    border-radius: 50%;
+}

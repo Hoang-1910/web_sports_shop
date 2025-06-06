@@ -66,6 +66,18 @@ Route::get('/register', function () {
     return view('customer.register');
 })->name('customer.register');
 
+Route::get('/promotions', function () {
+    return view('customer.promotions');
+})->name('customer.promotions');
+
+Route::get('/contact', function () {
+    return view('customer.contact');
+})->name('customer.contact');
+
+Route::get('/promotion-detail', function () {
+    return view('customer.promotion-detail');
+})->name('customer.promotion-detail');
+
 // Route::post('/register', [CustomerLoginController::class, 'register'])->name('customer.register.submit');
 
 
