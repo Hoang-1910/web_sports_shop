@@ -60,7 +60,7 @@
                             </a>
                         </li>
                         <li class="mb-2">
-                            <a href="{{ route('orders') }}" class="footer-link d-flex align-items-center">
+                            <a href="#" class="footer-link d-flex align-items-center">
                                 <i class="fas fa-bag-shopping me-2 text-danger"></i>
                                 Đơn hàng
                             </a>

@@ -10,7 +10,8 @@
             <!-- Logo -->
             <a class="navbar-brand d-flex align-items-center me-4" href="#">
                 <div class="logo-container d-flex align-items-center justify-content-center">
-                    <img src="{{ asset('customer/images/logo.jpg') }}" alt="SportShop Logo" class="logo-img" loading="lazy" onerror="this.classList.add('d-none'); this.nextElementSibling.classList.remove('d-none')">
+                    <img src="{{ asset('customer/images/logo.jpg') }}" alt="SportShop Logo" class="logo-img" loading="lazy"
+                         onerror="this.classList.add('d-none'); this.nextElementSibling.classList.remove('d-none')">
                     <div class="logo-placeholder d-none align-items-center justify-content-center bg-danger rounded-circle">
                         <i class="bi bi-shop text-white fs-3"></i>
                     </div>
@@ -18,42 +19,40 @@
                 <span class="brand-text ms-2 fw-bold text-dark d-none d-md-inline">SportShop</span>
             </a>
 
-            <!-- Mobile Search Toggle -->
-            <button class="btn btn-outline-danger d-lg-none me-2 search-toggle" type="button" onclick="toggleMobileSearch()" aria-label="Search">
-                <i class="bi bi-search" id="search-icon"></i>
-                <i class="bi bi-x-lg d-none" id="close-search-icon"></i>
-            </button>
-
             <!-- Mobile Menu Toggle -->
-            <button class="navbar-toggler border-0 p-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileMenu" aria-controls="mobileMenu" aria-label="Toggle navigation">
+            <button class="navbar-toggler border-0 p-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileMenu"
+                    aria-controls="mobileMenu" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
 
-            <!-- Desktop Navigation -->
-            <div class="collapse navbar-collapse" id="navbarContent">
-                <!-- Main Navigation Links -->
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <!-- Navbar content -->
+            <div class="collapse navbar-collapse d-none d-lg-flex align-items-center" id="navbarContent" style="min-width: 0;">
+                <!-- Main Navigation -->
+                <ul class="navbar-nav flex-grow-1 justify-content-center">
                     <li class="nav-item">
                         <a class="nav-link fw-medium" href="#">Trang chủ</a>
                     </li>
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle fw-medium" href="#" id="productsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <a class="nav-link dropdown-toggle fw-medium" href="#" id="productsDropdown" role="button"
+                           data-bs-toggle="dropdown" aria-expanded="false">
                             Sản phẩm
                         </a>
                         <ul class="dropdown-menu shadow border-0" aria-labelledby="productsDropdown">
                             <li><a class="dropdown-item" href="#">Tất cả sản phẩm</a></li>
                             <li><hr class="dropdown-divider"></li>
-                            @foreach([
-                                ['name' => 'Giày thể thao', 'slug' => 'giay-the-thao'],
-                                ['name' => 'Quần áo thể thao', 'slug' => 'quan-ao-the-thao'],
-                                ['name' => 'Phụ kiện', 'slug' => 'phu-kien']
-                            ] as $category)
-                                <li><a class="dropdown-item" href="#</a></li>
+                            @foreach($categories as $category)
+                                <li>
+                                    <a class="dropdown-item" href="#">
+                                        {{ $category->name }}
+                                    </a>
+                                </li>
                             @endforeach
                         </ul>
+                        
                     </li>
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle fw-medium" href="#" id="brandsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <a class="nav-link dropdown-toggle fw-medium" href="#" id="brandsDropdown" role="button"
+                           data-bs-toggle="dropdown" aria-expanded="false">
                             Thương hiệu
                         </a>
                         <ul class="dropdown-menu shadow border-0" aria-labelledby="brandsDropdown">
@@ -69,103 +68,43 @@
                         </ul>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link fw-medium {{ request()->routeIs('promotions') ? 'active' : '' }}" href="#">Khuyến mãi</a>
+                        <a class="nav-link fw-medium" href="#">Khuyến mãi</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link fw-medium {{ request()->routeIs('blog') ? 'active' : '' }}" href="#">Blog</a>
+                        <a class="nav-link fw-medium" href="#">Blog</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link fw-medium {{ request()->routeIs('contact') ? 'active' : '' }}" href="#">Liên hệ</a>
+                        <a class="nav-link fw-medium" href="#">Liên hệ</a>
                     </li>
                 </ul>
 
-                <!-- Desktop Search Bar -->
-                <div class="d-none d-lg-flex me-4 flex-grow-1 justify-content-center">
-                    <form class="search-form position-relative w-50" role="search" action="#" method="GET">
-                        <input class="form-control search-input rounded-pill" type="search" name="q" placeholder="Tìm kiếm sản phẩm..." value="{{ request('q') }}" aria-label="Search products">
+                <!-- Search form + Action icons (right) -->
+                <div class="d-none d-lg-flex align-items-center gap-3 ms-auto">
+                    <form class="search-form position-relative" style="min-width:180px;max-width:260px;" role="search" action="#" method="GET">
+                        <input class="form-control search-input rounded-pill" type="search" name="q" placeholder="Tìm kiếm sản phẩm..."
+                               value="{{ request('q') }}" aria-label="Search products">
                         <button class="search-btn position-absolute end-0 top-50 translate-middle-y me-2 border-0 bg-transparent" type="submit">
                             <i class="bi bi-search"></i>
                         </button>
                     </form>
-                </div>
-
-                <!-- Desktop Action Icons -->
-                <div class="d-none d-lg-flex align-items-center gap-3">
-                    {{-- @auth --}}
-                        <div class="dropdown">
-                            <a class="nav-icon-link dropdown-toggle d-flex align-items-center gap-2" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                <div class="user-avatar">
-                                    <img src="{{ asset('customer/images/avatar.jpg') }}" alt="Avatar" class="rounded-circle" width="32" height="32">
-                                </div>
-                                <span class="user-name">{{-- Auth::user()->name --}}</span>
-                            </a>
-                            <ul class="dropdown-menu dropdown-menu-end shadow border-0" aria-labelledby="userDropdown">
-                                <li><a class="dropdown-item" href="#">Tài khoản</a></li>
-                                <li><a class="dropdown-item" href="#">Đơn hàng</a></li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li>
-                                    <form action="#" method="POST">
-                                        @csrf
-                                        <button type="submit" class="dropdown-item d-flex align-items-center gap-2 text-danger">
-                                            <i class="bi bi-box-arrow-right"></i>
-                                            <span>Đăng xuất</span>
-                                        </button>
-                                    </form>
-                                </li>
-                            </ul>
-                        </div>
-                    @else
-                        <a href="#" class="nav-icon-link" title="Đăng nhập" aria-label="Login">
-                            <i class="bi bi-person fs-4"></i>
-                        </a>
-                    @endauth --}}
-
                     <a href="#" class="nav-icon-link position-relative" title="Yêu thích" aria-label="Wishlist">
                         <i class="bi bi-heart fs-4"></i>
                         <span class="nav-badge badge bg-danger rounded-pill position-absolute top-0 start-100 translate-middle">3</span>
                     </a>
-
                     <a href="#" class="nav-icon-link position-relative" title="Giỏ hàng" aria-label="Cart">
                         <i class="bi bi-cart fs-4"></i>
                         <span class="nav-badge badge bg-danger rounded-pill position-absolute top-0 start-100 translate-middle">2</span>
                     </a>
+                    <!-- Avatar/user -->
+                    <div class="dropdown">
+                        <a class="nav-icon-link dropdown-toggle d-flex align-items-center gap-2" href="#" id="userDropdown" data-bs-toggle="dropdown">
+                            <img src="{{ asset('customer/images/avatar.jpg') }}" alt="Avatar" class="rounded-circle" width="32" height="32">
+                        </a>
+                        <!-- Dropdown menu here -->
+                    </div>
                 </div>
             </div>
         </nav>
-
-        <!-- Mobile Search Bar -->
-        <div class="mobile-search-overlay d-none" id="mobileSearchOverlay">
-            <div class="mobile-search-content">
-                <!-- Close button inside the modal -->
-                <div class="d-flex justify-content-end mb-2">
-                    <button type="button" class="btn btn-sm btn-outline-secondary" onclick="toggleMobileSearch()" aria-label="Close search">
-                        <i class="bi bi-x-lg"></i>
-                    </button>
-                </div>
-                
-                <form class="search-form-mobile" role="search" action="#" method="GET">
-                    <div class="mobile-search-group">
-                        <input class="form-control mobile-search-input" type="search" name="q" placeholder="Tìm kiếm sản phẩm..." value="{{ request('q') }}" aria-label="Search products" autofocus>
-                        <button class="btn btn-danger mobile-search-btn" type="submit">
-                            <i class="bi bi-search"></i>
-                        </button>
-                    </div>
-                </form>
-                
-                <!-- Quick Search Suggestions -->
-                <div class="mobile-search-suggestions mt-3">
-                    <div class="mb-2">
-                        <small class="text-muted fw-bold">Tìm kiếm phổ biến:</small>
-                    </div>
-                    <div class="d-flex flex-wrap gap-2">
-                        <span class="badge bg-light text-dark border search-suggestion" onclick="searchSuggestion('giày nike')">Giày Nike</span>
-                        <span class="badge bg-light text-dark border search-suggestion" onclick="searchSuggestion('áo adidas')">Áo Adidas</span>
-                        <span class="badge bg-light text-dark border search-suggestion" onclick="searchSuggestion('phụ kiện')">Phụ kiện</span>
-                        <span class="badge bg-light text-dark border search-suggestion" onclick="searchSuggestion('giày thể thao')">Giày thể thao</span>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
 </header>
 
