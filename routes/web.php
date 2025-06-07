@@ -8,6 +8,8 @@ use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\ProductVariantController;
 use App\Http\Controllers\Admin\ProductVariantImageController;
 use App\Http\Controllers\Customer\HomeController;
+use App\Http\Controllers\Customer\WishlistController;
+use App\Http\Controllers\Customer\CustomerRegisterController;
 
 // Trang chủ cho khách hàng (không cần login)
 Route::get('/', [HomeController::class, 'index'])->name('customer.home');
@@ -59,53 +61,23 @@ Route::middleware(['auth', 'is_admin'])->prefix('admin')->group(function () {
 Route::get('/login', [CustomerLoginController::class, 'showLoginForm'])->name('customer.login');
 Route::post('/login', [CustomerLoginController::class, 'login'])->name('customer.login.submit');
 Route::post('/logout', [CustomerLoginController::class, 'logout'])->name('customer.logout');
+Route::get('/register', [CustomerRegisterController::class, 'showRegisterForm'])->name('customer.register');
+Route::post('/register', [CustomerRegisterController::class, 'register'])->name('customer.register.submit');
 
+Route::middleware(['auth', 'role:customer'])->group(function () {
+    // Customer Profile
+    Route::get('/profile', function () {
+        return view('customer.profile');
+    })->name('customer.profile');
 
-// Test front end
-Route::get('/register', function () {
-    return view('customer.register');
-})->name('customer.register');
+    // Customer Orders
+    Route::get('/orders', function () {
+        return view('customer.orders');
+    })->name('customer.orders');
 
-Route::get('/promotions', function () {
-    return view('customer.promotions');
-})->name('customer.promotions');
+    // Customer Wishlist
+    Route::get('/wishlist', [WishlistController::class, 'index'])->name('customer.wishlist.index');
+    Route::post('/wishlist/add', [WishlistController::class, 'add'])->name('customer.wishlist.add');
+    Route::post('/wishlist/remove', [WishlistController::class, 'remove'])->name('customer.wishlist.remove');
+});
 
-Route::get('/contact', function () {
-    return view('customer.contact');
-})->name('customer.contact');
-
-Route::get('/promotion-detail', function () {
-    return view('customer.promotion-detail');
-})->name('customer.promotion-detail');
-
-// Route::post('/register', [CustomerLoginController::class, 'register'])->name('customer.register.submit');
-
-
-// //Trang chủ
-// Route::get('/', function () {
-//     return view('customer.home');
-// })->name('home');
-
-// // Sản phẩm
-// Route::get('/products', [ProductController::class, 'index'])->name('products.index');
-
-// // Giỏ hàng
-// Route::get('/cart', function () {
-//     return view('customer.cart');
-// })->name('cart');
-
-// Route::get('/products/category/{slug}', [ProductController::class, 'category'])->name('products.category');
-// Route::get('/products/brand/{slug}', [ProductController::class, 'brand'])->name('products.brand');
-// Route::get('/products/search', [ProductController::class, 'search'])->name('products.search');
-// Route::get('/wishlist', [WishlistController::class, 'index'])->name('wishlist');
-// Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
-// Route::get('/orders', [OrderController::class, 'index'])->name('orders');
-// Route::get('/promotions', [PromotionController::class, 'index'])->name('promotions');
-// Route::get('/blog', [BlogController::class, 'index'])->name('blog');
-// Route::get('/contact', [ContactController::class, 'index'])->name('contact');
-// Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-//Route::get('/login', [AuthController::class, 'login'])->name('login');
-//Route::get('/register', [AuthController::class, 'register'])->name('register');
-// Route::get('/brands', function () {
-//     return view('customer.test-layout');
-// })->name('brands.index'); // Added brands.index route
