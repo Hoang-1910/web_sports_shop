@@ -1,0 +1,53 @@
+.brand-hero {
+    background-size: cover;
+    background-position: center;
+}
+
+.product-card {
+    transition: transform 0.3s ease;
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0.5rem 1rem rgba(229, 57, 53, 0.15) !important;
+}
+
+.product-title {
+    font-size: 1rem;
+    line-height: 1.4;
+    height: 2.8em;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+
+.form-check-input:checked {
+    background-color: #e53935;
+    border-color: #e53935;
+}
+
+.form-select:focus {
+    border-color: #e53935;
+    box-shadow: 0 0 0 0.25rem rgba(229, 57, 53, 0.25);
+}
+
+.btn-outline-danger:hover {
+    background-color: #e53935;
+    border-color: #e53935;
+    color: white;
+}
+
+.pagination .page-link {
+    color: #e53935;
+}
+
+.pagination .page-link:hover {
+    color: #c62828;
+    background-color: #fff5f5;
+}
+
+.pagination .page-item.active .page-link {
+    background-color: #e53935;
+    border-color: #e53935;
+}

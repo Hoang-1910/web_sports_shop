@@ -64,6 +64,17 @@ Route::post('/logout', [CustomerLoginController::class, 'logout'])->name('custom
 Route::get('/register', [CustomerRegisterController::class, 'showRegisterForm'])->name('customer.register');
 Route::post('/register', [CustomerRegisterController::class, 'register'])->name('customer.register.submit');
 
+// Test front end
+Route::get('/brands', function () {
+    return view('customer.brands');
+})->name('customer.brands');
+
+Route::get('/brands/{slug}', function ($slug) {
+    return view('customer.brands.show', ['slug' => $slug]);
+})->name('customer.brands.show');
+
+
+
 Route::middleware(['auth', 'role:customer'])->group(function () {
     // Customer Profile
     Route::get('/profile', function () {
