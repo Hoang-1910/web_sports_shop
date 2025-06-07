@@ -1,4 +1,3 @@
-<!-- Navigation Bar -->
 @prepend('styles')
     <link href="{{ asset('customer/css/navbar.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
@@ -8,7 +7,7 @@
     <div class="container-fluid px-3 px-lg-5">
         <nav class="navbar navbar-expand-lg navbar-light p-0">
             <!-- Logo -->
-            <a class="navbar-brand d-flex align-items-center me-4" href="#">
+            <a class="navbar-brand d-flex align-items-center me-4" href="{{ route('customer.home') }}">
                 <div class="logo-container d-flex align-items-center justify-content-center">
                     <img src="{{ asset('customer/images/logo.jpg') }}" alt="SportShop Logo" class="logo-img" loading="lazy"
                          onerror="this.classList.add('d-none'); this.nextElementSibling.classList.remove('d-none')">
@@ -48,7 +47,6 @@
                                 </li>
                             @endforeach
                         </ul>
-                        
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle fw-medium" href="#" id="brandsDropdown" role="button"
@@ -95,13 +93,43 @@
                         <i class="bi bi-cart fs-4"></i>
                         <span class="nav-badge badge bg-danger rounded-pill position-absolute top-0 start-100 translate-middle">2</span>
                     </a>
-                    <!-- Avatar/user -->
-                    <div class="dropdown">
-                        <a class="nav-icon-link dropdown-toggle d-flex align-items-center gap-2" href="#" id="userDropdown" data-bs-toggle="dropdown">
-                            <img src="{{ asset('customer/images/avatar.jpg') }}" alt="Avatar" class="rounded-circle" width="32" height="32">
-                        </a>
-                        <!-- Dropdown menu here -->
-                    </div>
+
+                    {{-- User section --}}
+                    @if(Auth::check())
+                        <div class="dropdown">
+                            <a class="nav-icon-link dropdown-toggle d-flex align-items-center gap-2" href="#" id="userDropdown" data-bs-toggle="dropdown">
+                                <img src="{{ asset('customer/images/avatar.jpg') }}" alt="Avatar" class="rounded-circle" width="32" height="32">
+                                <span class="user-name fw-semibold">{{ Auth::user()->name }}</span>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end shadow border-0 rounded-3" aria-labelledby="userDropdown">
+                                <li>
+                                    <a class="dropdown-item d-flex align-items-center gap-2" href="#">
+                                        <i class="bi bi-person"></i>
+                                        Tài khoản của tôi
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item d-flex align-items-center gap-2" href="#">
+                                        <i class="bi bi-bag"></i>
+                                        Đơn hàng
+                                    </a>
+                                </li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <form action="{{ route('customer.logout') }}" method="POST">
+                                        @csrf
+                                        <button type="submit" class="dropdown-item d-flex align-items-center gap-2 text-danger">
+                                            <i class="bi bi-box-arrow-right"></i>
+                                            Đăng xuất
+                                        </button>
+                                    </form>
+                                </li>
+                            </ul>
+                        </div>
+                    @else
+                        <a href="{{ route('customer.login') }}" class="btn btn-outline-danger me-2">Đăng nhập</a>
+                        <a href="{{ route('customer.register') }}" class="btn btn-danger">Đăng ký</a>
+                    @endif
                 </div>
             </div>
         </nav>
@@ -117,22 +145,22 @@
     <div class="offcanvas-body p-0">
         <!-- Mobile User Section -->
         <div class="mobile-user-section p-3 bg-light border-bottom">
-            @auth
+            @if(Auth::check())
                 <div class="d-flex align-items-center">
                     <div class="user-avatar me-3">
                         <i class="bi bi-person-circle fs-2 text-danger"></i>
                     </div>
                     <div>
-                        <h6 class="mb-1 text-truncate" style="max-width: 200px;">Khách Demo</h6>
-                        <small class="text-muted text-truncate" style="max-width: 200px;">demo@example.com</small>
+                        <h6 class="mb-1 text-truncate" style="max-width: 200px;">{{ Auth::user()->name }}</h6>
+                        <small class="text-muted text-truncate" style="max-width: 200px;">{{ Auth::user()->email }}</small>
                     </div>
                 </div>
             @else
                 <div class="d-grid gap-2">
-                    <a href="#" class="btn btn-danger">Đăng nhập</a>
-                    <a href="#" class="btn btn-outline-danger">Đăng ký</a>
+                    <a href="{{ route('customer.login') }}" class="btn btn-danger">Đăng nhập</a>
+                    <a href="{{ route('customer.register') }}" class="btn btn-outline-danger">Đăng ký</a>
                 </div>
-            @endauth
+            @endif
         </div>
 
         <!-- Mobile Navigation Links -->
@@ -148,12 +176,8 @@
                 </div>
                 <div class="collapse" id="mobileProducts">
                     <a href="#" class="mobile-nav-sublink">Tất cả sản phẩm</a>
-                    @foreach([
-                        ['name' => 'Giày thể thao', 'slug' => 'giay-the-thao'],
-                        ['name' => 'Quần áo thể thao', 'slug' => 'quan-ao-the-thao'],
-                        ['name' => 'Phụ kiện', 'slug' => 'phu-kien']
-                    ] as $category)
-                        <a href="#" class="mobile-nav-sublink">{{ $category['name'] }}</a>
+                    @foreach($categories as $category)
+                        <a href="#" class="mobile-nav-sublink">{{ $category->name }}</a>
                     @endforeach
                 </div>
             </div>
@@ -204,7 +228,7 @@
                     </a>
                 </div>
                 <div class="col-4">
-                    @auth
+                    @if(Auth::check())
                         <a href="#" class="btn btn-outline-danger w-100 d-flex flex-column align-items-center">
                             <i class="bi bi-bag fs-5"></i>
                             <small>Đơn hàng</small>
@@ -214,7 +238,7 @@
                             <i class="bi bi-person fs-5"></i>
                             <small>Tài khoản</small>
                         </a>
-                    @endauth
+                    @endif
                 </div>
             </div>
         </div>
