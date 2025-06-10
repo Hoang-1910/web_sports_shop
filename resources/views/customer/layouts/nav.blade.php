@@ -29,7 +29,7 @@
                 <!-- Main Navigation -->
                 <ul class="navbar-nav flex-grow-1 justify-content-center">
                     <li class="nav-item">
-                        <a class="nav-link fw-medium" href="#">Trang chủ</a>
+                        <a class="nav-link fw-medium" href="{{ route('customer.home') }}">Trang chủ</a>
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle fw-medium" href="#" id="productsDropdown" role="button"
@@ -37,7 +37,7 @@
                             Sản phẩm
                         </a>
                         <ul class="dropdown-menu shadow border-0" aria-labelledby="productsDropdown">
-                            <li><a class="dropdown-item" href="#">Tất cả sản phẩm</a></li>
+                            <li><a class="dropdown-item" href="{{ route('customer.products.index') }}">Tất cả sản phẩm</a></li>
                             <li><hr class="dropdown-divider"></li>
                             @foreach($categories as $category)
                                 <li>

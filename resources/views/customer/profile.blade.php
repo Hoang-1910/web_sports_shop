@@ -6,7 +6,7 @@
 <nav aria-label="breadcrumb" class="bg-light py-3 mb-4">
     <div class="container">
         <ol class="breadcrumb mb-0">
-            <li class="breadcrumb-item"><a href="{{ route('home') }}">Trang chủ</a></li>
+            <li class="breadcrumb-item"><a href="{{ route('customer.home') }}">Trang chủ</a></li>
             <li class="breadcrumb-item active" aria-current="page">Tài khoản cá nhân</li>
         </ol>
     </div>

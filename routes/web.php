@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\ProductVariantImageController;
 use App\Http\Controllers\Customer\HomeController;
 use App\Http\Controllers\Customer\WishlistController;
 use App\Http\Controllers\Customer\CustomerRegisterController;
+use App\Http\Controllers\Customer\ProductController as CustomerProductController;
 
 // Trang chủ cho khách hàng (không cần login)
 Route::get('/', [HomeController::class, 'index'])->name('customer.home');
@@ -63,7 +64,8 @@ Route::post('/login', [CustomerLoginController::class, 'login'])->name('customer
 Route::post('/logout', [CustomerLoginController::class, 'logout'])->name('customer.logout');
 Route::get('/register', [CustomerRegisterController::class, 'showRegisterForm'])->name('customer.register');
 Route::post('/register', [CustomerRegisterController::class, 'register'])->name('customer.register.submit');
-
+Route::get('/products', [CustomerProductController::class, 'index'])->name('customer.products.index');
+Route::get('/products/{id}', [CustomerProductController::class, 'show'])->name('customer.products.show');
 Route::middleware(['auth', 'role:customer'])->group(function () {
     // Customer Profile
     Route::get('/profile', function () {
@@ -80,4 +82,3 @@ Route::middleware(['auth', 'role:customer'])->group(function () {
     Route::post('/wishlist/add', [WishlistController::class, 'add'])->name('customer.wishlist.add');
     Route::post('/wishlist/remove', [WishlistController::class, 'remove'])->name('customer.wishlist.remove');
 });
-

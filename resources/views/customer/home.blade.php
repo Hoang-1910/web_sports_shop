@@ -73,7 +73,7 @@
             
             <!-- CTA Buttons -->
             <div class="hero-buttons d-flex flex-column flex-sm-row justify-content-center gap-4 animate-fade-in-delay-3">
-                <a href="#" class="btn btn-danger btn-lg px-5 py-3 fw-semibold hero-btn-primary" 
+                <a href="#Products" class="btn btn-danger btn-lg px-5 py-3 fw-semibold hero-btn-primary" 
                    aria-label="Mua sản phẩm ngay">
                     <i class="fas fa-shopping-cart me-2" aria-hidden="true"></i>
                     Mua ngay
@@ -147,7 +147,7 @@
 
 
 <!-- Sản phẩm nổi bật -->
-<section class="featured-products py-5 bg-light" aria-labelledby="featured-products-title">
+<section class="featured-products py-5 bg-light" aria-labelledby="featured-products-title" id="Products">
     <div class="container">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h2 id="featured-products-title" class="section-title mb-0">Sản phẩm nổi bật</h2>
@@ -190,7 +190,7 @@
                     <!-- Product Info -->
                     <div class="p-3">
                         <h3 class="fw-semibold mb-2 h6">
-                            <a href="#" class="text-decoration-none text-dark">
+                            <a href="{{ route('customer.products.show', $product['id']) }}" class="text-decoration-none text-dark">
                                 {{ $product['name'] }}
                             </a>
                         </h3>
