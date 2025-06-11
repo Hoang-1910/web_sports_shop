@@ -7,7 +7,7 @@
 <nav aria-label="breadcrumb" class="bg-light py-3">
     <div class="container">
         <ol class="breadcrumb mb-0">
-            <li class="breadcrumb-item"><a href="{{ route('home') }}" class="text-decoration-none">Trang chủ</a></li>
+            <li class="breadcrumb-item"><a href="{{ route('customer.home') }}" class="text-decoration-none">Trang chủ</a></li>
             <li class="breadcrumb-item active" aria-current="page">Giỏ hàng</li>
         </ol>
     </div>
@@ -42,29 +42,6 @@
 
                     <!-- Cart Items List -->
                     <div class="cart-items-list">
-                        @php
-                        $cartItems = [
-                            [
-                                'id' => 1,
-                                'name' => 'Nike Air Zoom Pegasus 38',
-                                'image' => '/customer/images/product1.jpg',
-                                'price' => 2450000,
-                                'quantity' => 1,
-                                'size' => '42',
-                                'color' => 'Đen'
-                            ],
-                            [
-                                'id' => 2,
-                                'name' => 'Adidas Ultraboost 21',
-                                'image' => '/customer/images/product2.jpg',
-                                'price' => 3200000,
-                                'quantity' => 2,
-                                'size' => '41',
-                                'color' => 'Trắng'
-                            ]
-                        ];
-                        @endphp
-
                         @foreach($cartItems as $item)
                         <div class="cart-item p-4 border-bottom">
                             <div class="row align-items-center">
@@ -72,29 +49,32 @@
                                 <div class="col-6">
                                     <div class="d-flex align-items-center">
                                         <div class="cart-item-img me-3" style="width: 80px; height: 80px;">
-                                            <img src="{{ $item['image'] }}" 
+                                            <img src="{{ asset('storage/' . $item->product->image) }}" 
                                                  class="w-100 h-100 object-fit-cover rounded-3" 
-                                                 alt="{{ $item['name'] }}">
+                                                 alt="{{ $item->product->name }}">
                                         </div>
                                         <div class="cart-item-info">
                                             <h6 class="fw-semibold mb-1">
-                                                <a href="#" class="text-decoration-none text-dark">{{ $item['name'] }}</a>
+                                                <a href="#" class="text-decoration-none text-dark">{{ $item->product->name }}</a>
                                             </h6>
                                             <div class="text-muted small">
-                                                Size: {{ $item['size'] }} | Màu: {{ $item['color'] }}
+                                                Size: {{ $item->variant->size ?? '' }} | Màu: {{ $item->variant->color ?? '' }}
                                             </div>
-                                            <button class="btn btn-link text-danger p-0 mt-2 remove-item" 
-                                                    data-product-id="{{ $item['id'] }}">
-                                                <i class="fas fa-trash-alt me-1"></i>Xóa
-                                            </button>
+                                            <form action="{{ route('customer.cart.remove') }}" method="POST" class="d-inline remove-cart-form">
+                                                @csrf
+                                                <input type="hidden" name="cart_id" value="{{ $item->id }}">
+                                                <button type="submit" class="btn btn-link text-danger p-0 mt-2 remove-item">
+                                                    <i class="fas fa-trash-alt me-1"></i>Xóa
+                                                </button>
+                                            </form>
                                         </div>
                                     </div>
                                 </div>
 
                                 <!-- Price -->
                                 <div class="col-2 text-center">
-                                    <div class="text-danger fw-bold">
-                                        {{ number_format($item['price']) }}đ
+                                    <div class="text-danger fw-bold item-price" data-price="{{ $item->product->price }}">
+                                        {{ number_format($item->product->price) }}đ
                                     </div>
                                 </div>
 
@@ -107,10 +87,8 @@
                                         </button>
                                         <input type="number" 
                                                class="form-control form-control-sm text-center mx-2" 
-                                               value="{{ $item['quantity'] }}" 
-                                               min="1" 
-                                               max="10"
-                                               style="width: 60px;">
+                                               value="{{ $item->quantity }}"
+                                               style="width: 60px; text-align: center;" >
                                         <button class="btn btn-outline-secondary btn-sm quantity-btn" 
                                                 data-action="increase">
                                             <i class="fas fa-plus"></i>
@@ -120,8 +98,8 @@
 
                                 <!-- Total -->
                                 <div class="col-2 text-center">
-                                    <div class="text-danger fw-bold">
-                                        {{ number_format($item['price'] * $item['quantity']) }}đ
+                                    <div class="text-danger fw-bold item-total">
+                                        {{ number_format($item->product->price * $item->quantity) }}đ
                                     </div>
                                 </div>
                             </div>
@@ -138,7 +116,7 @@
                                 </button>
                             </div>
                             <div>
-                                <a href="{{ route('products.index') }}" class="btn btn-outline-secondary">
+                                <a href="{{ route('customer.products.index') }}" class="btn btn-outline-secondary">
                                     <i class="fas fa-arrow-left me-2"></i>Tiếp tục mua sắm
                                 </a>
                             </div>
@@ -156,7 +134,7 @@
                     <div class="summary-details mb-4">
                         <div class="d-flex justify-content-between mb-2">
                             <span class="text-muted">Tạm tính:</span>
-                            <span class="fw-semibold">8.900.000đ</span>
+                            <span class="fw-semibold">{{ number_format($cartItems->sum(fn($item) => $item->product->price * $item->quantity)) }}đ</span>
                         </div>
                         <div class="d-flex justify-content-between mb-2">
                             <span class="text-muted">Phí vận chuyển:</span>
@@ -164,24 +142,24 @@
                         </div>
                         <div class="d-flex justify-content-between mb-2">
                             <span class="text-muted">Giảm giá:</span>
-                            <span class="text-danger">-500.000đ</span>
+                            <span class="text-danger"></span>
                         </div>
                         <hr>
                         <div class="d-flex justify-content-between">
                             <span class="fw-bold">Tổng cộng:</span>
-                            <span class="text-danger fw-bold fs-5">8.430.000đ</span>
+                            <span class="text-danger fw-bold fs-5">{{ number_format($cartItems->sum(fn($item) => $item->product->price * $item->quantity) + 30000) }}đ</span>
                         </div>
                     </div>
 
                     <!-- Coupon Code -->
-                    <div class="coupon-code mb-4">
+                    {{-- <div class="coupon-code mb-4">
                         <div class="input-group">
                             <input type="text" 
                                    class="form-control" 
                                    placeholder="Nhập mã giảm giá">
                             <button class="btn btn-outline-danger">Áp dụng</button>
                         </div>
-                    </div>
+                    </div> --}}
 
                     <!-- Checkout Button -->
                     <button class="btn btn-danger w-100 py-3 fw-semibold">
@@ -211,9 +189,41 @@
 @endsection
 
 @push('styles')
+<style>
+    input[type="number"]::-webkit-outer-spin-button,
+    input[type="number"]::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
 
+    input[type="number"] {
+        -moz-appearance: textfield;
+    }
+</style>
 <link href="{{ asset('customer/css/cart.css') }}" rel="stylesheet">
 @endpush
 @push('scripts')
 <script src="{{ asset('customer/js/cart.js') }}"></script>
-@endpush 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('.remove-cart-form').forEach(function(form) {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            Swal.fire({
+                title: 'Bạn có chắc muốn xóa sản phẩm này khỏi giỏ hàng?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Xóa',
+                cancelButtonText: 'Hủy',
+                confirmButtonColor: '#d33'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit();
+                }
+            });
+        });
+    });
+});
+</script>
+@endpush

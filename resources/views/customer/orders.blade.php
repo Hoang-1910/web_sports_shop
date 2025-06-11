@@ -6,7 +6,7 @@
 <nav aria-label="breadcrumb" class="bg-light py-3 mb-4">
     <div class="container">
         <ol class="breadcrumb mb-0">
-            <li class="breadcrumb-item"><a href="{{ route('home') }}">Trang chủ</a></li>
+            <li class="breadcrumb-item"><a href="{{ route('customer.home') }}">Trang chủ</a></li>
             <li class="breadcrumb-item active" aria-current="page">Đơn hàng của tôi</li>
         </ol>
     </div>
@@ -64,7 +64,7 @@
                                     </td>
                                     <td class="text-danger fw-bold">{{ number_format($order['total']) }}đ</td>
                                     <td>
-                                        <a href="{{ route('orders.detail', ['code' => $order['code']]) }}" class="btn btn-sm btn-outline-danger px-3"><i class="bi bi-eye"></i> Xem</a>
+                                        <a href="#" class="btn btn-sm btn-outline-danger px-3"><i class="bi bi-eye"></i> Xem</a>
                                     </td>
                                 </tr>
                                 @endforeach
@@ -72,7 +72,7 @@
                         </table>
                     </div>
                     <div class="mt-4 text-center">
-                        <a href="{{ route('products.index') }}" class="btn btn-danger px-4"><i class="bi bi-shop me-2"></i>Tiếp tục mua sắm</a>
+                        <a href="{{ route('customer.products.index') }}" class="btn btn-danger px-4"><i class="bi bi-shop me-2"></i>Tiếp tục mua sắm</a>
                     </div>
                 </div>
             </div>

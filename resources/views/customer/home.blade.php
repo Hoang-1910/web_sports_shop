@@ -151,7 +151,7 @@
     <div class="container">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h2 id="featured-products-title" class="section-title mb-0">Sản phẩm nổi bật</h2>
-            <a href="#" class="text-danger text-decoration-none">
+            <a href="{{ route('customer.products.index') }}" class="text-danger text-decoration-none">
                 Xem tất cả <i class="fas fa-arrow-right ms-1" aria-hidden="true"></i>
             </a>
         </div>
@@ -169,11 +169,22 @@
                     </div>
                     
                     <!-- Wishlist Button -->
-                    <button class="btn btn-light btn-sm position-absolute top-0 end-0 m-2 z-3 wishlist-btn"
-                            data-product-id="{{ $product['id'] }}"
-                            aria-label="Thêm vào danh sách yêu thích">
-                        <i class="far fa-heart" aria-hidden="true"></i>
-                    </button>
+                    @php
+                        $isFavorite = in_array($product['id'], $wishlistProductIds ?? []);
+                    @endphp
+
+                    <form method="POST" action="{{ route($isFavorite ? 'customer.wishlist.remove' : 'customer.wishlist.add') }}" class="d-inline">
+                        @csrf
+                        <input type="hidden" name="product_id" value="{{ $product['id'] }}">
+                        <button type="submit" class="btn btn-light btn-sm" aria-label="Yêu thích sản phẩm">
+                            <i class="fa-heart {{ $isFavorite ? 'fas text-danger' : 'far' }}"></i>
+                        </button>
+                    </form>
+
+
+
+
+
                     
                     <!-- Product Image -->
                     <div class="product-img-box position-relative w-100" style="aspect-ratio: 1.1/1;">
@@ -181,12 +192,12 @@
                              class="w-100 h-100 object-fit-cover"
                              alt="{{ $product['name'] }}"
                              loading="lazy">
-                        <button class="btn btn-danger add-to-cart-btn position-absolute start-0 bottom-0 w-100 rounded-0 opacity-0 translate-y-100 transition-all"
-                                data-product-id="{{ $product['id'] }}">
+                        <a href="{{ route('customer.products.show', $product['id']) }}" class="btn btn-danger add-to-cart-btn position-absolute start-0 bottom-0 w-100 rounded-0 opacity-0 translate-y-100 transition-all"
+                                ">
                             <i class="fas fa-shopping-cart me-2" aria-hidden="true"></i>Thêm vào giỏ
-                        </button>
+                        </a>
                     </div>
-                    
+                     
                     <!-- Product Info -->
                     <div class="p-3">
                         <h3 class="fw-semibold mb-2 h6">
@@ -258,7 +269,7 @@
                 <div class="col-lg-6 col-md-6 col-12">
                     <div class="collection-banner-img p-3 p-lg-4 h-100 d-flex align-items-center justify-content-center">
                         <div class="image-container position-relative w-100" style="max-width: 500px;">
-                            <img src="/customer/images/category-gym.jpg" 
+                            <img src="{{ asset('/customer/images/category-gym.jpg') }}" 
                                  alt="Bộ sưu tập Activewear Pro - Thời trang thể thao cao cấp" 
                                  class="w-100 rounded-4 shadow-lg" 
                                  style="height: 300px; object-fit: cover;"
@@ -390,5 +401,5 @@
 @endpush
 
 @push('scripts')
-<script src="{{ asset('customer/js/homepage.js') }}"></script>
+<script src="{{ asset('customer/js/wishlist.js') }}"></script>
 @endpush

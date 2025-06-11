@@ -22,36 +22,36 @@
                             <img src="{{ asset('customer/images/avatar.jpg') }}" alt="Avatar" class="rounded-circle border border-3 border-white shadow" width="100" height="100">
                         </div>
                         <div class="flex-grow-1">
-                            <h2 class="fw-bold mb-1">Khách Demo</h2>
-                            <p class="mb-1 text-muted"><i class="bi bi-envelope me-2"></i>demo@example.com</p>
-                            <p class="mb-1 text-muted"><i class="bi bi-telephone me-2"></i>0123 456 789</p>
-                            <p class="mb-0 text-muted"><i class="bi bi-geo-alt me-2"></i>123 Đường ABC, Quận 1, TP.HCM</p>
+                            <h2 class="fw-bold mb-1">{{ $customer->name }}</h2>
+                            <p class="mb-1 text-muted"><i class="bi bi-envelope me-2"></i>{{ $customer->email }}</p>
+                            <p class="mb-1 text-muted"><i class="bi bi-telephone me-2"></i>{{ $customer->phone ?? 'Chưa cập nhật' }}</p>
+                            <p class="mb-0 text-muted"><i class="bi bi-geo-alt me-2"></i>{{ $customer->address ?? 'Chưa cập nhật' }}</p>
                         </div>
                         <div class="ms-md-auto">
-                            <a href="#" class="btn btn-outline-danger px-4"><i class="bi bi-pencil me-2"></i>Chỉnh sửa</a>
+                            <a href="{{ route('customer.profile.edit') }}" class="btn btn-outline-danger px-4"><i class="bi bi-pencil me-2"></i>Chỉnh sửa</a>
                         </div>
                     </div>
                     <hr>
                     <div class="row g-3">
                         <div class="col-sm-6">
                             <label class="form-label text-muted">Họ và tên</label>
-                            <div class="fw-semibold">Khách Demo</div>
+                            <div class="fw-semibold">{{ $customer->name }}</div>
                         </div>
                         <div class="col-sm-6">
                             <label class="form-label text-muted">Email</label>
-                            <div class="fw-semibold">demo@example.com</div>
+                            <div class="fw-semibold">{{ $customer->email }}</div>
                         </div>
                         <div class="col-sm-6">
                             <label class="form-label text-muted">Số điện thoại</label>
-                            <div class="fw-semibold">0123 456 789</div>
+                            <div class="fw-semibold">{{ $customer->phone ?? 'Chưa cập nhật' }}</div>
                         </div>
                         <div class="col-sm-6">
                             <label class="form-label text-muted">Địa chỉ</label>
-                            <div class="fw-semibold">123 Đường ABC, Quận 1, TP.HCM</div>
+                            <div class="fw-semibold">{{ $customer->address ?? 'Chưa cập nhật' }}</div>
                         </div>
                         <div class="col-12">
                             <label class="form-label text-muted">Ngày tham gia</label>
-                            <div class="fw-semibold">01/01/2024</div>
+                            <div class="fw-semibold">{{ $customer->created_at ? $customer->created_at->format('d/m/Y') : '' }}</div>
                         </div>
                     </div>
                 </div>
@@ -63,4 +63,4 @@
 
 @push('styles')
 <link href="{{ asset('customer/css/profile.css') }}" rel="stylesheet">
-@endpush 
+@endpush

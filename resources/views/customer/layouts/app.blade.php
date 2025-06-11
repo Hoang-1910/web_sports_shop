@@ -27,6 +27,30 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js" integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO" crossorigin="anonymous"></script>
     <!-- Additional JS -->
     @stack('scripts')
+    {{-- Thêm vào cuối file hoặc @push('scripts') --}}
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    @if(session('success'))
+    <script>
+        Swal.fire({
+            icon: 'success',
+            title: 'Thành công',
+            text: '{{ session('success') }}',
+            timer: 2000,
+            showConfirmButton: false    
+        });
+    </script>
+    @endif
+    @if(session('error'))
+    <script>
+        Swal.fire({
+            icon: 'error',
+            title: 'Lỗi',
+            text: '{{ session('error') }}',
+            timer: 2000,
+            showConfirmButton: false
+        });
+    </script>
+    @endif
     <!-- Additional CSS -->
     @stack('styles')
 </body>

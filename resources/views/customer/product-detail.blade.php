@@ -116,7 +116,7 @@
                             <button class="btn btn-outline-secondary" type="button" id="decreaseQuantity">
                                 <i class="fas fa-minus"></i>
                             </button>
-                            <input type="number" class="form-control text-center" id="quantity" value="1" min="1">
+                            <input type="number" class="form-control text-center" id="quantity" name="quantity" value="1" min="1">
                             <button class="btn btn-outline-secondary" type="button" id="increaseQuantity">
                                 <i class="fas fa-plus"></i>
                             </button>
@@ -124,11 +124,13 @@
                     </div>
 
                     <!-- Action Buttons -->
-                    <div class="action-buttons d-grid gap-2">
-                        <button type="button" class="btn btn-danger btn-lg" id="addToCart">
+                    <form action="{{ route('customer.cart.add') }}" method="POST" id="addToCartForm">
+                        @csrf
+                        <input type="hidden" name="product_variant_id" id="variantInput" value="">
+                        <button type="submit" class="btn btn-danger btn-lg" id="addToCart" disabled>
                             <i class="fas fa-shopping-cart me-2"></i>Thêm vào giỏ
                         </button>
-                    </div>
+                    </form>
 
                     <!-- Product Meta -->
                     <div class="product-meta mt-4 pt-4 border-top">
@@ -261,59 +263,87 @@
 <script src="{{ asset('customer/js/product-detail.js') }}"></script>
 <script>
     const variants = @json($product->variants->map(fn($v) => [
+        'id' => $v->id,
         'size' => $v->size,
         'color' => $v->color
     ]));
 </script>
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const sizeButtons = document.querySelectorAll('.size-btn');
-        const colorButtons = document.querySelectorAll('.color-btn');
-        let selectedSize = null;
-        let selectedColor = null;
-    
-        function updateDisabledStates() {
-            // Disable color nếu size được chọn và cặp (size, color) không tồn tại
-            if (selectedSize) {
-                colorButtons.forEach(button => {
-                    const color = button.getAttribute('data-color');
-                    const exists = variants.some(v => v.size === selectedSize && v.color === color);
-                    button.disabled = !exists;
-                });
-            } else {
-                colorButtons.forEach(button => button.disabled = false);
-            }
-    
-            // Disable size nếu color được chọn và cặp (size, color) không tồn tại
-            if (selectedColor) {
-                sizeButtons.forEach(button => {
-                    const size = button.getAttribute('data-size');
-                    const exists = variants.some(v => v.color === selectedColor && v.size === size);
-                    button.disabled = !exists;
-                });
-            } else {
-                sizeButtons.forEach(button => button.disabled = false);
+document.addEventListener('DOMContentLoaded', function () {
+    const sizeButtons = document.querySelectorAll('.size-btn');
+    const colorButtons = document.querySelectorAll('.color-btn');
+    let selectedSize = null;
+    let selectedColor = null;
+    let selectedVariantId = null;
+
+    function updateDisabledStates() {
+        // Disable color nếu size được chọn và cặp (size, color) không tồn tại
+        if (selectedSize) {
+            colorButtons.forEach(button => {
+                const color = button.getAttribute('data-color');
+                const exists = variants.some(v => v.size === selectedSize && v.color === color);
+                button.disabled = !exists;
+            });
+        } else {
+            colorButtons.forEach(button => button.disabled = false);
+        }
+
+        // Disable size nếu color được chọn và cặp (size, color) không tồn tại
+        if (selectedColor) {
+            sizeButtons.forEach(button => {
+                const size = button.getAttribute('data-size');
+                const exists = variants.some(v => v.color === selectedColor && v.size === size);
+                button.disabled = !exists;
+            });
+        } else {
+            sizeButtons.forEach(button => button.disabled = false);
+        }
+
+        // Sau khi cập nhật, kiểm tra có variant hợp lệ không
+        const addToCartBtn = document.getElementById('addToCart');
+        const variantInput = document.getElementById('variantInput');
+        selectedVariantId = null;
+        if (selectedSize && selectedColor) {
+            const found = variants.find(v => v.size === selectedSize && v.color === selectedColor);
+            if (found) {
+                selectedVariantId = found.id;
+                addToCartBtn.disabled = false;
+                variantInput.value = found.id;
+                return;
             }
         }
-    
-        sizeButtons.forEach(button => {
-            button.addEventListener('click', function () {
-                sizeButtons.forEach(btn => btn.classList.remove('active'));
-                this.classList.add('active');
-                selectedSize = this.getAttribute('data-size');
-                updateDisabledStates();
-            });
-        });
-    
-        colorButtons.forEach(button => {
-            button.addEventListener('click', function () {
-                colorButtons.forEach(btn => btn.classList.remove('active'));
-                this.classList.add('active');
-                selectedColor = this.getAttribute('data-color');
-                updateDisabledStates();
-            });
+        addToCartBtn.disabled = true;
+        variantInput.value = '';
+    }
+
+    sizeButtons.forEach(button => {
+        button.addEventListener('click', function () {
+            sizeButtons.forEach(btn => btn.classList.remove('active'));
+            this.classList.add('active');
+            selectedSize = this.getAttribute('data-size');
+            updateDisabledStates();
         });
     });
-    </script>
+
+    colorButtons.forEach(button => {
+        button.addEventListener('click', function () {
+            colorButtons.forEach(btn => btn.classList.remove('active'));
+            this.classList.add('active');
+            selectedColor = this.getAttribute('data-color');
+            updateDisabledStates();
+        });
+    });
+
+    // Xử lý thêm vào giỏ hàng
+    document.getElementById('addToCartForm').addEventListener('submit', function (e) {
+        if (!selectedVariantId) {
+            e.preventDefault();
+            alert('Vui lòng chọn đủ kích thước và màu sắc!');
+        } else {
+            document.getElementById('variantInput').value = selectedVariantId;
+        }
+    });
+});
+</script>
     
 @endpush

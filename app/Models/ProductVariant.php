@@ -9,7 +9,7 @@ class ProductVariant extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['product_id', 'size', 'color', 'price']; // Bỏ 'stock'
+    protected $fillable = ['product_id', 'size', 'color', 'price'];
 
     public function product()
     {

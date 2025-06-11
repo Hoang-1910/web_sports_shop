@@ -194,5 +194,4 @@
 @endpush
 
 @push('scripts')
-<script src="{{ asset('customer/js/products.js') }}"></script>
 @endpush

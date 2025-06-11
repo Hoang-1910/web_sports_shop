@@ -11,6 +11,7 @@ use App\Http\Controllers\Customer\HomeController;
 use App\Http\Controllers\Customer\WishlistController;
 use App\Http\Controllers\Customer\CustomerRegisterController;
 use App\Http\Controllers\Customer\ProductController as CustomerProductController;
+use App\Http\Controllers\Customer\CartController;
 
 // Trang chủ cho khách hàng (không cần login)
 Route::get('/', [HomeController::class, 'index'])->name('customer.home');
@@ -66,19 +67,30 @@ Route::get('/register', [CustomerRegisterController::class, 'showRegisterForm'])
 Route::post('/register', [CustomerRegisterController::class, 'register'])->name('customer.register.submit');
 Route::get('/products', [CustomerProductController::class, 'index'])->name('customer.products.index');
 Route::get('/products/{id}', [CustomerProductController::class, 'show'])->name('customer.products.show');
+Route::get('/contact', [HomeController::class, 'contact'])->name('customer.contact');
+// Customer Wishlist
+Route::get('/wishlist', [WishlistController::class, 'index'])->name('customer.wishlist.index');
+Route::post('/wishlist/add', [WishlistController::class, 'add'])->name('customer.wishlist.add');
+Route::post('/wishlist/remove', [WishlistController::class, 'remove'])->name('customer.wishlist.remove');
 Route::middleware(['auth', 'role:customer'])->group(function () {
-    // Customer Profile
-    Route::get('/profile', function () {
-        return view('customer.profile');
-    })->name('customer.profile');
+
 
     // Customer Orders
     Route::get('/orders', function () {
         return view('customer.orders');
     })->name('customer.orders');
 
-    // Customer Wishlist
-    Route::get('/wishlist', [WishlistController::class, 'index'])->name('customer.wishlist.index');
-    Route::post('/wishlist/add', [WishlistController::class, 'add'])->name('customer.wishlist.add');
-    Route::post('/wishlist/remove', [WishlistController::class, 'remove'])->name('customer.wishlist.remove');
+    // Customer Profile
+    Route::get('/profile', [HomeController::class, 'profile'])->name('customer.profile');
+    Route::get('/profile/edit', [HomeController::class, 'profileEdit'])->name('customer.profile.edit');
+    Route::post('/profile/update', [HomeController::class, 'profileUpdate'])->name('customer.profile.update');
+
+    // Customer Cart
+    Route::get('/cart', [CartController::class, 'index'])->name('customer.cart.index');
+    Route::post('/cart/add', [CartController::class, 'add'])->name('customer.cart.add');
+    Route::post('/cart/remove', [CartController::class, 'remove'])->name('customer.cart.remove');
+    Route::post('/cart/update', [CartController::class, 'update'])->name('customer.cart.update');
+
+    // Customer Orders
+    Route::get('/orders', [HomeController::class, 'orders'])->name('customer.orders');
 });

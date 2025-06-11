@@ -1,6 +1,28 @@
 @prepend('styles')
     <link href="{{ asset('customer/css/navbar.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    <style>
+        .dropdown-menu {
+    max-width: 95vw;
+    min-width: 220px;
+    box-sizing: border-box;
+    overflow-x: auto;
+}
+
+.dropdown-menu .d-flex.align-items-center {
+    max-width: 100%;
+    flex-wrap: nowrap;
+}
+
+.dropdown-menu .fw-semibold.text-truncate {
+    max-width: 200px; /* hoặc giá trị phù hợp */
+    overflow: visible;
+    text-overflow: unset;
+    white-space: normal;      /* Cho phép xuống dòng */
+    word-break: break-word;   /* Tự động xuống dòng khi dài */
+    display: block;
+}
+    </style>
 @endprepend
 
 <header class="navbar-header bg-white shadow-sm sticky-top">
@@ -72,7 +94,7 @@
                         <a class="nav-link fw-medium" href="#">Blog</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link fw-medium" href="#">Liên hệ</a>
+                        <a class="nav-link fw-medium" href="{{ route('customer.contact') }}">Liên hệ</a>
                     </li>
                 </ul>
 
@@ -85,14 +107,73 @@
                             <i class="bi bi-search"></i>
                         </button>
                     </form>
-                    <a href="#" class="nav-icon-link position-relative" title="Yêu thích" aria-label="Wishlist">
-                        <i class="bi bi-heart fs-4"></i>
-                        <span class="nav-badge badge bg-danger rounded-pill position-absolute top-0 start-100 translate-middle">3</span>
-                    </a>
-                    <a href="#" class="nav-icon-link position-relative" title="Giỏ hàng" aria-label="Cart">
-                        <i class="bi bi-cart fs-4"></i>
-                        <span class="nav-badge badge bg-danger rounded-pill position-absolute top-0 start-100 translate-middle">2</span>
-                    </a>
+                    <!-- Wishlist Icon with Dropdown -->
+                    <div class="dropdown">
+                        <a href="#" class="nav-icon-link position-relative" title="Yêu thích" aria-label="Wishlist" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-heart fs-4"></i>
+                            @if(isset($wishlistCount) && $wishlistCount > 0)
+                                <span class="nav-badge badge bg-danger rounded-pill position-absolute top-0 start-100 translate-middle">{{ $wishlistCount }}</span>
+                            @endif
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end shadow-sm p-0" style="min-width: 320px; max-width: 400px;">
+                            <li class="dropdown-header fw-bold py-2 px-3">Sản phẩm yêu thích</li>
+                            @forelse($wishlistItems as $item)
+                                <li class="d-flex align-items-center gap-2 px-3 py-2 border-bottom">
+                                    <img src="{{ asset('storage/' . $item->product->image) }}" alt="{{ $item->product->name }}" width="40" height="40" class="rounded">
+                                    <div class="flex-grow-1">
+                                        <div class="fw-semibold text-truncate">{{ $item->product->name }}</div>
+                                        <div class="text-muted small">{{ number_format($item->product->price) }}đ</div>
+                                    </div>
+                                    <form action="{{ route('customer.wishlist.remove') }}" method="POST" class="ms-2">
+                                        @csrf
+                                        <input type="hidden" name="product_id" value="{{ $item->product_id }}">
+                                        <button type="submit" class="btn btn-sm btn-link text-danger p-0" title="Xóa">
+                                            <i class="bi bi-x-circle"></i>
+                                        </button>
+                                    </form>
+                                </li>
+                            @empty
+                                <li class="px-3 py-3 text-center text-muted">Chưa có sản phẩm yêu thích.</li>
+                            @endforelse
+                            <li>
+                                <a href="#" class="dropdown-item text-center text-danger fw-semibold">Xem tất cả</a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Cart Icon with Dropdown -->
+                    <div class="dropdown">
+                        <a href="#" class="nav-icon-link position-relative" title="Giỏ hàng" aria-label="Cart" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-cart fs-4"></i>
+                            @if(isset($cartCount) && $cartCount > 0)
+                                <span class="nav-badge badge bg-danger rounded-pill position-absolute top-0 start-100 translate-middle">{{ $cartCount }}</span>
+                            @endif
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end shadow-sm p-0" style="min-width: 320px; max-width: 400px;">
+                            <li class="dropdown-header fw-bold py-2 px-3">Giỏ hàng</li>
+                            @forelse($cartItems as $item)
+                                <li class="d-flex align-items-center gap-2 px-3 py-2 border-bottom">
+                                    <img src="{{ asset('storage/' . $item->product->image) }}" alt="{{ $item->product->name }}" width="40" height="40" class="rounded">
+                                    <div class="flex-grow-1">
+                                        <div class="fw-semibold text-truncate">{{ $item->product->name }}</div>
+                                        <div class="text-muted small">{{ number_format($item->product->price) }}đ x {{ $item->quantity }}</div>
+                                    </div>
+                                    <form action="{{ route('customer.cart.remove') }}" method="POST" class="ms-2">
+                                        @csrf
+                                        <input type="hidden" name="cart_id" value="{{ $item->id }}">
+                                        <button type="submit" class="btn btn-sm btn-link text-danger p-0" title="Xóa">
+                                            <i class="bi bi-x-circle"></i>
+                                        </button>
+                                    </form>
+                                </li>
+                            @empty
+                                <li class="px-3 py-3 text-center text-muted">Giỏ hàng trống.</li>
+                            @endforelse
+                            <li>
+                                <a href="{{ route('customer.cart.index') }}" class="dropdown-item text-center text-danger fw-semibold">Xem giỏ hàng</a>
+                            </li>
+                        </ul>
+                    </div>
 
                     {{-- User section --}}
                     @if(Auth::check())
@@ -103,13 +184,13 @@
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end shadow border-0 rounded-3" aria-labelledby="userDropdown">
                                 <li>
-                                    <a class="dropdown-item d-flex align-items-center gap-2" href="#">
+                                    <a class="dropdown-item d-flex align-items-center gap-2" href="{{ route('customer.profile') }}">    
                                         <i class="bi bi-person"></i>
                                         Tài khoản của tôi
                                     </a>
                                 </li>
                                 <li>
-                                    <a class="dropdown-item d-flex align-items-center gap-2" href="#">
+                                    <a class="dropdown-item d-flex align-items-center gap-2" href="{{ route('customer.orders') }}">
                                         <i class="bi bi-bag"></i>
                                         Đơn hàng
                                     </a>

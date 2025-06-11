@@ -1,46 +1,64 @@
-document.addEventListener('DOMContentLoaded', function() {
-    // Add to Cart
-    const addToCartButtons = document.querySelectorAll('.add-to-cart');
-    addToCartButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            const productId = this.dataset.productId;
-            // TODO: Implement add to cart functionality
-            alert('Đã thêm vào giỏ hàng!');
-        });
-    });
+document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('.wishlist-form').forEach(form => {
+        const productId = form.dataset.productId;
+        const icon = form.querySelector('i');
+        const button = form.querySelector('button');
+        const isFavorite = form.dataset.favorite === 'true';
 
-    // Remove from Wishlist
-    const removeButtons = document.querySelectorAll('.remove-from-wishlist');
-    removeButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            const productId = this.dataset.productId;
-            const wishlistItem = this.closest('.wishlist-item');
-            
-            // TODO: Implement remove from wishlist functionality
-            if (confirm('Bạn có chắc chắn muốn xóa sản phẩm này khỏi danh sách yêu thích?')) {
-                wishlistItem.remove();
-                // Update wishlist count
-                const countElement = document.querySelector('.wishlist-header .text-danger');
-                const currentCount = parseInt(countElement.textContent);
-                countElement.textContent = currentCount - 1;
-                
-                // Show empty state if no items left
-                if (currentCount - 1 === 0) {
-                    const wishlistItems = document.querySelector('.wishlist-items');
-                    wishlistItems.innerHTML = `
-                        <div class="empty-wishlist bg-white rounded-4 shadow-sm p-5 text-center">
-                            <div class="empty-icon mb-4">
-                                <i class="far fa-heart fa-4x text-muted"></i>
-                            </div>
-                            <h3 class="h4 fw-bold mb-3">Danh sách yêu thích trống</h3>
-                            <p class="text-muted mb-4">Bạn chưa thêm sản phẩm nào vào danh sách yêu thích.</p>
-                            <a href="{{ route('products.index') }}" class="btn btn-danger">
-                                <i class="fas fa-shopping-bag me-2"></i>Tiếp tục mua sắm
-                            </a>
-                        </div>
-                    `;
-                }
-            }
+        // Đặt icon đúng ban đầu
+        icon.classList.remove('far', 'fas', 'text-danger');
+        if (isFavorite) {
+            icon.classList.add('fas', 'text-danger');
+        } else {
+            icon.classList.add('far');
+        }
+
+        // Ngăn form submit mặc định
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const currentlyFav = icon.classList.contains('fas');
+            const url = currentlyFav ? '/wishlist/remove' : '/wishlist/add';
+
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                },
+                body: JSON.stringify({ product_id: productId })
+            })
+                .then(res => {
+                    if (res.status === 401) {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Bạn cần đăng nhập',
+                            text: 'Vui lòng đăng nhập để sử dụng chức năng yêu thích.',
+                            confirmButtonColor: '#d33'
+                        });
+                        throw new Error('Chưa đăng nhập');
+                    }
+                    return res.json();
+                })
+                .then(data => {
+                    // Toggle icon
+                    icon.classList.toggle('fas');
+                    icon.classList.toggle('far');
+                    icon.classList.toggle('text-danger');
+
+                    // Cập nhật trạng thái
+                    form.dataset.favorite = icon.classList.contains('fas') ? 'true' : 'false';
+
+                    Swal.fire({
+                        icon: currentlyFav ? 'info' : 'success',
+                        title: currentlyFav ? 'Đã xóa khỏi yêu thích!' : 'Đã thêm vào yêu thích!',
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                })
+                .catch(err => {
+                    console.error('Lỗi:', err);
+                });
         });
     });
 });
