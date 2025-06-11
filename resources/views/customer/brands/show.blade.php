@@ -123,25 +123,25 @@
                         [
                             'name' => 'Giày thể thao ' . ucfirst($slug),
                             'price' => '1.500.000đ',
-                            'image' => asset('customer/images/products/product1.jpg'),
+                            'image' => asset('customer/images/product1.jpg'),
                             'discount' => '20%'
                         ],
                         [
                             'name' => 'Áo thể thao ' . ucfirst($slug),
                             'price' => '800.000đ',
-                            'image' => asset('customer/images/products/product2.jpg'),
+                            'image' => asset('customer/images/product2.jpg'),
                             'discount' => '15%'
                         ],
                         [
                             'name' => 'Quần thể thao ' . ucfirst($slug),
                             'price' => '600.000đ',
-                            'image' => asset('customer/images/products/product3.jpg'),
+                            'image' => asset('customer/images/product3.jpg'),
                             'discount' => null
                         ],
                         [
                             'name' => 'Phụ kiện ' . ucfirst($slug),
                             'price' => '300.000đ',
-                            'image' => asset('customer/images/products/product4.jpg'),
+                            'image' => asset('customer/images/product2.jpg'),
                             'discount' => '10%'
                         ]
                     ];
