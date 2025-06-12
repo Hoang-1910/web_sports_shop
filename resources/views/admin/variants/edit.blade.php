@@ -37,7 +37,7 @@
                 @forelse($variant->images as $img)
                     <div class="relative">
                         <img src="{{ asset('storage/' . $img->image_path) }}" class="w-14 h-14 object-cover rounded border">
-                        <form action="{{ route('admin.variant_images.destroy', $img->id) }}" method="POST" class="absolute top-0 right-0">
+                        <form action="{{ route('admin.variants.images.destroy', [$variant->id, $img->id]) }}" method="POST" class="absolute top-0 right-0">
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs" title="Xóa ảnh">&times;</button>

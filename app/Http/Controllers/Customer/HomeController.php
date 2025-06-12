@@ -70,8 +70,4 @@ class HomeController extends Controller
 
         return redirect()->back()->with('success', 'Cập nhật thông tin thành công!');
     }
-
-    public function orders(){
-        return view('customer.orders');
-    }
 }

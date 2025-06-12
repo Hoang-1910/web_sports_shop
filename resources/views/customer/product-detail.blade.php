@@ -127,11 +127,15 @@
                     <form action="{{ route('customer.cart.add') }}" method="POST" id="addToCartForm">
                         @csrf
                         <input type="hidden" name="product_variant_id" id="variantInput" value="">
+                        <input type="hidden" name="buy_now" id="buyNowInput" value="0">
                         <button type="submit" class="btn btn-danger btn-lg" id="addToCart" disabled>
                             <i class="fas fa-shopping-cart me-2"></i>Thêm vào giỏ
                         </button>
+                        <button type="submit" class="btn btn-warning btn-lg ms-2" id="buyNowBtn" disabled>
+                            <i class="fas fa-bolt me-2"></i>Mua ngay
+                        </button>
                     </form>
-
+                    
                     <!-- Product Meta -->
                     <div class="product-meta mt-4 pt-4 border-top">
                         <div class="d-flex flex-wrap gap-4">
@@ -276,6 +280,11 @@ document.addEventListener('DOMContentLoaded', function () {
     let selectedColor = null;
     let selectedVariantId = null;
 
+    const buyNowBtn = document.getElementById('buyNowBtn');
+    const addToCartBtn = document.getElementById('addToCart');
+    const buyNowInput = document.getElementById('buyNowInput');
+
+    // Enable/disable "Mua ngay" giống "Thêm vào giỏ"
     function updateDisabledStates() {
         // Disable color nếu size được chọn và cặp (size, color) không tồn tại
         if (selectedSize) {
@@ -300,7 +309,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         // Sau khi cập nhật, kiểm tra có variant hợp lệ không
-        const addToCartBtn = document.getElementById('addToCart');
         const variantInput = document.getElementById('variantInput');
         selectedVariantId = null;
         if (selectedSize && selectedColor) {
@@ -308,12 +316,16 @@ document.addEventListener('DOMContentLoaded', function () {
             if (found) {
                 selectedVariantId = found.id;
                 addToCartBtn.disabled = false;
+                buyNowBtn.disabled = false;
                 variantInput.value = found.id;
+                buyNowInput.value = 1; // Mặc định là mua ngay 1 sản phẩm
                 return;
             }
         }
         addToCartBtn.disabled = true;
+        buyNowBtn.disabled = true;
         variantInput.value = '';
+        buyNowInput.value = 0;
     }
 
     sizeButtons.forEach(button => {
@@ -334,7 +346,14 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    // Xử lý thêm vào giỏ hàng
+    // Xử lý submit cho "Mua ngay"
+    buyNowBtn.addEventListener('click', function () {
+        buyNowInput.value = 1;
+    });
+    addToCartBtn.addEventListener('click', function () {
+        buyNowInput.value = 0;
+    });
+
     document.getElementById('addToCartForm').addEventListener('submit', function (e) {
         if (!selectedVariantId) {
             e.preventDefault();

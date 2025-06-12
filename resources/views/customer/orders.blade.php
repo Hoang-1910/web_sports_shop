@@ -22,7 +22,9 @@
                         <table class="table align-middle table-hover mb-0">
                             <thead class="table-light">
                                 <tr>
-                                    <th>Mã đơn</th>
+                                    <th class="text-center">Mã đơn</th>
+                                    <th>Tên sản phẩm</th>
+                                    <th>Số lượng</th>
                                     <th>Ngày đặt</th>
                                     <th>Trạng thái</th>
                                     <th>Tổng tiền</th>
@@ -30,46 +32,53 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ([
-                                    [
-                                        'code' => 'DH001',
-                                        'date' => '2024-06-01',
-                                        'status' => 'Đang xử lý',
-                                        'total' => 2450000
-                                    ],
-                                    [
-                                        'code' => 'DH002',
-                                        'date' => '2024-05-25',
-                                        'status' => 'Đã giao',
-                                        'total' => 3200000
-                                    ],
-                                    [
-                                        'code' => 'DH003',
-                                        'date' => '2024-05-10',
-                                        'status' => 'Đã hủy',
-                                        'total' => 1890000
-                                    ]
-                                ] as $order)
+                                @forelse ($orders as $order)
                                 <tr>
-                                    <td class="fw-semibold">{{ $order['code'] }}</td>
-                                    <td>{{ date('d/m/Y', strtotime($order['date'])) }}</td>
+                                    <td class="fw-semibold text-center">{{ $order->id }}</td>
                                     <td>
-                                        @if($order['status'] === 'Đã giao')
-                                            <span class="badge bg-success">{{ $order['status'] }}</span>
-                                        @elseif($order['status'] === 'Đang xử lý')
-                                            <span class="badge bg-warning text-dark">{{ $order['status'] }}</span>
+                                        @foreach ($order->details->unique(fn($item) => $item->variant->product->id) as $detail)
+                                            <div>{{ $detail->variant->product->name }}</div>
+                                        @endforeach
+                                    </td>
+                                    <td>
+                                        @php
+                                            $productQuantities = [];
+                                            foreach ($order->details as $detail) {
+                                                $productName = $detail->variant->product->name;
+                                                if (!isset($productQuantities[$productName])) {
+                                                    $productQuantities[$productName] = 0;
+                                                }
+                                                $productQuantities[$productName] += $detail->quantity;
+                                            }
+                                        @endphp
+                                        @foreach ($productQuantities as $name => $qty)
+                                            <div><span class="badge bg-secondary">{{ $qty }}</span></div>
+                                        @endforeach
+                                    </td>
+                                    <td>{{ $order->created_at->format('d/m/Y') }}</td>
+                                    <td>
+                                        @if($order->status === 'delivered' || $order->status === 'Đã giao')
+                                            <span class="badge bg-success">Đã giao</span>
+                                        @elseif($order->status === 'pending' || $order->status === 'Đang xử lý')
+                                            <span class="badge bg-warning text-dark">Đang xử lý</span>
                                         @else
-                                            <span class="badge bg-danger">{{ $order['status'] }}</span>
+                                            <span class="badge bg-danger">Đã hủy</span>
                                         @endif
                                     </td>
-                                    <td class="text-danger fw-bold">{{ number_format($order['total']) }}đ</td>
+                                    <td class="text-danger fw-bold">{{ number_format($order->total_amount ?? $order->total) }}đ</td>
                                     <td>
-                                        <a href="#" class="btn btn-sm btn-outline-danger px-3"><i class="bi bi-eye"></i> Xem</a>
+                                        <a href="{{ route('customer.orders.show', $order->id) }}" class="btn btn-sm btn-outline-danger px-3">
+                                            <i class="bi bi-eye"></i> Xem
+                                        </a>
                                     </td>
                                 </tr>
-                                @endforeach
+                                @empty
+                                <tr>
+                                    <td colspan="5" class="text-center text-muted">Bạn chưa có đơn hàng nào.</td>
+                                </tr>
+                                @endforelse
                             </tbody>
-                        </table>
+                        </table> 
                     </div>
                     <div class="mt-4 text-center">
                         <a href="{{ route('customer.products.index') }}" class="btn btn-danger px-4"><i class="bi bi-shop me-2"></i>Tiếp tục mua sắm</a>
@@ -83,4 +92,4 @@
 
 @push('styles')
 <link href="{{ asset('customer/css/orders.css') }}" rel="stylesheet">
-@endpush 
+@endpush

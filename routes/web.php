@@ -12,6 +12,8 @@ use App\Http\Controllers\Customer\WishlistController;
 use App\Http\Controllers\Customer\CustomerRegisterController;
 use App\Http\Controllers\Customer\ProductController as CustomerProductController;
 use App\Http\Controllers\Customer\CartController;
+use App\Http\Controllers\Customer\CheckoutController;
+use App\Http\Controllers\Customer\OrderController;
 
 // Trang chủ cho khách hàng (không cần login)
 Route::get('/', [HomeController::class, 'index'])->name('customer.home');
@@ -49,6 +51,10 @@ Route::middleware(['auth', 'is_admin'])->prefix('admin')->group(function () {
     Route::delete('/variants/images/{image}', [ProductVariantImageController::class, 'destroy'])->name('admin.variants.images.destroy');
     Route::get('/variants/{variant}/images/{image}/show', [ProductVariantImageController::class, 'show'])->name('admin.variants.images.show');
     Route::get('/variants/{variant}/images/{image}/edit', [ProductVariantImageController::class, 'edit'])->name('admin.variants.images.edit');
+    Route::delete('/variants/{variant}/images/{image}', [ProductVariantImageController::class, 'destroy'])->name('admin.variants.images.destroy');
+    Route::get('/variants/{variant}/images/{image}/show', [ProductVariantImageController::class, 'show'])->name('admin.variants.images.show');
+    Route::get('/variants/{variant}/images/{image}/edit', [ProductVariantImageController::class, 'edit'])->name('admin.variants.images.edit');
+    Route::put('/variants/images/{image}', [ProductVariantImageController::class, 'update'])->name('admin.variants.images.update');
 
     //Route Categories
     Route::get('/categories', [\App\Http\Controllers\Admin\CategoryController::class, 'index'])->name('admin.categories.index');
@@ -90,7 +96,11 @@ Route::middleware(['auth', 'role:customer'])->group(function () {
     Route::post('/cart/add', [CartController::class, 'add'])->name('customer.cart.add');
     Route::post('/cart/remove', [CartController::class, 'remove'])->name('customer.cart.remove');
     Route::post('/cart/update', [CartController::class, 'update'])->name('customer.cart.update');
-
+    Route::post('/cart/checkout', [CartController::class, 'checkout'])->name('customer.cart.checkout');
+    Route::get('/checkout', [CartController::class, 'showCheckout'])->name('customer.checkout');
+    Route::post('/checkout/process', [CheckoutController::class, 'process'])->name('customer.checkout.process');
     // Customer Orders
-    Route::get('/orders', [HomeController::class, 'orders'])->name('customer.orders');
+    Route::get('/orders', [OrderController::class, 'index'])->name('customer.orders');
+    Route::get('/orders/{order}', [OrderController::class, 'show'])->name('customer.orders.show');
+    Route::post('/orders/{order}/cancel', [OrderController::class, 'cancel'])->name('customer.orders.cancel');
 });

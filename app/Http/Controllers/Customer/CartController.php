@@ -42,6 +42,11 @@ class CartController extends Controller
         }
         $cartItem->save();
 
+        if ($request->input('buy_now') == 1) {
+            // Thêm vào giỏ xong chuyển sang checkout
+            return redirect()->route('customer.checkout');
+        }
+        // Ngược lại, chỉ thêm vào giỏ và quay lại trang sản phẩm
         return redirect()->back()->with('success', 'Đã thêm vào giỏ hàng!');
     }
 
@@ -79,5 +84,24 @@ class CartController extends Controller
             ->delete();
 
         return redirect()->back()->with('success', 'Đã xóa sản phẩm khỏi giỏ hàng!');
+    }
+
+    public function checkout(Request $request)
+    {
+        // Cập nhật số lượng
+        $quantities = $request->input('quantities', []);
+        foreach ($quantities as $cartId => $qty) {
+            Cart::where('id', $cartId)
+                ->where('user_id', auth()->id())
+                ->update(['quantity' => max(1, (int)$qty)]);
+        }
+        // Chuyển sang trang checkout
+        return redirect()->route('customer.checkout');
+    }
+    public function showCheckout()
+    {
+        $customer = Auth::user();
+        $cartItems = Cart::with('variant.product')->where('user_id', Auth::id())->get();
+        return view('customer.checkout', compact('customer', 'cartItems'));
     }
 }

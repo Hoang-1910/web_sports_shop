@@ -32,11 +32,7 @@
                 <tr class="border-t hover:bg-purple-50 transition">
                     <td class="p-4">{{ $loop->iteration }}</td>
                     <td class="p-4">
-                        @if($product->images->isNotEmpty())
-                            <img src="{{ asset($product->images->first()->image_path) }}" alt="{{ $product->name }}" class="w-16 h-16 object-cover rounded shadow">
-                        @else
-                            <span class="text-gray-400 italic">Không có ảnh</span>
-                        @endif
+                            <img src="{{ $product->image ? asset('storage/' . $product->image) : '' }}" alt="{{ $product->name }}" class="w-16 h-16 object-cover rounded shadow">
                     </td>
                     <td class="p-4 font-medium text-gray-900">{{ $product->name }}</td>
                     <td class="p-4 text-blue-700 font-semibold">{{ number_format($product->price, 0, ',', '.') }} đ</td>

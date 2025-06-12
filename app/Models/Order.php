@@ -15,7 +15,10 @@ class Order extends Model
         'status',
         'payment_method',
         'order_date',
-        'delivery_date'
+        'delivery_date',
+        'name',      // thêm dòng này
+        'phone',     // thêm dòng này
+        'address',   // thêm dòng này
     ];
 
     public function user()

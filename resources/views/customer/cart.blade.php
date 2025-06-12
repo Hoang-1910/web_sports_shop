@@ -21,108 +21,117 @@
         <div class="row">
             <!-- Cart Items -->
             <div class="col-lg-8">
-                <div class="cart-items bg-white rounded-4 shadow-sm">
-                    <!-- Cart Header -->
-                    <div class="cart-header p-4 border-bottom">
-                        <div class="row align-items-center">
-                            <div class="col-6">
-                                <h5 class="fw-bold mb-0">Sản phẩm</h5>
-                            </div>
-                            <div class="col-2 text-center">
-                                <h5 class="fw-bold mb-0">Đơn giá</h5>
-                            </div>
-                            <div class="col-2 text-center">
-                                <h5 class="fw-bold mb-0">Số lượng</h5>
-                            </div>
-                            <div class="col-2 text-center">
-                                <h5 class="fw-bold mb-0">Thành tiền</h5>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Cart Items List -->
-                    <div class="cart-items-list">
-                        @foreach($cartItems as $item)
-                        <div class="cart-item p-4 border-bottom">
+                <form id="cartUpdateForm" action="{{ route('customer.cart.checkout') }}" method="POST">
+                    @csrf
+                    <div class="cart-items bg-white rounded-4 shadow-sm">
+                        <!-- Cart Header -->
+                        <div class="cart-header p-4 border-bottom">
                             <div class="row align-items-center">
-                                <!-- Product Info -->
                                 <div class="col-6">
-                                    <div class="d-flex align-items-center">
-                                        <div class="cart-item-img me-3" style="width: 80px; height: 80px;">
-                                            <img src="{{ asset('storage/' . $item->product->image) }}" 
-                                                 class="w-100 h-100 object-fit-cover rounded-3" 
-                                                 alt="{{ $item->product->name }}">
-                                        </div>
-                                        <div class="cart-item-info">
-                                            <h6 class="fw-semibold mb-1">
-                                                <a href="#" class="text-decoration-none text-dark">{{ $item->product->name }}</a>
-                                            </h6>
-                                            <div class="text-muted small">
-                                                Size: {{ $item->variant->size ?? '' }} | Màu: {{ $item->variant->color ?? '' }}
+                                    <h5 class="fw-bold mb-0">Sản phẩm</h5>
+                                </div>
+                                <div class="col-2 text-center">
+                                    <h5 class="fw-bold mb-0">Đơn giá</h5>
+                                </div>
+                                <div class="col-2 text-center">
+                                    <h5 class="fw-bold mb-0">Số lượng</h5>
+                                </div>
+                                <div class="col-2 text-center">
+                                    <h5 class="fw-bold mb-0">Thành tiền</h5>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Cart Items List -->
+                        <div class="cart-items-list">
+                            @foreach($cartItems as $item)
+                            <div class="cart-item p-4 border-bottom">
+                                <div class="row align-items-center">
+                                    <!-- Product Info -->
+                                    <div class="col-6">
+                                        <div class="d-flex align-items-center">
+                                            <div class="cart-item-img me-3" style="width: 80px; height: 80px;">
+                                                <img src="{{ asset('storage/' . $item->product->image) }}" 
+                                                     class="w-100 h-100 object-fit-cover rounded-3" 
+                                                     alt="{{ $item->product->name }}">
                                             </div>
-                                            <form action="{{ route('customer.cart.remove') }}" method="POST" class="d-inline remove-cart-form">
-                                                @csrf
-                                                <input type="hidden" name="cart_id" value="{{ $item->id }}">
-                                                <button type="submit" class="btn btn-link text-danger p-0 mt-2 remove-item">
-                                                    <i class="fas fa-trash-alt me-1"></i>Xóa
-                                                </button>
-                                            </form>
+                                            <div class="cart-item-info">
+                                                <h6 class="fw-semibold mb-1">
+                                                    <a href="#" class="text-decoration-none text-dark">{{ $item->product->name }}</a>
+                                                </h6>
+                                                <div class="text-muted small">
+                                                    Size: {{ $item->variant->size ?? '' }} | Màu: {{ $item->variant->color ?? '' }}
+                                                </div>
+                                                <form action="{{ route('customer.cart.remove') }}" method="POST" class="d-inline remove-cart-form">
+                                                    @csrf
+                                                    <input type="hidden" name="cart_id" value="{{ $item->id }}">
+                                                    <button type="submit" class="btn btn-link text-danger p-0 mt-2 remove-item">
+                                                        <i class="fas fa-trash-alt me-1"></i>Xóa
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Price -->
+                                    <div class="col-2 text-center">
+                                        <div class="text-danger fw-bold item-price" data-price="{{ $item->product->price }}">
+                                            {{ number_format($item->product->price) }}đ
+                                        </div>
+                                    </div>
+
+                                    <!-- Quantity -->
+                                    <div class="col-2">
+                                        <div class="quantity-control d-flex align-items-center justify-content-center">
+                                            <button type="button" class="btn btn-outline-secondary btn-sm quantity-btn" data-action="decrease">
+                                                <i class="fas fa-minus"></i>
+                                            </button>
+                                            <input type="number" name="quantities[{{ $item->id }}]" 
+                                                   class="form-control form-control-sm text-center mx-2 quantity-input" 
+                                                   value="{{ $item->quantity }}"
+                                                   min="1"
+                                                   style="width: 60px; text-align: center;" >
+                                            <button type="button" class="btn btn-outline-secondary btn-sm quantity-btn" data-action="increase">
+                                                <i class="fas fa-plus"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <!-- Total -->
+                                    <div class="col-2 text-center">
+                                        <div class="text-danger fw-bold item-total">
+                                            {{ number_format($item->product->price * $item->quantity) }}đ
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+                            @endforeach
+                        </div>
 
-                                <!-- Price -->
-                                <div class="col-2 text-center">
-                                    <div class="text-danger fw-bold item-price" data-price="{{ $item->product->price }}">
-                                        {{ number_format($item->product->price) }}đ
-                                    </div>
+                        <!-- Cart Footer -->
+                        <div class="cart-footer p-4">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <button class="btn btn-outline-danger" id="clearCart">
+                                        <i class="fas fa-trash-alt me-2"></i>Xóa tất cả
+                                    </button>
                                 </div>
-
-                                <!-- Quantity -->
-                                <div class="col-2">
-                                    <div class="quantity-control d-flex align-items-center justify-content-center">
-                                        <button class="btn btn-outline-secondary btn-sm quantity-btn" 
-                                                data-action="decrease">
-                                            <i class="fas fa-minus"></i>
-                                        </button>
-                                        <input type="number" 
-                                               class="form-control form-control-sm text-center mx-2" 
-                                               value="{{ $item->quantity }}"
-                                               style="width: 60px; text-align: center;" >
-                                        <button class="btn btn-outline-secondary btn-sm quantity-btn" 
-                                                data-action="increase">
-                                            <i class="fas fa-plus"></i>
-                                        </button>
-                                    </div>
-                                </div>
-
-                                <!-- Total -->
-                                <div class="col-2 text-center">
-                                    <div class="text-danger fw-bold item-total">
-                                        {{ number_format($item->product->price * $item->quantity) }}đ
-                                    </div>
+                                <div>
+                                    <a href="{{ route('customer.products.index') }}" class="btn btn-outline-secondary">
+                                        <i class="fas fa-arrow-left me-2"></i>Tiếp tục mua sắm
+                                    </a>
                                 </div>
                             </div>
                         </div>
-                        @endforeach
                     </div>
 
-                    <!-- Cart Footer -->
-                    <div class="cart-footer p-4">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div>
-                                <button class="btn btn-outline-danger" id="clearCart">
-                                    <i class="fas fa-trash-alt me-2"></i>Xóa tất cả
-                                </button>
-                            </div>
-                            <div>
-                                <a href="{{ route('customer.products.index') }}" class="btn btn-outline-secondary">
-                                    <i class="fas fa-arrow-left me-2"></i>Tiếp tục mua sắm
-                                </a>
-                            </div>
-                        </div>
+                    <!-- Checkout Button - Mobile -->
+                    <div class="d-block d-lg-none mt-4">
+                        <button type="submit" class="btn btn-danger w-100 py-3 fw-semibold">
+                            <i class="fas fa-lock me-2"></i>Thanh toán ngay
+                        </button>
                     </div>
-                </div>
+                </form>
             </div>
 
             <!-- Order Summary -->
@@ -161,8 +170,8 @@
                         </div>
                     </div> --}}
 
-                    <!-- Checkout Button -->
-                    <button class="btn btn-danger w-100 py-3 fw-semibold">
+                    <!-- Checkout Button - Desktop -->
+                    <button type="submit" form="cartUpdateForm" class="btn btn-danger w-100 py-3 fw-semibold">
                         <i class="fas fa-lock me-2"></i>Thanh toán ngay
                     </button>
 
