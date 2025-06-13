@@ -1,10 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
-use App\Http\Controllers\AdminLoginController;
-use App\Http\Controllers\CustomerLoginController;
+use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ProductController;
+
 use App\Http\Controllers\Admin\ProductVariantController;
 use App\Http\Controllers\Admin\ProductVariantImageController;
 use App\Http\Controllers\Customer\HomeController;
@@ -16,14 +15,29 @@ use App\Http\Controllers\Customer\CartController;
 // Trang chủ cho khách hàng (không cần login)
 Route::get('/', [HomeController::class, 'index'])->name('customer.home');
 
-// -------- ADMIN ----------//
-Route::get('/admin', [AdminLoginController::class, 'showLoginForm'])->name('admin.login');
-Route::post('/admin/login', [AdminLoginController::class, 'login'])->name('admin.login.submit');
-Route::post('/admin/logout', [AdminLoginController::class, 'logout'])->name('admin.logout');
+use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\OrderController;
+use App\Http\Controllers\Admin\ReviewController;
+use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\AdminLoginController;
 
-Route::middleware(['auth', 'is_admin'])->prefix('admin')->group(function () {
-    Route::get('/dashboard', fn() => view('admin.dashboard'))->name('admin.dashboard');
-    // Route Products
+// Hiển thị form login
+Route::get('/', [AdminLoginController::class, 'showLoginForm'])->name('admin.login');
+
+
+// Xử lý đăng nhập
+Route::post('/admin/login', [AdminLoginController::class, 'login'])->name('admin.login.submit');
+
+// Đăng xuất
+Route::post('/admin/logout', [AdminLoginController::class, 'logout'])->name('admin.logout');
+Route::middleware(['auth', 'is_admin'])->group(function () {
+
+
+    // Dashboard
+    Route::get('/admin/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
+
+
+    // Quản lý sản phẩm (products) email: "admin1@example.com",
     Route::get('/products', [ProductController::class, 'index'])->name('admin.products.index');
     Route::get('/products/create', [ProductController::class, 'create'])->name('admin.products.create');
     Route::post('/products', [ProductController::class, 'store'])->name('admin.products.store');
@@ -50,14 +64,33 @@ Route::middleware(['auth', 'is_admin'])->prefix('admin')->group(function () {
     Route::get('/variants/{variant}/images/{image}/show', [ProductVariantImageController::class, 'show'])->name('admin.variants.images.show');
     Route::get('/variants/{variant}/images/{image}/edit', [ProductVariantImageController::class, 'edit'])->name('admin.variants.images.edit');
 
-    //Route Categories
-    Route::get('/categories', [\App\Http\Controllers\Admin\CategoryController::class, 'index'])->name('admin.categories.index');
-    Route::get('/categories/create', [\App\Http\Controllers\Admin\CategoryController::class, 'create'])->name('admin.categories.create');
-    Route::post('/categories', [\App\Http\Controllers\Admin\CategoryController::class, 'store'])->name('admin.categories.store');
-    Route::get('/categories/{category}/edit', [\App\Http\Controllers\Admin\CategoryController::class, 'edit'])->name('admin.categories.edit');
-    Route::put('/categories/{category}', [\App\Http\Controllers\Admin\CategoryController::class, 'update'])->name('admin.categories.update');
-    Route::delete('/categories/{category}', [\App\Http\Controllers\Admin\CategoryController::class, 'destroy'])->name('admin.categories.destroy');
+    // Quản lý danh mục (categories)
+    Route::resource('categories', CategoryController::class, ['as' => 'admin']);
+
+    // Quản lý đơn hàng (orders)
+    Route::resource('orders', OrderController::class, ['as' => 'admin']);
+    Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
+    Route::delete('/orders/{id}', [OrderController::class, 'destroy'])->name('admin.orders.destroy');
+
+
+    // Route hiển thị đơn hàng
+    Route::get('/orders/{id}', [OrderController::class, 'show'])->name('orders.show');
+
+    // Route cập nhật trạng thái đơn hàng
+    Route::put('/orders/{id}/status', [OrderController::class, 'updateStatus'])->name('orders.updateStatus');
+    // Quản lý đánh giá (reviews)
+    Route::resource('reviews', ReviewController::class, ['as' => 'admin']);
+
+    // Quản lý người dùng (users)
+    Route::resource('users', UserController::class, ['as' => 'admin']);
+    Route::resource('dashboard1', DashboardController::class, ['as' => 'admin']);
+
+    //
+    Route::get('/orders/export/excel', [OrderController::class, 'exportExcel'])->name('orders.exportExcel');
+    Route::get('/orders/export/pdf', [OrderController::class, 'exportPdf'])->name('orders.exportPdf');
+    Route::delete('/orders/delete-all', [OrderController::class, 'deleteAll'])->name('orders.deleteAll');
 });
+
 
 // -------- CUSTOMER ----------//
 Route::get('/login', [CustomerLoginController::class, 'showLoginForm'])->name('customer.login');
@@ -94,3 +127,4 @@ Route::middleware(['auth', 'role:customer'])->group(function () {
     // Customer Orders
     Route::get('/orders', [HomeController::class, 'orders'])->name('customer.orders');
 });
+
