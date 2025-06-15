@@ -143,58 +143,30 @@
     <table>
         <thead>
             <tr>
-                <th>ID</th>
-                <th>Tên</th>
-                <th>Hành động</th>
+                <th>#</th>
+                <th>Tên danh mục</th>
+                <th>Mô tả</th>
+                <th>Thao tác</th>
             </tr>
         </thead>
         <tbody>
-            @forelse($categories as $c)
+            @forelse ($categories as $category)
                 <tr>
-
-                    <th class="p-4 text-left font-semibold text-gray-700">#</th>
-                    <th class="p-4 text-left font-semibold text-gray-700">Tên danh mục</th>
-                    <th class="p-4 text-left font-semibold text-gray-700">Mô tả</th>
-                    <th class="p-4 text-left font-semibold text-gray-700">Thao tác</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($categories as $category)
-                <tr class="border-t hover:bg-purple-50 transition">
-                    <td class="p-4">{{ $loop->iteration }}</td>
-                    <td class="p-4 font-medium text-gray-900">{{ $category->name }}</td>
-                    <td class="p-4 text-gray-700">{{ $category->description }}</td>
-                    <td class="p-4">
-                        <div class="flex items-center gap-2">
-                            <a href="{{ route('admin.categories.edit', $category->id) }}"
-                               class="inline-flex items-center px-3 py-1 bg-yellow-100 text-yellow-700 rounded hover:bg-yellow-200 transition text-sm font-medium shadow-sm">
-                                <span class="material-icons text-base mr-1">edit</span> Sửa
-                            </a>
-                            <form action="{{ route('admin.categories.destroy', $category->id) }}" method="POST" onsubmit="return confirm('Xóa danh mục này?')">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit"
-                                    class="inline-flex items-center px-3 py-1 bg-red-100 text-red-700 rounded hover:bg-red-200 transition text-sm font-medium shadow-sm">
-                                    <span class="material-icons text-base mr-1">delete</span> Xóa
-                                </button>
-                            </form>
-                        </div>
-
-                    <td>{{ $c->id }}</td>
-                    <td>{{ $c->name }}</td>
+                    <td>{{ $loop->iteration }}</td>
+                    <td>{{ $category->name }}</td>
+                    <td>{{ $category->description }}</td>
                     <td class="action-group">
-                        <a href="{{ route('admin.categories.edit', $c) }}">Sửa</a>
-                        <form method="POST" action="{{ route('admin.categories.destroy', $c) }}" onsubmit="return confirm('Bạn có chắc muốn xóa danh mục này?')">
+                        <a href="{{ route('admin.categories.edit', $category->id) }}">Sửa</a>
+                        <form method="POST" action="{{ route('admin.categories.destroy', $category->id) }}" style="display:inline;" onsubmit="return confirm('Bạn có chắc muốn xóa danh mục này?')">
                             @csrf
                             @method('DELETE')
                             <button class="delete-btn">Xóa</button>
                         </form>
-
                     </td>
                 </tr>
             @empty
                 <tr>
-                    <td colspan="3" class="no-data">Không có danh mục nào.</td>
+                    <td colspan="4" class="no-data">Không có danh mục nào.</td>
                 </tr>
             @endforelse
         </tbody>

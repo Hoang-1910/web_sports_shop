@@ -144,8 +144,8 @@
                     <th>Đơn hàng</th>
                     <th>Số lượng</th>
                     <th>Tổng tiền</th>
-                    <th>Tình trạng</th>
-                    <th>Tính năng</th>
+                    <th style="width: 130px;">Tình trạng</th>
+                    <th style="width: 150px;">Tính năng</th>
                 </tr>
             </thead>
             <tbody>
