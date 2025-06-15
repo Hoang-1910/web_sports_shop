@@ -26,10 +26,15 @@ class Order extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function details()
+    // public function details()
+    // {
+    //     return $this->hasMany(OrderDetail::class);
+    // }
+    public function orderDetails()
     {
         return $this->hasMany(OrderDetail::class);
     }
+
 
     public function payment()
     {
