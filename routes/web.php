@@ -13,13 +13,15 @@ use App\Http\Controllers\Customer\ProductController as CustomerProductController
 use App\Http\Controllers\Customer\CartController;
 use App\Http\Controllers\Customer\CheckoutController;
 use App\Http\Controllers\Customer\OrderController;
+use App\Http\Controllers\Customer\ReviewController;
+use App\Http\Controllers\CustomerLoginController;
 
 // Trang chủ cho khách hàng (không cần login)
 Route::get('/', [HomeController::class, 'index'])->name('customer.home');
 
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\AdminOrderController;
-use App\Http\Controllers\Admin\ReviewController;
+use App\Http\Controllers\Admin\ReviewController as AdminReviewController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\AdminLoginController;
 
@@ -84,7 +86,7 @@ Route::middleware(['auth', 'is_admin'])->group(function () {
     // Route cập nhật trạng thái đơn hàng
     Route::put('/admin/orders/{id}/status', [AdminOrderController::class, 'updateStatus'])->name('orders.updateStatus');
     // Quản lý đánh giá (reviews)
-    Route::resource('reviews', ReviewController::class, ['as' => 'admin']);
+    Route::resource('reviews', AdminReviewController::class, ['as' => 'admin']);
 
     // Quản lý người dùng (users)
     Route::resource('users', UserController::class, ['as' => 'admin']);
@@ -135,4 +137,7 @@ Route::middleware(['auth', 'role:customer'])->group(function () {
     Route::get('/orders', [OrderController::class, 'index'])->name('customer.orders');
     Route::get('/orders/{order}', [OrderController::class, 'show'])->name('customer.orders.show');
     Route::post('/orders/{order}/cancel', [OrderController::class, 'cancel'])->name('customer.orders.cancel');
+
+    // Customer Reviews
+    Route::post('/products/{product}/reviews', [ReviewController::class, 'store'])->name('customer.reviews.store');
 });
