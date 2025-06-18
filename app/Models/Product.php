@@ -42,4 +42,15 @@ class Product extends Model
     {
         return $this->hasMany(Wishlist::class);
     }
+
+    public function stockImportItems()
+    {
+        return $this->hasMany(StockImportItem::class, 'product_id');
+    }
+
+    // Nếu muốn truy vấn tổng số đã nhập:
+    public function totalImported()
+    {
+        return $this->stockImportItems()->sum('quantity');
+    }
 }

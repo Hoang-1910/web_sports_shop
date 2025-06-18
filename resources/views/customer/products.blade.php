@@ -39,20 +39,6 @@
                             </div>
                         </div>
 
-                        <!-- Categories Filter -->
-                        <div class="filter-group mb-4">
-                            <h6 class="fw-semibold mb-3">Danh mục</h6>
-                            @foreach ($categories as $category)
-                                <div class="form-check mb-2">
-                                    <input class="form-check-input" type="checkbox" name="categories[]"
-                                        value="{{ $category->slug }}" id="category{{ $category->id }}"
-                                        {{ is_array(request('categories')) && in_array($category->slug, request('categories')) ? 'checked' : '' }}>
-                                    <label class="form-check-label"
-                                        for="category{{ $category->id }}">{{ $category->name }}</label>
-                                </div>
-                            @endforeach
-                        </div>
-
                         <!-- Brands Filter -->
                         <div class="filter-group mb-4">
                             <h6 class="fw-semibold mb-3">Thương hiệu</h6>

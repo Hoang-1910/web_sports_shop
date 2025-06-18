@@ -27,14 +27,6 @@ class ProductController extends Controller
             $query->where('name', 'like', '%' . $request->name . '%');
         }
 
-        // Lọc theo danh mục
-        if ($request->has('categories')) {
-            // Nếu dùng category_id thì sửa lại cho đúng
-            $query->whereHas('category', function ($q) use ($request) {
-                $q->whereIn('slug', (array)$request->categories);
-            });
-        }
-
         // Lọc theo thương hiệu
         if ($request->has('brands')) {
             $query->whereIn('brand', (array)$request->brands);
@@ -105,9 +97,17 @@ class ProductController extends Controller
             'images',           // hasMany ProductVariantImage hoặc ProductImage
             'variants',         // hasMany ProductVariant
             'category',         // belongsTo Category
-            'reviews.user'      // hasMany Review, mỗi review belongsTo User
+            'reviews.user',     // hasMany Review, mỗi review belongsTo User
+            'variants.images'   // Lấy ảnh của từng biến thể
         ])->findOrFail($id);
-        return view('customer.product-detail', compact('product'));
+        $variantArray = $product->variants->map(function ($v) {
+            return [
+                'id' => $v->id,
+                'size' => $v->size,
+                'color' => $v->color,
+            ];
+        });
+        return view('customer.product-detail', compact('product', 'variantArray'));
     }
 
     public function search(Request $request)

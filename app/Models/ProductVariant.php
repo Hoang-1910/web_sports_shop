@@ -30,4 +30,15 @@ class ProductVariant extends Model
     {
         return $this->hasMany(ProductVariantImage::class);
     }
+
+    public function stockImportItems()
+    {
+        return $this->hasMany(StockImportItem::class, 'product_variant_id');
+    }
+
+    // Tổng nhập cho variant này:
+    public function totalImported()
+    {
+        return $this->stockImportItems()->sum('quantity');
+    }
 }

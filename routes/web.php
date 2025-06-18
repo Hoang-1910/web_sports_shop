@@ -99,6 +99,14 @@ Route::middleware(['auth:admin', 'is_admin'])->group(function () {
     Route::get('/admin/orders/export/excel', [AdminOrderController::class, 'exportExcel'])->name('orders.exportExcel');
     Route::get('/admin/orders/export/pdf', [AdminOrderController::class, 'exportPdf'])->name('orders.exportPdf');
     Route::delete('/admin/orders/delete-all', [AdminOrderController::class, 'deleteAll'])->name('orders.deleteAll');
+
+
+
+    // Quản lý nhập kho
+    Route::get('admin/stock-imports', [\App\Http\Controllers\StockImportController::class, 'index'])->name('admin.stock_imports.index');
+    Route::get('admin/stock-imports/create', [\App\Http\Controllers\StockImportController::class, 'create'])->name('admin.stock_imports.create');
+    Route::post('admin/stock-imports', [\App\Http\Controllers\StockImportController::class, 'store'])->name('admin.stock_imports.store');
+    Route::delete('admin/stock-imports/{id}', [\App\Http\Controllers\StockImportController::class, 'destroy'])->name('admin.stock_imports.destroy');
 });
 
 
