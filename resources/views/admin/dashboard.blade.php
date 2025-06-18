@@ -1,76 +1,139 @@
 @extends('admin.layouts.app')
 
+@section('title', 'Dashboard')
+
 @section('content')
-{{-- Main content --}}
-<main class="flex-1 p-6 overflow-auto">
-    <h2 class="text-xl font-semibold mb-6">Dashboard</h2>
+<h2 class="text-2xl font-bold mb-6 text-purple-700"> Thống kê tổng quan</h2>
 
-    {{-- Stats --}}
-    <div class="grid grid-cols-4 gap-4 mb-6">
-        <div class="bg-white p-4 rounded-xl shadow text-center">
-            <p class="text-gray-500">Projects</p>
-            <h3 class="text-2xl font-bold text-purple-700">21</h3>
-        </div>
-        <div class="bg-white p-4 rounded-xl shadow text-center">
-            <p class="text-gray-500">Tasks</p>
-            <h3 class="text-2xl font-bold text-purple-700">145</h3>
-        </div>
-        <div class="bg-white p-4 rounded-xl shadow text-center">
-            <p class="text-gray-500">Members</p>
-            <h3 class="text-2xl font-bold text-purple-700">12</h3>
-        </div>
-        <div class="bg-white p-4 rounded-xl shadow text-center">
-            <p class="text-gray-500">Stages</p>
-            <h3 class="text-2xl font-bold text-purple-700">18</h3>
-        </div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div class="bg-white shadow rounded-xl p-6">
+        <h3 class="text-lg font-semibold text-gray-700"> Tổng sản phẩm</h3>
+        <p class="text-2xl text-purple-600 mt-2">{{ $totalProducts }}</p>
+    </div>
+    <div class="bg-white shadow rounded-xl p-6">
+        <h3 class="text-lg font-semibold text-gray-700">Tổng đơn hàng</h3>
+        <p class="text-2xl text-purple-600 mt-2">{{ $totalOrders }}</p>
+    </div>
+    <div class="bg-white shadow rounded-xl p-6">
+        <h3 class="text-lg font-semibold text-gray-700"> Doanh thu</h3>
+        <p class="text-2xl text-purple-600 mt-2">{{ number_format($totalRevenue, 0, ',', '.') }} đ</p>
+    </div>
+    <div class="bg-white shadow rounded-xl p-6">
+        <h3 class="text-lg font-semibold text-gray-700"> Tổng người dùng</h3>
+        <p class="text-2xl text-purple-600 mt-2">{{ $totalUsers }}</p>
+    </div>
+    <div class="bg-white shadow rounded-xl p-6">
+        <h3 class="text-lg font-semibold text-gray-700"> Tổng đánh giá</h3>
+        <p class="text-2xl text-purple-600 mt-2">{{ $totalReviews }}</p>
+    </div>
+</div>
+
+{{-- Biểu đồ doanh thu & đơn hàng --}}
+<div class="bg-white rounded-xl shadow p-6 mt-10">
+    <div class="flex justify-between items-center mb-4">
+        <h3 class="text-xl font-bold text-purple-700"> Biểu đồ doanh thu & số đơn hàng</h3>
+
+        <form method="GET">
+            <label for="filter" class="mr-2 font-semibold">Xem theo:</label>
+            <select name="filter" id="filter" onchange="this.form.submit()" class="border rounded px-2 py-1">
+                <option value="day" {{ $filter == 'day' ? 'selected' : '' }}>Ngày</option>
+                <option value="month" {{ $filter == 'month' ? 'selected' : '' }}>Tháng</option>
+                <option value="year" {{ $filter == 'year' ? 'selected' : '' }}>Năm</option>
+            </select>
+        </form>
     </div>
 
-    {{-- Latest Events --}}
-    <div class="bg-white p-6 rounded-xl shadow mb-6">
-        <h3 class="text-lg font-semibold mb-4">Latest Events</h3>
-        <ul class="space-y-3">
-            <li class="flex justify-between items-center">
-                <span class="text-gray-600">Add new task: <strong>Develop a visual concept</strong></span>
-                <span class="text-sm text-gray-400">12:45</span>
-            </li>
-            <li class="flex justify-between items-center">
-                <span class="text-gray-600">Added Members: <strong>Cornelia Owen</strong></span>
-                <span class="text-sm text-gray-400">11:32</span>
-            </li>
-            <li class="flex justify-between items-center">
-                <span class="text-gray-600">Add Stages: <strong>Effective Advertising</strong></span>
-                <span class="text-sm text-gray-400">11:08</span>
-            </li>
-        </ul>
-    </div>
-
-    {{-- Projects List --}}
-    <div class="grid grid-cols-2 gap-4">
-        <div class="bg-white p-4 rounded-xl shadow">
-            <h4 class="text-md font-semibold mb-3">Develop Chat App</h4>
-            <div class="flex justify-between text-sm text-gray-500">
-                <span>Deadline: 09.25.2025</span>
-                <span>21 Tasks</span>
-            </div>
-            <div class="mt-2">
-                <div class="w-full bg-gray-200 rounded-full h-2">
-                    <div class="bg-purple-500 h-2 rounded-full" style="width: 48%"></div>
-                </div>
-            </div>
-        </div>
-
-        <div class="bg-white p-4 rounded-xl shadow">
-            <h4 class="text-md font-semibold mb-3">Web Application Development</h4>
-            <div class="flex justify-between text-sm text-gray-500">
-                <span>Deadline: 09.25.2025</span>
-                <span>21 Tasks</span>
-            </div>
-            <div class="mt-2">
-                <div class="w-full bg-gray-200 rounded-full h-2">
-                    <div class="bg-purple-500 h-2 rounded-full" style="width: 40%"></div>
-                </div>
-            </div>
-        </div>
-    </div>
-</main>
+    <canvas id="ordersChart" class="h-[400px]"></canvas>
+</div>
 @endsection
+
+@push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    let ordersChart = null;
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const ctx = document.getElementById('ordersChart').getContext('2d');
+
+        if (ordersChart !== null) {
+            ordersChart.destroy();
+        }
+
+        const revenueGradient = ctx.createLinearGradient(0, 0, 0, 400);
+        revenueGradient.addColorStop(0, 'rgba(124, 58, 237, 0.7)');
+        revenueGradient.addColorStop(1, 'rgba(124, 58, 237, 0.1)');
+
+        ordersChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: @json($labels),
+                datasets: [
+                    {
+                        label: 'Doanh thu (VND)',
+                        data: @json($revenues),
+                        backgroundColor: revenueGradient,
+                        borderColor: 'rgba(124, 58, 237, 1)',
+                        borderWidth: 2,
+                        yAxisID: 'y'
+                    },
+                    {
+                        label: 'Số đơn hàng',
+                        data: @json($orderCounts),
+                        backgroundColor: 'rgba(34, 197, 94, 0.2)',
+                        borderColor: 'rgba(34, 197, 94, 1)',
+                        borderWidth: 2,
+                        type: 'line',
+                        yAxisID: 'y1',
+                        tension: 0.4,
+                        pointRadius: 4,
+                        pointBackgroundColor: 'rgba(34, 197, 94, 1)',
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                interaction: {
+                    mode: 'index',
+                    intersect: false
+                },
+                plugins: {
+                    legend: {
+                        labels: {
+                            color: '#4B5563',
+                            font: {
+                                weight: 'bold'
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        position: 'left',
+                        title: {
+                            display: true,
+                            text: 'Doanh thu (VND)'
+                        },
+                        ticks: {
+                            callback: function(value) {
+                                return value.toLocaleString() + ' đ';
+                            }
+                        }
+                    },
+                    y1: {
+                        beginAtZero: true,
+                        position: 'right',
+                        grid: {
+                            drawOnChartArea: false
+                        },
+                        title: {
+                            display: true,
+                            text: 'Số đơn hàng'
+                        }
+                    }
+                }
+            }
+        });
+    });
+</script>
+@endpush

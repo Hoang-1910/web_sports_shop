@@ -56,7 +56,7 @@ class DashboardController extends Controller
         $revenues = $orders->pluck('total');
         $orderCounts = $orders->pluck('count');
 
-        return view('admin.dashboard1.index', [
+        return view('admin.dashboard', [
             'totalProducts' => Product::count(),
             'totalOrders' => Order::count(),
             'totalRevenue' => Order::where('status', 'delivered')->sum('total_amount'),

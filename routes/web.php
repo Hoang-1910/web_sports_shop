@@ -13,7 +13,7 @@ use App\Http\Controllers\Customer\ProductController as CustomerProductController
 use App\Http\Controllers\Customer\CartController;
 use App\Http\Controllers\Customer\CheckoutController;
 use App\Http\Controllers\Customer\OrderController;
-
+use App\Http\Controllers\CustomerLoginController;
 // Trang chủ cho khách hàng (không cần login)
 Route::get('/', [HomeController::class, 'index'])->name('customer.home');
 

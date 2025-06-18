@@ -150,7 +150,7 @@
         <tbody>
             @foreach($users as $u)
                 <tr>
-                    <td>{{ $u->id }}</td>
+                    <td>{{ $loop->index + 1 }}</td>
                     <td>{{ $u->name }}</td>
                     <td>{{ $u->email }}</td>
                     <td>{{ $u->phone ?? '---' }}</td>

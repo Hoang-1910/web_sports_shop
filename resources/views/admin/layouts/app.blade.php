@@ -62,12 +62,6 @@
                         <span class="material-icons">shopping_cart</span>
                         <span class="font-semibold">Đánh Giá</span>
                     </a>
-                    <a href="{{ route('admin.dashboard1.index') }}"
-                        class="flex items-center gap-3 px-4 py-2 rounded-lg text-gray-700 hover:bg-purple-100 hover:text-purple-700 transition"
-                    >
-                        <span class="material-icons">shopping_cart</span>
-                        <span class="font-semibold">Thống kê</span>
-                    </a>
                     <a href="{{ route('admin.orders.index') }}"
                         class="flex items-center gap-3 px-4 py-2 rounded-lg text-gray-700 hover:bg-purple-100 hover:text-purple-700 transition"
                     >
