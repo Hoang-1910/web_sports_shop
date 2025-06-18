@@ -19,8 +19,9 @@ class AdminLoginController extends Controller
             'password' => 'required'
         ]);
 
-        if (Auth::attempt(array_merge($data, ['role' => 'admin']))) {
-            return redirect('/admin/dashboard');
+        // Dùng guard 'admin'
+        if (Auth::guard('admin')->attempt(array_merge($data, ['role' => 'admin']))) {
+            return redirect()->route('admin.dashboard');
         }
 
         return back()->withErrors(['email' => 'Sai thông tin đăng nhập']);
@@ -28,7 +29,7 @@ class AdminLoginController extends Controller
 
     public function logout()
     {
-        Auth::logout();
-        return redirect('/admin/login');
+        Auth::guard('admin')->logout();
+        return redirect()->route('admin.login');
     }
 }

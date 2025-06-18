@@ -26,15 +26,18 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\AdminLoginController;
 
 // Hiển thị form login
-Route::get('/admin', [AdminLoginController::class, 'showLoginForm'])->name('admin.login');
-
-
+Route::get('/admin', function () {
+    return redirect()->route('admin.login');
+});
+Route::get('admin/login', [AdminLoginController::class, 'showLoginForm'])->name('admin.login');
 // Xử lý đăng nhập
 Route::post('/admin/login', [AdminLoginController::class, 'login'])->name('admin.login.submit');
 
+Route::get('/search', [CustomerProductController::class, 'search'])->name('customer.products.search');
+
 // Đăng xuất
 Route::post('/admin/logout', [AdminLoginController::class, 'logout'])->name('admin.logout');
-Route::middleware(['auth', 'is_admin'])->group(function () {
+Route::middleware(['auth:admin', 'is_admin'])->group(function () {
 
     // Dashboard
     Route::get('/admin/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');

@@ -19,7 +19,8 @@ class CustomerLoginController extends Controller
             'password' => 'required'
         ]);
 
-        if (Auth::attempt(array_merge($data, ['role' => 'customer']))) {
+        // Dùng guard 'web'
+        if (Auth::guard('web')->attempt(array_merge($data, ['role' => 'customer']))) {
             return redirect('/');
         }
 
@@ -28,8 +29,7 @@ class CustomerLoginController extends Controller
 
     public function logout()
     {
-        Auth::logout();
+        Auth::guard('web')->logout();
         return redirect('/');
     }
-
 }
