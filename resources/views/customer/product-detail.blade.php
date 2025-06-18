@@ -249,6 +249,40 @@
                                     </div>
                                     @endforelse
                                 </div>
+
+                                <!-- Review Submission Form -->
+                                @auth
+                                <div class="review-form mt-4 pt-4 border-top">
+                                    <h5 class="fw-bold mb-3">Gửi đánh giá của bạn</h5>
+                                    <form action="{{ route('customer.reviews.store', $product->id) }}" method="POST">
+                                        @csrf
+                                        <div class="mb-3">
+                                            <label for="rating" class="form-label">Đánh giá sao:</label>
+                                            <div id="rating" class="stars-input text-warning d-flex gap-1">
+                                                @for($i = 1; $i <= 5; $i++)
+                                                    <i class="far fa-star" data-rating="{{ $i }}"></i>
+                                                @endfor
+                                                <input type="hidden" name="rating" id="selectedRating" value="0">
+                                            </div>
+                                            @error('rating')
+                                                <div class="text-danger mt-1">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="comment" class="form-label">Bình luận:</label>
+                                            <textarea class="form-control" id="comment" name="comment" rows="4" required>{{ old('comment') }}</textarea>
+                                            @error('comment')
+                                                <div class="text-danger mt-1">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+                                        <button type="submit" class="btn btn-danger">Gửi đánh giá</button>
+                                    </form>
+                                </div>
+                                @else
+                                <div class="mt-4 pt-4 border-top text-center">
+                                    <p class="text-muted mb-0">Vui lòng <a href="{{ route('customer.login') }}" class="text-danger text-decoration-none">đăng nhập</a> để gửi đánh giá.</p>
+                                </div>
+                                @endauth
                             </div>
                         </div>
                     </div>
@@ -362,6 +396,44 @@ document.addEventListener('DOMContentLoaded', function () {
             document.getElementById('variantInput').value = selectedVariantId;
         }
     });
+
+    // Star rating functionality
+    const stars = document.querySelectorAll('.stars-input .fa-star');
+    const selectedRatingInput = document.getElementById('selectedRating');
+
+    stars.forEach(star => {
+        star.addEventListener('click', function() {
+            const rating = this.getAttribute('data-rating');
+            selectedRatingInput.value = rating;
+            highlightStars(rating);
+        });
+
+        star.addEventListener('mouseover', function() {
+            const rating = this.getAttribute('data-rating');
+            highlightStars(rating);
+        });
+
+        star.addEventListener('mouseout', function() {
+            highlightStars(selectedRatingInput.value);
+        });
+    });
+
+    function highlightStars(rating) {
+        stars.forEach(star => {
+            if (star.getAttribute('data-rating') <= rating) {
+                star.classList.remove('far');
+                star.classList.add('fas');
+            } else {
+                star.classList.remove('fas');
+                star.classList.add('far');
+            }
+        });
+    }
+
+    // Initial highlight based on old input value if available
+    if (selectedRatingInput.value > 0) {
+        highlightStars(selectedRatingInput.value);
+    }
 });
 </script>
     
