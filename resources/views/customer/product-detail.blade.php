@@ -487,4 +487,26 @@
             }
         });
     </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Xử lý tăng/giảm số lượng
+            const decreaseBtn = document.getElementById('decreaseQuantity');
+            const increaseBtn = document.getElementById('increaseQuantity');
+            const quantityInput = document.getElementById('quantity');
+
+            if (decreaseBtn && increaseBtn && quantityInput) {
+                decreaseBtn.addEventListener('click', function() {
+                    let value = parseInt(quantityInput.value, 10);
+                    if (value > 1) {
+                        quantityInput.value = value - 1;
+                    }
+                });
+
+                increaseBtn.addEventListener('click', function() {
+                    let value = parseInt(quantityInput.value, 10);
+                    quantityInput.value = value + 1;
+                });
+            }
+        });
+    </script>
 @endpush
