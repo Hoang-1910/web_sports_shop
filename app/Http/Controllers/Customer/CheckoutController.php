@@ -28,7 +28,7 @@ class CheckoutController extends Controller
         }
 
         // Tính tổng tiền
-        $total = $cartItems->sum(fn($item) => $item->product->price * $item->quantity) + 30000;
+        $total = $cartItems->sum(fn($item) => $item->product->getDiscountedPrice() * $item->quantity) + 30000;
 
         // Tạo đơn hàng
         $order = Order::create([
@@ -48,7 +48,7 @@ class CheckoutController extends Controller
                 'order_id'           => $order->id,
                 'product_variant_id' => $item->variant->id,
                 'quantity'           => $item->quantity,
-                'price'              => $item->product->price,
+                'price'              => $item->product->getDiscountedPrice(),
             ]);
         }
 

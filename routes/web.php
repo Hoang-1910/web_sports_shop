@@ -110,6 +110,9 @@ Route::middleware(['auth:admin', 'is_admin'])->group(function () {
 
     // Quản lý nhà cung cấp (suppliers)
     Route::resource('suppliers', App\Http\Controllers\Admin\SupplierController::class, ['as' => 'admin']);
+
+    // Quản lý khuyến mãi (promotions)
+    Route::resource('promotions', App\Http\Controllers\Admin\PromotionController::class, ['as' => 'admin']);
 });
 
 

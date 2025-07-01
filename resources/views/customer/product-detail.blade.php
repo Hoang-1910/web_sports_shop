@@ -64,17 +64,22 @@
                         <div class="price-info mb-4">
                             <div class="d-flex align-items-center gap-3">
                                 <span class="h3 text-danger fw-bold mb-0">
-                                    {{ number_format($product->price) }}đ
+                                    {{ number_format($product->getDiscountedPrice()) }}đ
                                 </span>
-                                @if ($product->original_price && $product->original_price > $product->price)
+                                @if ($product->getDiscountedPrice() < $product->price)
                                     <span class="text-muted text-decoration-line-through">
-                                        {{ number_format($product->original_price) }}đ
+                                        {{ number_format($product->price) }}đ
                                     </span>
                                     <span class="badge bg-danger">
-                                        -{{ round(100 - ($product->price / $product->original_price) * 100) }}%
+                                        -{{ round(100 - ($product->getDiscountedPrice() / $product->price) * 100) }}%
                                     </span>
                                 @endif
                             </div>
+                            @if ($product->getDiscountedPrice() < $product->price)
+                                <div class="text-success mt-2">
+                                    Tiết kiệm {{ number_format($product->price - $product->getDiscountedPrice()) }}đ
+                                </div>
+                            @endif
                         </div>
 
                         <!-- Description -->

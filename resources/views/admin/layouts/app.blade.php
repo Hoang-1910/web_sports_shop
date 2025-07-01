@@ -77,6 +77,11 @@
                         <span class="material-icons">local_shipping</span>
                         <span class="font-semibold">Nhà cung cấp</span>
                     </a>
+                    <a href="{{ route('admin.promotions.index') }}"
+                        class="flex items-center gap-3 px-4 py-2 rounded-lg text-gray-700 hover:bg-purple-100 hover:text-purple-700 transition">
+                        <span class="material-icons">local_offer</span>
+                        <span class="font-semibold">Khuyến mãi</span>
+                    </a>
                 </nav>
             </aside>
 

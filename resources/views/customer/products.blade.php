@@ -184,20 +184,17 @@
                                             </h3>
                                             <div class="d-flex align-items-center gap-2 mb-2">
                                                 <span class="text-danger fw-bold h6 mb-0">
-                                                    {{ number_format($product->price) }}đ
+                                                    {{ number_format($product->getDiscountedPrice()) }}đ
                                                 </span>
-                                                @if ($product->original_price && $product->original_price > $product->price)
+                                                @if ($product->getDiscountedPrice() < $product->price)
                                                     <span class="text-muted text-decoration-line-through small">
-                                                        {{ number_format($product->original_price) }}đ
+                                                        {{ number_format($product->price) }}đ
                                                     </span>
+                                                    <div class="text-success small mb-1">
+                                                        Tiết kiệm {{ number_format($product->price - $product->getDiscountedPrice()) }}đ
+                                                    </div>
                                                 @endif
                                             </div>
-                                            @if ($product->original_price && $product->original_price > $product->price)
-                                                <div class="text-success small mb-1">
-                                                    Tiết kiệm
-                                                    {{ number_format($product->original_price - $product->price) }}đ
-                                                </div>
-                                            @endif
 
                                             <div class="d-flex gap-2 align-items-center">
                                                 <form action="{{ route('customer.wishlist.add') }}" method="POST"
@@ -260,20 +257,17 @@
                                             </h3>
                                             <div class="d-flex align-items-center gap-2">
                                                 <span class="text-danger fw-bold h6 mb-0">
-                                                    {{ number_format($product->price) }}đ
+                                                    {{ number_format($product->getDiscountedPrice()) }}đ
                                                 </span>
-                                                @if ($product->original_price && $product->original_price > $product->price)
+                                                @if ($product->getDiscountedPrice() < $product->price)
                                                     <span class="text-muted text-decoration-line-through small">
-                                                        {{ number_format($product->original_price) }}đ
+                                                        {{ number_format($product->price) }}đ
                                                     </span>
+                                                    <div class="text-success small">
+                                                        Tiết kiệm {{ number_format($product->price - $product->getDiscountedPrice()) }}đ
+                                                    </div>
                                                 @endif
                                             </div>
-                                            @if ($product->original_price && $product->original_price > $product->price)
-                                                <div class="text-success small">
-                                                    Tiết kiệm
-                                                    {{ number_format($product->original_price - $product->price) }}đ
-                                                </div>
-                                            @endif
                                         </div>
                                     </article>
                                 </div>

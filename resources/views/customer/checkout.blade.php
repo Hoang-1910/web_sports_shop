@@ -65,12 +65,19 @@
                                 <div class="flex-grow-1">
                                     <div class="fw-semibold">{{ $item->product->name }}</div>
                                     <div class="text-muted small">
-                                        Số lượng: {{ $item->quantity }} | 
-                                        {{ number_format($item->product->price) }}đ
+                                        Số lượng: {{ $item->quantity }} |
+                                        <span class="text-danger">{{ number_format($item->product->getDiscountedPrice()) }}đ</span>
+                                        @if ($item->product->getDiscountedPrice() < $item->product->price)
+                                            <span class="text-decoration-line-through ms-1">{{ number_format($item->product->price) }}đ</span>
+                                        @endif
                                     </div>
+                                    @if ($item->product->getDiscountedPrice() < $item->product->price)
+                                        <div class="text-success small">Tiết kiệm {{ number_format($item->product->price - $item->product->getDiscountedPrice()) }}đ</div>
+                                        <div class="text-success small">Tiết kiệm tổng: {{ number_format(($item->product->price - $item->product->getDiscountedPrice()) * $item->quantity) }}đ</div>
+                                    @endif
                                 </div>
                                 <div class="fw-bold text-danger ms-2">
-                                    {{ number_format($item->product->price * $item->quantity) }}đ
+                                    {{ number_format($item->product->getDiscountedPrice() * $item->quantity) }}đ
                                 </div>
                             </div>
                         @endforeach
@@ -78,7 +85,7 @@
                     <hr>
                     <div class="d-flex justify-content-between mb-2">
                         <span class="text-muted">Tạm tính:</span>
-                        <span class="fw-semibold">{{ number_format($cartItems->sum(fn($item) => $item->product->price * $item->quantity)) }}đ</span>
+                        <span class="fw-semibold">{{ number_format($cartItems->sum(fn($item) => $item->product->getDiscountedPrice() * $item->quantity)) }}đ</span>
                     </div>
                     <div class="d-flex justify-content-between mb-2">
                         <span class="text-muted">Phí vận chuyển:</span>
@@ -86,13 +93,15 @@
                     </div>
                     <div class="d-flex justify-content-between mb-2">
                         <span class="text-muted">Giảm giá:</span>
-                        <span class="text-danger">0đ</span>
+                        <span class="text-danger">
+                            {{ number_format($cartItems->sum(fn($item) => ($item->product->price - $item->product->getDiscountedPrice()) * $item->quantity)) }}đ
+                        </span>
                     </div>
                     <hr>
                     <div class="d-flex justify-content-between">
                         <span class="fw-bold">Tổng cộng:</span>
                         <span class="text-danger fw-bold fs-5">
-                            {{ number_format($cartItems->sum(fn($item) => $item->product->price * $item->quantity) + 30000) }}đ
+                            {{ number_format($cartItems->sum(fn($item) => $item->product->getDiscountedPrice() * $item->quantity) + 30000) }}đ
                         </span>
                     </div>
                 </div>
