@@ -25,6 +25,15 @@
                             placeholder="Ghi chú (nếu có)">
                     </div>
                 </div>
+                <div class="mb-6">
+                    <label class="block mb-1 font-semibold text-gray-700">Nhà cung cấp</label>
+                    <select name="supplier_id" class="w-full rounded-xl border-gray-300 focus:border-indigo-400 focus:ring focus:ring-indigo-100 shadow-sm" required>
+                        <option value="">-- Chọn nhà cung cấp --</option>
+                        @foreach ($suppliers as $supplier)
+                            <option value="{{ $supplier->id }}">{{ $supplier->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
 
                 <div>
                     <label class="block font-semibold text-gray-700 mb-3">Danh sách sản phẩm nhập kho</label>

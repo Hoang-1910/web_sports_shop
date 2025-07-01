@@ -37,6 +37,7 @@
                             <th class="p-4 font-semibold">Ghi chú</th>
                             <th class="p-4 font-semibold text-right">Tổng tiền</th>
                             <th class="p-4 text-center font-semibold">Chi tiết</th>
+                            <th class="p-3 text-left font-semibold">Nhà cung cấp</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-100 bg-white">
@@ -159,6 +160,7 @@
                                     </div>
                                     <!-- End modal -->
                                 </td>
+                                <td class="p-3">{{ $import->supplier->name ?? '' }}</td>
                             </tr>
                         @empty
                             <tr>

@@ -107,6 +107,9 @@ Route::middleware(['auth:admin', 'is_admin'])->group(function () {
     Route::get('admin/stock-imports/create', [\App\Http\Controllers\StockImportController::class, 'create'])->name('admin.stock_imports.create');
     Route::post('admin/stock-imports', [\App\Http\Controllers\StockImportController::class, 'store'])->name('admin.stock_imports.store');
     Route::delete('admin/stock-imports/{id}', [\App\Http\Controllers\StockImportController::class, 'destroy'])->name('admin.stock_imports.destroy');
+
+    // Quản lý nhà cung cấp (suppliers)
+    Route::resource('suppliers', App\Http\Controllers\Admin\SupplierController::class, ['as' => 'admin']);
 });
 
 

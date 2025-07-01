@@ -72,6 +72,11 @@
                         <span class="material-icons">inventory</span>
                         <span class="font-semibold">Phiếu nhập kho</span>
                     </a>
+                    <a href="{{ route('admin.suppliers.index') }}"
+                        class="flex items-center gap-3 px-4 py-2 rounded-lg text-gray-700 hover:bg-purple-100 hover:text-purple-700 transition">
+                        <span class="material-icons">local_shipping</span>
+                        <span class="font-semibold">Nhà cung cấp</span>
+                    </a>
                 </nav>
             </aside>
 

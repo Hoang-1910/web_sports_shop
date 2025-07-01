@@ -27,7 +27,9 @@ class StockImportController extends Controller
     {
         // Lấy tất cả biến thể kèm tên sản phẩm cha
         $variants = ProductVariant::with('product')->get();
-        return view('admin.stock_imports.create', compact('variants'));
+        // Lấy tất cả nhà cung cấp
+        $suppliers = \App\Models\Supplier::all();
+        return view('admin.stock_imports.create', compact('variants', 'suppliers'));
     }
 
     // Xử lý lưu phiếu nhập kho
@@ -35,6 +37,7 @@ class StockImportController extends Controller
     {
         $request->validate([
             'import_date'        => 'required|date',
+            'supplier_id'        => 'required|exists:suppliers,id',
             'variants'           => 'required|array',
             'variants.*'         => 'required|integer|exists:product_variants,id',
             'quantities.*'       => 'required|integer|min:1',
@@ -44,6 +47,7 @@ class StockImportController extends Controller
         // Tạo phiếu nhập
         $import = StockImport::create([
             'user_id'     => auth()->id(),
+            'supplier_id' => $request->supplier_id,
             'import_date' => $request->import_date,
             'note'        => $request->note,
             'total_money' => 0, // cập nhật sau

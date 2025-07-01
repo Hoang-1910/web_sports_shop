@@ -8,6 +8,7 @@ class StockImport extends Model
 {
     protected $fillable = [
         'user_id',      // Người thực hiện nhập kho
+        'supplier_id',  // Nhà cung cấp
         'import_date',  // Ngày nhập
         'note',         // Ghi chú
         'total_money',  // Tổng tiền nhập
@@ -23,5 +24,11 @@ class StockImport extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    // Nhà cung cấp
+    public function supplier()
+    {
+        return $this->belongsTo(Supplier::class);
     }
 }
