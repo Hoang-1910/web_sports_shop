@@ -43,7 +43,7 @@
                     <tbody class="divide-y divide-gray-100 bg-white">
                         @forelse($imports as $import)
                             <tr>
-                                <td class="text-center text-gray-500 font-semibold py-4">{{ $import->id }}</td>
+                                <td class="text-center text-gray-500 font-semibold py-4">{{ $loop->index + 1 }}</td>
                                 <td class="text-center">
                                     <span
                                         class="inline-block px-3 py-1 rounded-full bg-indigo-100 text-indigo-700 font-medium text-xs shadow">

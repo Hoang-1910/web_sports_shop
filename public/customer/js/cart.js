@@ -1,67 +1,52 @@
 document.addEventListener('DOMContentLoaded', function () {
-    updateCartTotals();
-
     // Nút tăng/giảm số lượng
     document.querySelectorAll('.quantity-btn').forEach(btn => {
         btn.addEventListener('click', function () {
             const input = this.closest('.quantity-control').querySelector('input');
             let currentValue = parseInt(input.value) || 1;
             const action = this.dataset.action;
-            const max = parseInt(input.dataset.max) || 10;
-
+            const max = parseInt(input.dataset.max) || 100;
             if (action === 'increase' && currentValue < max) {
                 input.value = currentValue + 1;
             } else if (action === 'decrease' && currentValue > 1) {
                 input.value = currentValue - 1;
             }
-
             input.dispatchEvent(new Event('change'));
         });
     });
 
-    // Khi người dùng thay đổi số lượng thủ công
-    document.querySelectorAll('.quantity-control input').forEach(input => {
+    // Khi số lượng thay đổi thì update thành tiền và tổng tiền (JS only)
+    document.querySelectorAll('.quantity-input').forEach(input => {
         input.addEventListener('change', function () {
-            let value = parseInt(this.value);
-            const max = parseInt(this.dataset.max) || 10;
+            const row = input.closest('.cart-item');
+            const price = parseInt(row.querySelector('.item-price').dataset.price) || 0;
+            const quantity = parseInt(input.value) || 1;
+            // Update thành tiền từng dòng
+            const itemTotal = row.querySelector('.item-total');
+            itemTotal.textContent = (price * quantity).toLocaleString() + 'đ';
 
-            if (isNaN(value) || value < 1) value = 1;
-            if (value > max) value = max;
+            // Update tổng tiền các sản phẩm
+            let subtotal = 0;
+            document.querySelectorAll('.cart-item').forEach(row => {
+                const q = parseInt(row.querySelector('.quantity-input').value) || 1;
+                const p = parseInt(row.querySelector('.item-price').dataset.price) || 0;
+                subtotal += q * p;
+            });
+            // Update phần tổng tạm tính
+            const subtotalEl = document.getElementById('cartSubtotal');
+            if (subtotalEl) subtotalEl.textContent = subtotal.toLocaleString() + 'đ';
 
-            this.value = value;
-
-            // Không gửi request lên server, chỉ cập nhật giao diện
-            updateCartTotals();
+            // Update tổng cộng (có phí ship)
+            const totalEl = document.getElementById('cartTotal');
+            if (totalEl) {
+                const shipping = 30000;
+                totalEl.textContent = (subtotal + shipping).toLocaleString() + 'đ';
+            }
         });
     });
 
-    // Hàm cập nhật tổng tiền
-    function updateCartTotals() {
-        let subtotal = 0;
-
-        document.querySelectorAll('.cart-item').forEach(item => {
-            const priceEl = item.querySelector('.item-price');
-            if (!priceEl) return;
-
-            const rawPrice = priceEl.dataset.price || '0';
-            const price = parseFloat(rawPrice);  // dạng 200000.00
-
-            const quantityInput = item.querySelector('.quantity-control input');
-            const quantity = parseInt(quantityInput?.value) || 1;
-
-            const itemTotal = price * quantity;
-
-            const itemTotalEl = item.querySelector('.item-total');
-            if (itemTotalEl) {
-                itemTotalEl.innerText = itemTotal.toLocaleString('vi-VN') + 'đ';
-            }
-
-            subtotal += itemTotal;
-        });
-
-        // Cập nhật tạm tính và tổng cộng
-        document.querySelector('.summary-details .fw-semibold').innerText = subtotal.toLocaleString('vi-VN') + 'đ';
-        const total = subtotal + 30000;
-        document.querySelector('.summary-details .fs-5').innerText = total.toLocaleString('vi-VN') + 'đ';
-    }
+    // Khi vào trang, tính toán lại tổng ban đầu (nếu cần)
+    document.querySelectorAll('.quantity-input').forEach(input => {
+        input.dispatchEvent(new Event('change'));
+    });
 });

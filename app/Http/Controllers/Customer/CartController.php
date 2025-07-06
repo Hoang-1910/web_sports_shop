@@ -12,9 +12,14 @@ class CartController extends Controller
 {
     public function index()
     {
-        $cartItems = Cart::with('variant.product')->where('user_id', Auth::id())->get();
+        $cartItems = Cart::with('variant.product')
+            ->where('user_id', Auth::id())
+            ->get()
+            ->filter(fn($item) => $item->variant); // Lọc ra chỉ những dòng còn variant
+
         return view('customer.cart', compact('cartItems'));
     }
+
     public function add(Request $request)
     {
         if (!auth()->check()) {

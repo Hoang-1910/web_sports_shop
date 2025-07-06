@@ -87,28 +87,30 @@ class ProductController extends Controller
     }
 
 
-    /**
-     * Hiển thị chi tiết sản phẩm dữ liệu demo.
-     */
     public function show($id)
     {
-        // Sample product data
         $product = Product::with([
-            'images',           // hasMany ProductVariantImage hoặc ProductImage
-            'variants',         // hasMany ProductVariant
-            'category',         // belongsTo Category
-            'reviews.user',     // hasMany Review, mỗi review belongsTo User
-            'variants.images'   // Lấy ảnh của từng biến thể
+            'images',
+            'variants',
+            'category',
+            'reviews.user',
+            'variants.images'
         ])->findOrFail($id);
-        $variantArray = $product->variants->map(function ($v) {
+
+        // Đủ fields
+        $variants = $product->variants->map(function ($v) {
             return [
-                'id' => $v->id,
-                'size' => $v->size,
-                'color' => $v->color,
+                'id'        => $v->id,
+                'size'      => $v->size,
+                'color'     => $v->color,
+                'price'     => $v->price,
+                'old_price' => $v->old_price, // nhớ phải có field này trong DB
             ];
-        });
-        return view('customer.product-detail', compact('product', 'variantArray'));
+        })->values();
+
+        return view('customer.product-detail', compact('product', 'variants'));
     }
+
 
     public function search(Request $request)
     {

@@ -50,17 +50,24 @@
                             <tbody>
                                 <tr>
                                     <td class="p-2">
-                                        <select name="variants[]"
-                                            class="w-full rounded-lg border-gray-300 focus:border-indigo-400 focus:ring focus:ring-indigo-100 shadow-sm">
-                                            @foreach ($variants as $variant)
-                                                <option value="{{ $variant->id }}">
-                                                    {{ $variant->product->name }}
-                                                    {{ $variant->size ? ' - Size: ' . $variant->size : '' }}
-                                                    {{ $variant->color ? ' - Màu: ' . $variant->color : '' }}
-                                                </option>
-                                            @endforeach
-                                        </select>
+                                        <div class="relative">
+                                            <input type="text"
+                                                class="variant-search w-full mb-2 rounded-lg border-gray-300 focus:border-indigo-400 focus:ring focus:ring-indigo-100 shadow-sm text-sm"
+                                                placeholder="Nhập tên sản phẩm để lọc...">
+                                            <select name="variants[]"
+                                                class="select2-variant w-full rounded-lg border-gray-300 focus:border-indigo-400 focus:ring focus:ring-indigo-100 shadow-sm">
+                                                @foreach ($variants as $variant)
+                                                    <option value="{{ $variant->id }}">
+                                                        {{ $variant->product->name }}
+                                                        {{ $variant->size ? ' - Size: ' . $variant->size : '' }}
+                                                        {{ $variant->color ? ' - Màu: ' . $variant->color : '' }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+
+                                        </div>
                                     </td>
+
                                     <td class="p-2 text-center">
                                         <input type="number" name="quantities[]" min="1" value="1"
                                             class="w-20 mx-auto rounded-lg border-gray-300 focus:border-indigo-400 focus:ring focus:ring-indigo-100 shadow-sm text-center">
@@ -93,6 +100,10 @@
             </form>
         </div>
     </div>
+    <!-- Select2 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <!-- Select2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
     <script>
         document.getElementById('add-row').onclick = function() {
@@ -116,4 +127,36 @@
             }
         });
     </script>
+    <script>
+        // Khởi tạo select2 cho mọi select2-variant khi trang load & khi add dòng mới
+        function initSelect2Variant() {
+            $('.select2-variant').select2({
+                width: '100%',
+                placeholder: 'Chọn sản phẩm hoặc gõ tên để tìm nhanh...'
+            });
+        }
+        document.addEventListener('DOMContentLoaded', function() {
+            initSelect2Variant();
+
+            // Khi thêm dòng mới, phải gọi lại select2 cho dòng mới
+            document.getElementById('add-row').onclick = function() {
+                var table = document.getElementById('import-table').querySelector('tbody');
+                var row = table.rows[0].cloneNode(true);
+                row.querySelectorAll('input').forEach(function(input) {
+                    input.value = input.type === 'number' ? '1' : '';
+                });
+                // Xóa select2 của dòng clone cũ (nếu có)
+                $(row).find('.select2-variant').next().remove();
+                // Đổi lại thành select2 mới
+                table.appendChild(row);
+                initSelect2Variant();
+                // Gắn sự kiện xóa cho dòng mới
+                row.querySelector('.remove-row').onclick = function() {
+                    if (table.rows.length > 1) row.remove();
+                }
+            };
+        });
+        // Sự kiện xóa dòng giữ nguyên như cũ
+    </script>
+
 @endsection

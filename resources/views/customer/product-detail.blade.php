@@ -63,23 +63,14 @@
                         <!-- Price -->
                         <div class="price-info mb-4">
                             <div class="d-flex align-items-center gap-3">
-                                <span class="h3 text-danger fw-bold mb-0">
-                                    {{ number_format($product->getDiscountedPrice()) }}đ
+                                <span class="h3 text-danger fw-bold mb-0" id="variantPrice">
+                                    {{ isset($product->variants[0]) ? number_format($product->variants[0]->price) : number_format($product->getDiscountedPrice()) }}đ
                                 </span>
-                                @if ($product->getDiscountedPrice() < $product->price)
-                                    <span class="text-muted text-decoration-line-through">
-                                        {{ number_format($product->price) }}đ
-                                    </span>
-                                    <span class="badge bg-danger">
-                                        -{{ round(100 - ($product->getDiscountedPrice() / $product->price) * 100) }}%
-                                    </span>
-                                @endif
+                                <span class="text-muted text-decoration-line-through" id="variantOldPrice"
+                                    style="display:none;"></span>
+                                <span class="badge bg-danger" id="variantDiscount" style="display:none;"></span>
                             </div>
-                            @if ($product->getDiscountedPrice() < $product->price)
-                                <div class="text-success mt-2">
-                                    Tiết kiệm {{ number_format($product->price - $product->getDiscountedPrice()) }}đ
-                                </div>
-                            @endif
+                            <div class="text-success mt-2" id="variantSave" style="display:none;"></div>
                         </div>
 
                         <!-- Description -->
@@ -319,12 +310,14 @@
 @endpush
 
 @push('scripts')
+    <script>
+        const variants = @json($variants);
+    </script>
     <script src="{{ asset('customer/js/product-detail.js') }}"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const mainImage = document.getElementById('mainProductImage');
             const thumbnails = document.querySelectorAll('.thumbnail');
-
             // Tạo mảng các src của thumbnail
             const imageList = Array.from(thumbnails).map(t => t.getAttribute('data-image'));
             let currentIndex = 0;
@@ -360,7 +353,6 @@
             setMainImage(0);
             startSlideshow();
         });
-        const variants = @json($variantArray);
     </script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -512,6 +504,155 @@
                     quantityInput.value = value + 1;
                 });
             }
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const sizeButtons = document.querySelectorAll('.size-btn');
+            const colorButtons = document.querySelectorAll('.color-btn');
+            let selectedSize = null;
+            let selectedColor = null;
+            let selectedVariantId = null;
+
+            const buyNowBtn = document.getElementById('buyNowBtn');
+            const addToCartBtn = document.getElementById('addToCart');
+            const buyNowInput = document.getElementById('buyNowInput');
+
+            // Enable/disable "Mua ngay" giống "Thêm vào giỏ"
+            function updateDisabledStates() {
+                // Disable color nếu size được chọn và cặp (size, color) không tồn tại
+                if (selectedSize) {
+                    colorButtons.forEach(button => {
+                        const color = button.getAttribute('data-color');
+                        const exists = variants.some(v => v.size === selectedSize && v.color === color);
+                        button.disabled = !exists;
+                    });
+                } else {
+                    colorButtons.forEach(button => button.disabled = false);
+                }
+
+                // Disable size nếu color được chọn và cặp (size, color) không tồn tại
+                if (selectedColor) {
+                    sizeButtons.forEach(button => {
+                        const size = button.getAttribute('data-size');
+                        const exists = variants.some(v => v.color === selectedColor && v.size === size);
+                        button.disabled = !exists;
+                    });
+                } else {
+                    sizeButtons.forEach(button => button.disabled = false);
+                }
+
+                // Sau khi cập nhật, kiểm tra có variant hợp lệ không
+                const variantInput = document.getElementById('variantInput');
+                selectedVariantId = null;
+                if (selectedSize && selectedColor) {
+                    const found = variants.find(v => v.size === selectedSize && v.color === selectedColor);
+                    if (found) {
+                        selectedVariantId = found.id;
+                        addToCartBtn.disabled = false;
+                        buyNowBtn.disabled = false;
+                        variantInput.value = found.id;
+                        buyNowInput.value = 1; // Mặc định là mua ngay 1 sản phẩm
+                        return;
+                    }
+                }
+                addToCartBtn.disabled = true;
+                buyNowBtn.disabled = true;
+                variantInput.value = '';
+                buyNowInput.value = 0;
+            }
+
+            sizeButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    sizeButtons.forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+                    selectedSize = this.getAttribute('data-size');
+                    updateDisabledStates();
+                });
+            });
+
+            colorButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    colorButtons.forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+                    selectedColor = this.getAttribute('data-color');
+                    updateDisabledStates();
+                });
+            });
+
+            // Cập nhật hiển thị giá động theo biến thể
+            function updatePriceDisplay() {
+                const priceEl = document.getElementById('variantPrice');
+                const oldPriceEl = document.getElementById('variantOldPrice');
+                const discountEl = document.getElementById('variantDiscount');
+                const saveEl = document.getElementById('variantSave');
+                if (selectedSize && selectedColor) {
+                    const found = variants.find(v => v.size === selectedSize && v.color === selectedColor);
+                    if (found) {
+                        priceEl.textContent = Number(found.price).toLocaleString() + 'đ';
+                        if (found.old_price && found.old_price > found.price) {
+                            oldPriceEl.textContent = Number(found.old_price).toLocaleString() + 'đ';
+                            oldPriceEl.style.display = '';
+                            const percent = Math.round(100 - (found.price / found.old_price) * 100);
+                            discountEl.textContent = '-' + percent + '%';
+                            discountEl.style.display = '';
+                            saveEl.textContent = 'Tiết kiệm ' + Number(found.old_price - found.price)
+                                .toLocaleString() + 'đ';
+                            saveEl.style.display = '';
+                        } else {
+                            oldPriceEl.style.display = 'none';
+                            discountEl.style.display = 'none';
+                            saveEl.style.display = 'none';
+                        }
+                        return;
+                    }
+                }
+                // Nếu chưa chọn đủ, hiển thị giá mặc định
+                priceEl.textContent =
+                    '{{ isset($product->variants[0]) ? number_format($product->variants[0]->price) : number_format($product->getDiscountedPrice()) }}đ';
+                oldPriceEl.style.display = 'none';
+                discountEl.style.display = 'none';
+                saveEl.style.display = 'none';
+            }
+
+            // Gọi khi load trang
+            updatePriceDisplay();
+
+            // Xử lý submit cho "Mua ngay"
+            buyNowBtn.addEventListener('click', function() {
+                buyNowInput.value = 1;
+            });
+            addToCartBtn.addEventListener('click', function() {
+                buyNowInput.value = 0;
+            });
+
+            document.getElementById('addToCartForm').addEventListener('submit', function(e) {
+                if (!selectedVariantId) {
+                    e.preventDefault();
+                    alert('Vui lòng chọn đủ kích thước và màu sắc!');
+                } else {
+                    document.getElementById('variantInput').value = selectedVariantId;
+                }
+            });
+
+            sizeButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    sizeButtons.forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+                    selectedSize = this.getAttribute('data-size');
+                    updateDisabledStates();
+                    updatePriceDisplay();
+                });
+            });
+            colorButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    colorButtons.forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+                    selectedColor = this.getAttribute('data-color');
+                    updateDisabledStates();
+                    updatePriceDisplay();
+                });
+            });
         });
     </script>
 @endpush

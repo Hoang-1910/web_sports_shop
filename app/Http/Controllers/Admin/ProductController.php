@@ -8,6 +8,7 @@ use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use App\Imports\ProductsImport;
+use App\Models\StockImport;
 use Maatwebsite\Excel\Facades\Excel;
 
 class ProductController extends Controller
@@ -15,7 +16,10 @@ class ProductController extends Controller
     public function index()
     {
         $products = Product::latest()->get();
-        return view('admin.products.index', compact('products'));
+        $stock = StockImport::with(['user', 'items.productVariant.product'])
+            ->orderByDesc('import_date')
+            ->paginate(20);
+        return view('admin.products.index', compact('products', 'stock'));
     }
 
     public function create()
