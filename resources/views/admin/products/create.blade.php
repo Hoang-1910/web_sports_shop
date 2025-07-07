@@ -9,15 +9,6 @@
         <span class="material-icons text-purple-500">add_box</span>
         Thêm sản phẩm mới
     </h2>
-
-    <form action="{{ route('admin.products.import') }}" method="POST" enctype="multipart/form-data" class="flex items-center gap-3 mb-6">
-        @csrf
-        <input type="file" name="file" accept=".xlsx,.xls" required class="border rounded px-3 py-2">
-        <button type="submit" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded font-semibold">
-            <span class="material-icons align-middle text-base mr-1">upload</span>
-            Import Excel
-        </button>
-    </form>
     
     @if ($errors->any())
         <div class="mb-4">
@@ -63,9 +54,17 @@
         <div class="flex gap-4">
             <div class="flex-1">
                 <label class="block font-semibold mb-1">Thương hiệu</label>
-                <input type="text" name="brand" value="{{ old('brand') }}" class="w-full border rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-300">
+                <select name="brand_id" class="w-full border rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-300">
+                    <option value="">-- Chọn thương hiệu --</option>
+                    @foreach ($brands as $brand)
+                        <option value="{{ $brand->id }}" {{ old('brand_id') == $brand->id ? 'selected' : '' }}>
+                            {{ $brand->name }}
+                        </option>
+                    @endforeach
+                </select>
             </div>
         </div>
+
 
         <div>
             <label class="block font-semibold mb-1">Mô tả</label>

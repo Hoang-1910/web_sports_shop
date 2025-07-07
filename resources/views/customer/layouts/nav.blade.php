@@ -89,16 +89,17 @@
                             <li>
                                 <hr class="dropdown-divider">
                             </li>
-                            @foreach ([['name' => 'Nike', 'slug' => 'nike'], ['name' => 'Adidas', 'slug' => 'adidas'], ['name' => 'Puma', 'slug' => 'puma']] as $brand)
-                                <li><a class="dropdown-item" href="#">{{ $brand['name'] }}</a></li>
+                            @foreach ($brands as $brand)
+                                <li>
+                                    <a class="dropdown-item" href="{{ route('customer.products.byBrand', $brand->id) }}">
+                                        {{ $brand->name }}
+                                    </a>
+                                </li>
                             @endforeach
                         </ul>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link fw-medium" href="#">Khuyến mãi</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link fw-medium" href="#">Blog</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link fw-medium" href="{{ route('customer.contact') }}">Liên hệ</a>

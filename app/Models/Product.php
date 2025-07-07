@@ -16,7 +16,6 @@ class Product extends Model
         'price',
         'discount',
         'image',
-        'brand'
     ];
 
     public function category()
@@ -46,6 +45,10 @@ class Product extends Model
     public function stockImportItems()
     {
         return $this->hasMany(StockImportItem::class, 'product_id');
+    }
+    public function brand()
+    {
+        return $this->belongsTo(Brand::class);
     }
 
     // Nếu muốn truy vấn tổng số đã nhập:

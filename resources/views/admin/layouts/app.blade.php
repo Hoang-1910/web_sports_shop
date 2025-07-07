@@ -52,6 +52,11 @@
                         <span class="material-icons">category</span>
                         <span class="font-semibold">Danh mục sản phẩm</span>
                     </a>
+                    <a href="{{ route('admin.brands.index') }}" 
+                        class="flex items-center gap-3 px-4 py-2 rounded-lg text-gray-700 hover:bg-purple-100 hover:text-purple-700 transition">
+                        <span class="material-icons">branding_watermark</span>
+                        <span class="font-semibold">Thương hiệu</span>
+                    </a>
                     <a href="{{ route('admin.users.index') }}"
                         class="flex items-center gap-3 px-4 py-2 rounded-lg text-gray-700 hover:bg-purple-100 hover:text-purple-700 transition">
                         <span class="material-icons">people</span>

@@ -55,13 +55,27 @@
                                         <span class="material-icons text-base mr-1">edit</span> Sửa
                                     </a>
                                     <form action="{{ route('admin.products.destroy', $product) }}" method="POST"
-                                        class="d-inline delete-form">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="button"
-                                            class="btn btn-danger btn-delete inline-flex items-center px-3 py-1 bg-red-100 text-red-700 rounded hover:bg-red-200 transition text-sm font-medium shadow-sm">
-                                            <span class="material-icons text-base mr-1">delete</span> Xóa</button>
-                                    </form>
+    class="d-inline delete-form" onsubmit="return confirmDelete(event)">
+    @csrf
+    @method('DELETE')
+    <button type="submit"
+        class="btn btn-danger btn-delete inline-flex items-center px-3 py-1 bg-red-100 text-red-700 rounded hover:bg-red-200 transition text-sm font-medium shadow-sm">
+        <span class="material-icons text-base mr-1">delete</span> Xóa
+    </button>
+</form>
+
+<script>
+    function confirmDelete(event) {
+        // Hiển thị popup xác nhận
+        if (confirm("Bạn có chắc chắn muốn xóa sản phẩm này không?")) {
+            return true; // cho phép submit
+        } else {
+            event.preventDefault(); // chặn submit
+            return false;
+        }
+    }
+</script>
+
                                 </div>
                             </td>
                         </tr>

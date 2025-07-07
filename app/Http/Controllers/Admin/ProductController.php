@@ -5,10 +5,11 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Product;
 use App\Models\Category;
+use App\Models\Brand;
+use App\Models\StockImport;
+use App\Imports\ProductsImport;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use App\Imports\ProductsImport;
-use App\Models\StockImport;
 use Maatwebsite\Excel\Facades\Excel;
 
 class ProductController extends Controller
@@ -25,12 +26,8 @@ class ProductController extends Controller
     public function create()
     {
         $categories = Category::all();
-        return view('admin.products.create', compact('categories'));
-    }
-    public function show(Product $product)
-    {
-        $product = Product::with(['variants.images'])->findOrFail($product->id);
-        return view('admin.products.show', compact('product'));
+        $brands = Brand::all();
+        return view('admin.products.create', compact('categories', 'brands'));
     }
 
     public function store(Request $request)
@@ -38,14 +35,14 @@ class ProductController extends Controller
         $request->validate([
             'name'        => 'required|string|max:255',
             'category_id' => 'required|exists:categories,id',
+            'brand_id'    => 'nullable|exists:brands,id',
             'price'       => 'required|numeric|min:0',
             'discount'    => 'nullable|numeric|min:0|max:100',
-            'brand'       => 'nullable|string|max:255',
             'description' => 'nullable|string',
             'image'       => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        $data = $request->except('image');
+        $data = $request->only(['name', 'category_id', 'brand_id', 'price', 'discount', 'description']);
 
         if ($request->hasFile('image')) {
             $data['image'] = $request->file('image')->store('products', 'public');
@@ -56,10 +53,17 @@ class ProductController extends Controller
         return redirect()->route('admin.products.index')->with('success', 'Đã thêm sản phẩm thành công!');
     }
 
+    public function show(Product $product)
+    {
+        $product = Product::with(['variants.images', 'brand'])->findOrFail($product->id);
+        return view('admin.products.show', compact('product'));
+    }
+
     public function edit(Product $product)
     {
         $categories = Category::all();
-        return view('admin.products.edit', compact('product', 'categories'));
+        $brands = Brand::all();
+        return view('admin.products.edit', compact('product', 'categories', 'brands'));
     }
 
     public function update(Request $request, Product $product)
@@ -67,17 +71,16 @@ class ProductController extends Controller
         $request->validate([
             'name'        => 'required|string|max:255',
             'category_id' => 'required|exists:categories,id',
+            'brand_id'    => 'nullable|exists:brands,id',
             'price'       => 'required|numeric|min:0',
             'discount'    => 'nullable|numeric|min:0|max:100',
-            'brand'       => 'nullable|string|max:255',
             'description' => 'nullable|string',
             'image'       => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        $data = $request->except('image');
+        $data = $request->only(['name', 'category_id', 'brand_id', 'price', 'discount', 'description']);
 
         if ($request->hasFile('image')) {
-            // Xóa ảnh cũ nếu có
             if ($product->image) {
                 Storage::disk('public')->delete($product->image);
             }

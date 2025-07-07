@@ -21,8 +21,17 @@
 
         <div>
             <label class="block font-semibold mb-1">Thương hiệu</label>
-            <input type="text" name="brand" value="{{ old('brand', $product->brand) }}" class="w-full border rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-300">
+            <select name="brand_id" class="w-full border rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-300">
+                <option value="">-- Chọn thương hiệu --</option>
+                @foreach($brands as $brand)
+                    <option value="{{ $brand->id }}" 
+                        @if(old('brand_id', $product->brand_id) == $brand->id) selected @endif>
+                        {{ $brand->name }}
+                    </option>
+                @endforeach
+            </select>
         </div>
+
 
         <div>
             <label class="block font-semibold mb-1">Danh mục</label>

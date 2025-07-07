@@ -15,6 +15,7 @@ use App\Http\Controllers\Customer\CheckoutController;
 use App\Http\Controllers\Customer\OrderController;
 use App\Http\Controllers\Customer\ReviewController;
 use App\Http\Controllers\CustomerLoginController;
+use App\Http\Controllers\Admin\BrandController;
 
 // Trang chủ cho khách hàng (không cần login)
 Route::get('/', [HomeController::class, 'index'])->name('customer.home');
@@ -73,9 +74,18 @@ Route::middleware(['auth:admin', 'is_admin'])->group(function () {
     Route::get('/admin/variants/{variant}/images/{image}/edit', [ProductVariantImageController::class, 'edit'])->name('admin.variants.images.edit');
     Route::put('/admin/variants/images/{image}', [ProductVariantImageController::class, 'update'])->name('admin.variants.images.update');
 
+
     // Quản lý danh mục (categories)
     Route::resource('categories', CategoryController::class, ['as' => 'admin']);
-
+    
+    // Quản lý thương hiệu (brands)
+    Route::get('/admin/brands', [BrandController::class, 'index'])->name('admin.brands.index');
+    Route::get('/admin/brands/create', [BrandController::class, 'create'])->name('admin.brands.create');
+    Route::post('/admin/brands', [BrandController::class, 'store'])->name('admin.brands.store');
+    Route::get('/admin/brands/{brand}/edit', [BrandController::class, 'edit'])->name('admin.brands.edit');
+    Route::put('/admin/brands/{brand}', [BrandController::class, 'update'])->name('admin.brands.update');
+    Route::delete('/admin/brands/{brand}', [BrandController::class, 'destroy'])->name('admin.brands.destroy');
+    Route::get('/admin/brands/{brand}', [BrandController::class, 'show'])->name('admin.brands.show');
     // Quản lý đơn hàng (orders)
     Route::resource('orders', AdminOrderController::class, ['as' => 'admin']);
     Route::get('/admin/orders', [AdminOrderController::class, 'index'])->name('admin.orders.index');
@@ -124,6 +134,7 @@ Route::get('/register', [CustomerRegisterController::class, 'showRegisterForm'])
 Route::post('/register', [CustomerRegisterController::class, 'register'])->name('customer.register.submit');
 Route::get('/products', [CustomerProductController::class, 'index'])->name('customer.products.index');
 Route::get('/products/{id}', [CustomerProductController::class, 'show'])->name('customer.products.show');
+Route::get('/brands/{brand}', [CustomerProductController::class, 'byBrand'])->name('customer.products.byBrand');
 Route::get('/contact', [HomeController::class, 'contact'])->name('customer.contact');
 // Customer Wishlist
 Route::get('/wishlist', [WishlistController::class, 'index'])->name('customer.wishlist.index');

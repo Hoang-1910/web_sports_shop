@@ -42,16 +42,26 @@
                         <!-- Brands Filter -->
                         <div class="filter-group mb-4">
                             <h6 class="fw-semibold mb-3">Thương hiệu</h6>
-                            @foreach ($brands as $brand)
-                                <div class="form-check mb-2">
-                                    <input class="form-check-input" type="checkbox" name="brands[]"
-                                        value="{{ $brand }}" id="brand{{ \Illuminate\Support\Str::slug($brand) }}"
-                                        {{ is_array(request('brands')) && in_array($brand, request('brands')) ? 'checked' : '' }}>
-                                    <label class="form-check-label"
-                                        for="brand{{ \Illuminate\Support\Str::slug($brand) }}">{{ $brand }}</label>
-                                </div>
-                            @endforeach
+                            @php
+                                $selectedBrands = (array) request('brands');
+                            @endphp
+                            <div class="brand-checkboxes d-flex flex-column gap-2">
+                                @foreach ($brands as $brand)
+                                    <div class="form-check">
+                                        <input class="form-check-input"
+                                            type="checkbox"
+                                            name="brands[]"
+                                            value="{{ $brand->id }}"
+                                            id="brand{{ $brand->id }}"
+                                            {{ in_array($brand->id, $selectedBrands) ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="brand{{ $brand->id }}">
+                                            {{ $brand->name }}
+                                        </label>
+                                    </div>
+                                @endforeach
+                            </div>
                         </div>
+
 
                         <!-- Price Range Filter -->
                         <div class="filter-group mb-4">

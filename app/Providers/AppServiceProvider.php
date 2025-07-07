@@ -8,6 +8,7 @@ use App\Models\Category;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Wishlist;
 use App\Models\Cart;
+use App\Models\Brand;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -27,7 +28,7 @@ class AppServiceProvider extends ServiceProvider
         //
         View::composer('customer.layouts.nav', function ($view) {
             $categories = Category::orderBy('name')->get();
-
+            $brands = Brand::orderBy('name')->get();
             // Lấy dữ liệu wishlist và cart cho user hiện tại
             $wishlistItems = collect();
             $wishlistCount = 0;
@@ -43,6 +44,7 @@ class AppServiceProvider extends ServiceProvider
             }
 
             $view->with([
+                'brands' => $brands,
                 'categories' => $categories,
                 'wishlistItems' => $wishlistItems,
                 'wishlistCount' => $wishlistCount,

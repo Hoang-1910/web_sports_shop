@@ -10,6 +10,7 @@ use App\Models\Category;
 use App\Models\ProductVariant;
 use App\Models\ProductVariantImage;
 use App\Models\Wishlist;
+use App\Models\Brand;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
@@ -29,7 +30,7 @@ class ProductController extends Controller
 
         // Lọc theo thương hiệu
         if ($request->has('brands')) {
-            $query->whereIn('brand', (array)$request->brands);
+            $query->whereIn('brand_id', (array)$request->brands);
         }
 
         // Lọc theo khoảng giá
@@ -69,7 +70,7 @@ class ProductController extends Controller
 
         // Dữ liệu cho bộ lọc
         $categories = Category::all();
-        $brands = Product::select('brand')->distinct()->pluck('brand');
+        $brands = Brand::all();
         $sizes = ProductVariant::distinct()->pluck('size');
         $colors = ProductVariant::distinct()->pluck('color');
 
@@ -118,5 +119,16 @@ class ProductController extends Controller
         $products = Product::where('name', 'like', '%' . $q . '%')->paginate(16);
         // Bạn có thể trả thêm biến 'q' cho view hiển thị lại
         return view('customer.products_search', compact('products', 'q'));
+    }
+
+    public function byBrand($brandId)
+    {
+        $brand = Brand::findOrFail($brandId);
+
+        $products = Product::where('brand_id', $brandId)
+            ->latest()
+            ->paginate(12);
+
+        return view('customer.products-by-brand', compact('brand', 'products'));
     }
 }
