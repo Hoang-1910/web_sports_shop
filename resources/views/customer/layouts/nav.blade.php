@@ -85,7 +85,7 @@
                             Thương hiệu
                         </a>
                         <ul class="dropdown-menu shadow border-0" aria-labelledby="brandsDropdown">
-                            <li><a class="dropdown-item" href="#">Tất cả thương hiệu</a></li>
+                            <li><a class="dropdown-item" href="{{ route('customer.products.byAllBrands') }}">Tất cả thương hiệu</a></li>
                             <li>
                                 <hr class="dropdown-divider">
                             </li>

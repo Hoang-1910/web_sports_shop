@@ -19,7 +19,7 @@ use App\Http\Controllers\Admin\BrandController;
 
 // Trang chủ cho khách hàng (không cần login)
 Route::get('/', [HomeController::class, 'index'])->name('customer.home');
-
+use App\Http\Controllers\CustomerPasswordController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\AdminOrderController;
 use App\Http\Controllers\Admin\ReviewController as AdminReviewController;
@@ -140,9 +140,10 @@ Route::get('/contact', [HomeController::class, 'contact'])->name('customer.conta
 Route::get('/wishlist', [WishlistController::class, 'index'])->name('customer.wishlist.index');
 Route::post('/wishlist/add', [WishlistController::class, 'add'])->name('customer.wishlist.add');
 Route::post('/wishlist/remove', [WishlistController::class, 'remove'])->name('customer.wishlist.remove');
+
+Route::get('/brand', [CustomerProductController::class, 'productsByAllBrands'])->name('customer.products.byAllBrands');
+
 Route::middleware(['auth', 'role:customer'])->group(function () {
-
-
     // Customer Orders
     Route::get('/orders', function () {
         return view('customer.orders');
@@ -169,3 +170,9 @@ Route::middleware(['auth', 'role:customer'])->group(function () {
     // Customer Reviews
     Route::post('/products/{product}/reviews', [ReviewController::class, 'store'])->name('customer.reviews.store');
 });
+
+// forgot password flow
+Route::get('/password/request', [CustomerPasswordController::class, 'showRequestForm'])->name('customer.password.request');
+Route::post('/password/send-otp', [CustomerPasswordController::class, 'sendOtp'])->name('customer.password.sendOtp');
+Route::get('/password/verify', [CustomerPasswordController::class, 'showVerifyForm'])->name('customer.password.verifyForm');
+Route::post('/password/verify', [CustomerPasswordController::class, 'verifyOtp'])->name('customer.password.verifyOtp');

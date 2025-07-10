@@ -173,7 +173,8 @@
                         $isFavorite = in_array($product['id'], $wishlistProductIds ?? []);
                     @endphp
 
-                    <form method="POST" action="{{ route($isFavorite ? 'customer.wishlist.remove' : 'customer.wishlist.add') }}" class="d-inline">
+                    <form method="POST" action="{{ route($isFavorite ? 'customer.wishlist.remove' : 'customer.wishlist.add') }}" class="d-inline" 
+                    style="position: absolute; top: 0; z-index: 2; right: 0;">
                         @csrf
                         <input type="hidden" name="product_id" value="{{ $product['id'] }}">
                         <button type="submit" class="btn btn-light btn-sm" aria-label="Yêu thích sản phẩm">

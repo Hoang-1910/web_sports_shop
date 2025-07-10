@@ -137,7 +137,19 @@
         </div>
     </div>
 </div>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const termsCheckbox = document.getElementById('terms');
+        const submitBtn = document.querySelector('button[type="submit"]');
 
+        // mặc định disable button
+        submitBtn.disabled = true;
+
+        termsCheckbox.addEventListener('change', function () {
+            submitBtn.disabled = !this.checked;
+        });
+    });
+</script>
 @push('styles')
 <link href="{{ asset('customer/css/register.css') }}" rel="stylesheet">
 @endpush

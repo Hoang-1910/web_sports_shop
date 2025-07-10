@@ -54,7 +54,7 @@
                                 <input type="checkbox" class="form-check-input" id="remember" name="remember">
                                 <label class="form-check-label text-muted" for="remember">Ghi nhớ đăng nhập</label>
                             </div>
-                            <a href="#" class="text-danger text-decoration-none small">Quên mật khẩu?</a>
+                            <a href="{{ route('customer.password.request') }}" class="text-danger text-decoration-none small">Quên mật khẩu?</a>
                         </div>
 
                         <div class="d-grid gap-2">
@@ -82,9 +82,6 @@
                         <div class="d-grid gap-2">
                             <button type="button" class="btn btn-outline-danger">
                                 <i class="fab fa-google me-2"></i>Google
-                            </button>
-                            <button type="button" class="btn btn-outline-danger">
-                                <i class="fab fa-facebook-f me-2"></i>Facebook
                             </button>
                         </div>
                     </div>

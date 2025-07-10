@@ -131,4 +131,13 @@ class ProductController extends Controller
 
         return view('customer.products-by-brand', compact('brand', 'products'));
     }
+
+    public function productsByAllBrands()
+    {
+        $brand = Brand::with(['products' => function ($query) {
+            $query->latest(); // hoặc thêm paginate nếu muốn phân trang từng brand
+        }])->get();
+
+        return view('customer.brand-product', compact('brand'));
+    }
 }
