@@ -181,12 +181,6 @@
                             <i class="fa-heart {{ $isFavorite ? 'fas text-danger' : 'far' }}"></i>
                         </button>
                     </form>
-
-
-
-
-
-                    
                     <!-- Product Image -->
                     <div class="product-img-box position-relative w-100" style="aspect-ratio: 1.1/1;">
                         <img src="{{ asset('storage/' . $product['image']) }}"

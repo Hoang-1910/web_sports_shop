@@ -32,16 +32,30 @@ class AdminOrderController extends Controller
 
     public function updateStatus(Request $request, $id)
     {
-
         $request->validate([
             'status' => 'required|in:pending,processing,shipped,delivered,cancelled',
         ]);
 
-        $order = Order::findOrFail($id);
+        $order = Order::with('orderDetails.productVariant')->findOrFail($id);
+
+        // Nếu trạng thái mới là "delivered" và trạng thái cũ chưa phải "delivered" => trừ kho
+        if ($request->status === 'delivered' && $order->status !== 'delivered') {
+            foreach ($order->orderDetails as $detail) {
+                $variant = $detail->productVariant;
+                if ($variant) {
+                    // Trừ tồn kho
+                    $variant->stock = max(0, ($variant->stock ?? 0) - $detail->quantity);
+                    $variant->save();
+                }
+            }
+        }
+
+        // Cập nhật trạng thái đơn hàng
         $order->update(['status' => $request->status]);
 
         return redirect()->back()->with('success', 'Cập nhật trạng thái đơn hàng thành công.');
     }
+
     public function destroy($id)
     {
         $order = Order::findOrFail($id);

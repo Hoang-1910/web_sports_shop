@@ -17,7 +17,7 @@
                         <p class="text-muted mb-0">Tham gia cùng chúng tôi ngay hôm nay!</p>
                     </div>
 
-                    @if ($errors->any())
+                    {{-- @if ($errors->any())
                         <div class="alert alert-danger">
                             <i class="fas fa-exclamation-circle me-2"></i>
                             <ul class="mb-0">
@@ -26,7 +26,7 @@
                                 @endforeach
                             </ul>
                         </div>
-                    @endif
+                    @endif --}}
 
                     <form method="POST" action="{{ route('customer.register.submit') }}" class="needs-validation" novalidate>
                         @csrf

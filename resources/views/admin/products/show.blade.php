@@ -50,39 +50,48 @@
 
     {{-- Các lựa chọn/biến thể --}}
     @if($product->variants->count())
-    <div class="mt-10">
-        <h3 class="text-lg font-bold text-purple-700 mb-3 flex items-center gap-2">
-            <span class="material-icons text-purple-500">tune</span>
-            Các lựa chọn/biến thể
-        </h3>
-        @php
-            $sizes = $product->variants->pluck('size')->unique()->filter();
-            $colors = $product->variants->pluck('color')->unique()->filter();
-        @endphp
+<div class="mt-10">
+    <h3 class="text-lg font-bold text-purple-700 mb-3 flex items-center gap-2">
+        <span class="material-icons text-purple-500">tune</span>
+        Danh sách biến thể
+    </h3>
 
-        <div class="flex gap-4 mb-4">
-            {{-- Chọn size --}}
-            <div>
-                <div class="mb-1 font-semibold">Size:</div>
-                <div class="flex gap-2">
-                    @foreach($sizes as $size)
-                        <button type="button" class="size-btn px-3 py-1 rounded border border-purple-300 bg-white text-gray-700 hover:bg-purple-100" data-size="{{ $size }}">{{ $size }}</button>
-                    @endforeach
-                </div>
-            </div>
-            {{-- Chọn màu --}}
-            <div>
-                <div class="mb-1 font-semibold">Màu:</div>
-                <div class="flex gap-2">
-                    @foreach($colors as $color)
-                        <button type="button" class="color-btn px-3 py-1 rounded border border-purple-300 bg-white text-gray-700 hover:bg-purple-100" data-color="{{ $color }}">{{ $color }}</button>
-                    @endforeach
-                </div>
-            </div>
-        </div>
-        <div id="variant-images" class="flex gap-2"></div>
+    <div class="overflow-x-auto bg-white border rounded-xl shadow-sm">
+        <table class="min-w-full divide-y divide-gray-200 text-sm text-left">
+            <thead class="bg-purple-50">
+                <tr>
+                    <th class="px-4 py-2 font-semibold text-gray-700">Size</th>
+                    <th class="px-4 py-2 font-semibold text-gray-700">Màu</th>
+                    <th class="px-4 py-2 font-semibold text-gray-700">Tồn kho</th>
+                    <th class="px-4 py-2 font-semibold text-gray-700">Ảnh</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-100">
+                @foreach($product->variants as $variant)
+                <tr>
+                    <td class="px-4 py-2">{{ $variant->size ?? '-' }}</td>
+                    <td class="px-4 py-2">{{ $variant->color ?? '-' }}</td>
+                    <td class="px-4 py-2">
+                        <span class="font-semibold text-gray-800">{{ $variant->stock ?? 0 }}</span>
+                    </td>
+                    <td class="px-4 py-2">
+                        <div class="flex gap-2 flex-wrap">
+                            @forelse($variant->images as $image)
+                                <img src="{{ asset('storage/' . $image->image_path) }}" alt="Ảnh biến thể"
+                                     class="w-12 h-12 object-cover rounded shadow">
+                            @empty
+                                <span class="text-gray-400 italic">Không có ảnh</span>
+                            @endforelse
+                        </div>
+                    </td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
     </div>
-    @endif
+</div>
+@endif
+
 
     <div class="mt-8 flex justify-end">
         <a href="{{ route('admin.products.index') }}" class="px-5 py-2 rounded bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold transition">Quay lại</a>
