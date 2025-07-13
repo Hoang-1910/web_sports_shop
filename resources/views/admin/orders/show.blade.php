@@ -45,7 +45,7 @@
         @endforeach
     </ul>
 
-    <form method="POST" action="{{ route('orders.updateStatus', $order->id) }}" class="mt-8 bg-purple-50 p-5 rounded-xl shadow-inner">
+    <form method="POST" action="{{ route('admin.orders.updateStatus', $order->id) }}" class="mt-8 bg-purple-50 p-5 rounded-xl shadow-inner">
         @csrf
         @method('PUT')
 

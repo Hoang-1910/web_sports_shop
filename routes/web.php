@@ -38,91 +38,90 @@ Route::get('/search', [CustomerProductController::class, 'search'])->name('custo
 
 // Đăng xuất
 Route::post('/admin/logout', [AdminLoginController::class, 'logout'])->name('admin.logout');
-Route::middleware(['auth:admin', 'is_admin'])->group(function () {
+Route::middleware(['auth:admin', 'is_admin'])->prefix('admin')->as('admin.')->group(function () {
 
     // Dashboard
-    Route::get('/admin/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     // Quản lý sản phẩm (products) email: "admin1@example.com",
-    Route::get('/admin/products', [ProductController::class, 'index'])->name('admin.products.index');
-    Route::get('/admin/products/create', [ProductController::class, 'create'])->name('admin.products.create');
-    Route::post('/admin/products', [ProductController::class, 'store'])->name('admin.products.store');
-    Route::get('/admin/products/{product}/edit', [ProductController::class, 'edit'])->name('admin.products.edit');
-    Route::put('/admin/products/{product}', [ProductController::class, 'update'])->name('admin.products.update');
-    Route::get('/admin/products/{product}', [ProductController::class, 'show'])->name('admin.products.show');
-    Route::delete('/admin/products/{product}', [ProductController::class, 'destroy'])->name('admin.products.destroy');
-    Route::post('/admin/products/import', [ProductController::class, 'import'])->name('admin.products.import');
+    Route::get('/products', [ProductController::class, 'index'])->name('products.index');
+    Route::get('/products/create', [ProductController::class, 'create'])->name('products.create');
+    Route::post('/products', [ProductController::class, 'store'])->name('products.store');
+    Route::get('/products/{product}/edit', [ProductController::class, 'edit'])->name('products.edit');
+    Route::put('/products/{product}', [ProductController::class, 'update'])->name('products.update');
+    Route::get('/products/{product}', [ProductController::class, 'show'])->name('products.show');
+    Route::delete('/products/{product}', [ProductController::class, 'destroy'])->name('products.destroy');
+    Route::post('/products/import', [ProductController::class, 'import'])->name('products.import');
 
     // Route Product Variants
-    Route::get('/admin/products/{product}/variants/create', [ProductVariantController::class, 'create'])->name('admin.variants.create');
-    Route::post('/admin/products/{product}/variants', [ProductVariantController::class, 'store'])->name('admin.variants.store');
-    Route::get('/admin/variants/{variant}/edit', [ProductVariantController::class, 'edit'])->name('admin.variants.edit');
-    Route::put('/admin/variants/{variant}', [ProductVariantController::class, 'update'])->name('admin.variants.update');
-    Route::delete('/admin/variants/{variant}', [ProductVariantController::class, 'destroy'])->name('admin.variants.destroy');
-    Route::post('/admin/variants/{variant}/images', [ProductVariantImageController::class, 'store'])->name('admin.variants.images.store');
-    Route::delete('/admin/variants/images/{id}', [ProductVariantImageController::class, 'destroy'])->name('admin.variants.images.destroy');
-    Route::get('/admin/variants/{variant}/images', [ProductVariantImageController::class, 'index'])->name('admin.variants.images.index');
-    Route::get('/admin/variants/{variant}/images/create', [ProductVariantImageController::class, 'create'])->name('admin.variants.images.create');
-    Route::post('/admin/variants/{variant}/images/store', [ProductVariantImageController::class, 'store'])->name('admin.variants.images.store');
-    Route::get('/admin/variants/{variant}/images/{image}/edit', [ProductVariantImageController::class, 'edit'])->name('admin.variants.images.edit');
-    Route::put('/admin/variants/images/{image}', [ProductVariantImageController::class, 'update'])->name('admin.variants.images.update');
-    Route::delete('/admin/variants/images/{image}', [ProductVariantImageController::class, 'destroy'])->name('admin.variants.images.destroy');
-    Route::get('/admin/variants/{variant}/images/{image}/show', [ProductVariantImageController::class, 'show'])->name('admin.variants.images.show');
-    Route::get('/admin/variants/{variant}/images/{image}/edit', [ProductVariantImageController::class, 'edit'])->name('admin.variants.images.edit');
-    Route::delete('/admin/variants/{variant}/images/{image}', [ProductVariantImageController::class, 'destroy'])->name('admin.variants.images.destroy');
-    Route::get('/admin/variants/{variant}/images/{image}/show', [ProductVariantImageController::class, 'show'])->name('admin.variants.images.show');
-    Route::get('/admin/variants/{variant}/images/{image}/edit', [ProductVariantImageController::class, 'edit'])->name('admin.variants.images.edit');
-    Route::put('/admin/variants/images/{image}', [ProductVariantImageController::class, 'update'])->name('admin.variants.images.update');
-
+    Route::get('/products/{product}/variants/create', [ProductVariantController::class, 'create'])->name('variants.create');
+    Route::post('/products/{product}/variants', [ProductVariantController::class, 'store'])->name('variants.store');
+    Route::get('/variants/{variant}/edit', [ProductVariantController::class, 'edit'])->name('variants.edit');
+    Route::put('/variants/{variant}', [ProductVariantController::class, 'update'])->name('variants.update');
+    Route::delete('/variants/{variant}', [ProductVariantController::class, 'destroy'])->name('variants.destroy');
+    Route::post('/variants/{variant}/images', [ProductVariantImageController::class, 'store'])->name('variants.images.store');
+    Route::delete('/variants/images/{id}', [ProductVariantImageController::class, 'destroy'])->name('variants.images.destroy');
+    Route::get('/variants/{variant}/images', [ProductVariantImageController::class, 'index'])->name('variants.images.index');
+    Route::get('/variants/{variant}/images/create', [ProductVariantImageController::class, 'create'])->name('variants.images.create');
+    Route::post('/variants/{variant}/images/store', [ProductVariantImageController::class, 'store'])->name('variants.images.store');
+    Route::get('/variants/{variant}/images/{image}/edit', [ProductVariantImageController::class, 'edit'])->name('variants.images.edit');
+    Route::put('/variants/images/{image}', [ProductVariantImageController::class, 'update'])->name('variants.images.update');
+    Route::delete('/variants/images/{image}', [ProductVariantImageController::class, 'destroy'])->name('variants.images.destroy');
+    Route::get('/variants/{variant}/images/{image}/show', [ProductVariantImageController::class, 'show'])->name('variants.images.show');
+    Route::get('/variants/{variant}/images/{image}/edit', [ProductVariantImageController::class, 'edit'])->name('variants.images.edit');
+    Route::delete('/variants/{variant}/images/{image}', [ProductVariantImageController::class, 'destroy'])->name('variants.images.destroy');
+    Route::get('/variants/{variant}/images/{image}/show', [ProductVariantImageController::class, 'show'])->name('variants.images.show');
+    Route::get('/variants/{variant}/images/{image}/edit', [ProductVariantImageController::class, 'edit'])->name('variants.images.edit');
+    Route::put('/variants/images/{image}', [ProductVariantImageController::class, 'update'])->name('variants.images.update');
 
     // Quản lý danh mục (categories)
-    Route::resource('categories', CategoryController::class, ['as' => 'admin']);
+    Route::resource('categories', CategoryController::class);
     
     // Quản lý thương hiệu (brands)
-    Route::get('/admin/brands', [BrandController::class, 'index'])->name('admin.brands.index');
-    Route::get('/admin/brands/create', [BrandController::class, 'create'])->name('admin.brands.create');
-    Route::post('/admin/brands', [BrandController::class, 'store'])->name('admin.brands.store');
-    Route::get('/admin/brands/{brand}/edit', [BrandController::class, 'edit'])->name('admin.brands.edit');
-    Route::put('/admin/brands/{brand}', [BrandController::class, 'update'])->name('admin.brands.update');
-    Route::delete('/admin/brands/{brand}', [BrandController::class, 'destroy'])->name('admin.brands.destroy');
-    Route::get('/admin/brands/{brand}', [BrandController::class, 'show'])->name('admin.brands.show');
+    Route::get('/brands', [BrandController::class, 'index'])->name('brands.index');
+    Route::get('/brands/create', [BrandController::class, 'create'])->name('brands.create');
+    Route::post('/brands', [BrandController::class, 'store'])->name('brands.store');
+    Route::get('/brands/{brand}/edit', [BrandController::class, 'edit'])->name('brands.edit');
+    Route::put('/brands/{brand}', [BrandController::class, 'update'])->name('brands.update');
+    Route::delete('/brands/{brand}', [BrandController::class, 'destroy'])->name('brands.destroy');
+    Route::get('/brands/{brand}', [BrandController::class, 'show'])->name('brands.show');
     // Quản lý đơn hàng (orders)
-    Route::resource('orders', AdminOrderController::class, ['as' => 'admin']);
-    Route::get('/admin/orders', [AdminOrderController::class, 'index'])->name('admin.orders.index');
-    Route::get('/admin/orders/{order}', [AdminOrderController::class, 'show'])->name('orders.show');
-    Route::delete('/admin/orders/{id}', [AdminOrderController::class, 'destroy'])->name('admin.orders.destroy');
+    Route::resource('orders', AdminOrderController::class);
+    Route::get('/orders', [AdminOrderController::class, 'index'])->name('orders.index');
+    Route::get('/orders/{order}', [AdminOrderController::class, 'show'])->name('orders.show');
+    Route::delete('/orders/{id}', [AdminOrderController::class, 'destroy'])->name('orders.destroy');
 
 
     // Route hiển thị đơn hàng
-    Route::get('/admin/orders/{id}', [AdminOrderController::class, 'show'])->name('orders.show');
+    Route::get('/orders/{id}', [AdminOrderController::class, 'show'])->name('orders.show');
 
     // Route cập nhật trạng thái đơn hàng
-    Route::put('/admin/orders/{id}/status', [AdminOrderController::class, 'updateStatus'])->name('orders.updateStatus');
+    Route::put('/orders/{id}/status', [AdminOrderController::class, 'updateStatus'])->name('orders.updateStatus');
     // Quản lý đánh giá (reviews)
-    Route::resource('reviews', AdminReviewController::class, ['as' => 'admin']);
+    Route::resource('reviews', AdminReviewController::class);
 
     // Quản lý người dùng (users)
-    Route::resource('users', UserController::class, ['as' => 'admin']);
-    Route::resource('dashboard1', DashboardController::class, ['as' => 'admin']);
+    Route::resource('users', UserController::class);
+    Route::resource('dashboard1', DashboardController::class);
 
     //
-    Route::get('/admin/orders/export/excel', [AdminOrderController::class, 'exportExcel'])->name('orders.exportExcel');
-    Route::get('/admin/orders/export/pdf', [AdminOrderController::class, 'exportPdf'])->name('orders.exportPdf');
-    Route::delete('/admin/orders/delete-all', [AdminOrderController::class, 'deleteAll'])->name('orders.deleteAll');
+    Route::get('/orders/export/excel', [AdminOrderController::class, 'exportExcel'])->name('orders.exportExcel');
+    Route::get('/orders/export/pdf', [AdminOrderController::class, 'exportPdf'])->name('orders.exportPdf');
+    Route::delete('/orders/delete-all', [AdminOrderController::class, 'deleteAll'])->name('orders.deleteAll');
 
 
 
     // Quản lý nhập kho
-    Route::get('admin/stock-imports', [\App\Http\Controllers\StockImportController::class, 'index'])->name('admin.stock_imports.index');
-    Route::get('admin/stock-imports/create', [\App\Http\Controllers\StockImportController::class, 'create'])->name('admin.stock_imports.create');
-    Route::post('admin/stock-imports', [\App\Http\Controllers\StockImportController::class, 'store'])->name('admin.stock_imports.store');
-    Route::delete('admin/stock-imports/{id}', [\App\Http\Controllers\StockImportController::class, 'destroy'])->name('admin.stock_imports.destroy');
+    Route::get('stock-imports', [\App\Http\Controllers\StockImportController::class, 'index'])->name('stock_imports.index');
+    Route::get('stock-imports/create', [\App\Http\Controllers\StockImportController::class, 'create'])->name('stock_imports.create');
+    Route::post('stock-imports', [\App\Http\Controllers\StockImportController::class, 'store'])->name('stock_imports.store');
+    Route::delete('stock-imports/{id}', [\App\Http\Controllers\StockImportController::class, 'destroy'])->name('stock_imports.destroy');
 
     // Quản lý nhà cung cấp (suppliers)
-    Route::resource('suppliers', App\Http\Controllers\Admin\SupplierController::class, ['as' => 'admin']);
+    Route::resource('suppliers', \App\Http\Controllers\Admin\SupplierController::class);
 
     // Quản lý khuyến mãi (promotions)
-    Route::resource('promotions', App\Http\Controllers\Admin\PromotionController::class, ['as' => 'admin']);
+    Route::resource('promotions', \App\Http\Controllers\Admin\PromotionController::class);
 });
 
 
