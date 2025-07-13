@@ -140,6 +140,7 @@ Route::get('/contact', [HomeController::class, 'contact'])->name('customer.conta
 Route::get('/wishlist', [WishlistController::class, 'index'])->name('customer.wishlist.index');
 Route::post('/wishlist/add', [WishlistController::class, 'add'])->name('customer.wishlist.add');
 Route::post('/wishlist/remove', [WishlistController::class, 'remove'])->name('customer.wishlist.remove');
+Route::get('/promotions', [\App\Http\Controllers\Customer\PromotionController::class, 'index'])->name('customer.promotions');
 Route::middleware(['auth', 'role:customer'])->group(function () {
 
 

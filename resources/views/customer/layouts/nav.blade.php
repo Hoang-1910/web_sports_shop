@@ -99,7 +99,7 @@
                         </ul>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link fw-medium" href="#">Khuyến mãi</a>
+                        <a class="nav-link fw-medium" href="{{ route('customer.promotions') }}">Khuyến mãi</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link fw-medium" href="{{ route('customer.contact') }}">Liên hệ</a>
@@ -319,7 +319,7 @@
                 </div>
             </div>
 
-            <a href="#" class="mobile-nav-link {{ request()->routeIs('promotions') ? 'active' : '' }}">
+            <a href="{{ route('customer.promotions') }}" class="mobile-nav-link {{ request()->routeIs('customer.promotions') ? 'active' : '' }}">
                 <i class="bi bi-percent me-3"></i>Khuyến mãi
             </a>
             <a href="#" class="mobile-nav-link {{ request()->routeIs('blog') ? 'active' : '' }}">
