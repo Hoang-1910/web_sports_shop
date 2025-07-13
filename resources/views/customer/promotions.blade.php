@@ -33,68 +33,29 @@
         </h2>
         
         <div class="row g-4">
-            @php
-            $activePromotions = [
-                [
-                    'id' => 1,
-                    'title' => 'Siêu Sale Tháng 3',
-                    'discount' => 'Giảm đến 50%',
-                    'description' => 'Khuyến mãi đặc biệt dành cho các sản phẩm thể thao cao cấp. Áp dụng cho tất cả khách hàng.',
-                    'time_left' => 'Còn 5 ngày',
-                    'image' => asset('customer/images/promo.jpg'),
-                    'link' => '#'
-                ],
-                [
-                    'id' => 2,
-                    'title' => 'Combo Giày + Phụ Kiện',
-                    'discount' => 'Tiết kiệm 30%',
-                    'description' => 'Mua combo giày thể thao và phụ kiện đi kèm. Áp dụng cho các sản phẩm được chọn.',
-                    'time_left' => 'Còn 3 ngày',
-                    'image' => asset('customer/images/promo.jpg'),
-                    'link' => '#'
-                ],
-                [
-                    'id' => 3,
-                    'title' => 'Flash Sale Cuối Tuần',
-                    'discount' => 'Giảm đến 70%',
-                    'description' => 'Chương trình flash sale đặc biệt vào cuối tuần. Số lượng có hạn.',
-                    'time_left' => 'Còn 2 ngày',
-                    'image' => asset('customer/images/promo.jpg'),
-                    'link' => '#'
-                ],
-                [
-                    'id' => 4,
-                    'title' => 'Ưu đãi Thành viên',
-                    'discount' => 'Thêm 10%',
-                    'description' => 'Thành viên mới nhận thêm ưu đãi 10% cho đơn hàng đầu tiên.',
-                    'time_left' => 'Còn 7 ngày',
-                    'image' => asset('customer/images/promo.jpg'),
-                    'link' => '#'
-                ]
-            ];
-            @endphp
-
-            @foreach($activePromotions as $promo)
+            @forelse($activePromotions as $promotion)
             <div class="col-lg-6">
                 <div class="promo-card bg-white rounded-4 overflow-hidden shadow-sm h-100">
                     <div class="row g-0">
                         <div class="col-md-5">
-                            <img src="{{ $promo['image'] }}" class="w-100 h-100 object-fit-cover" alt="{{ $promo['title'] }}">
+                            <img src="{{ asset('customer/images/promo.jpg') }}" class="w-100 h-100 object-fit-cover" alt="{{ $promotion->name }}">
                         </div>
                         <div class="col-md-7">
                             <div class="p-4">
                                 <div class="d-flex justify-content-between align-items-start mb-3">
-                                    <h3 class="h5 fw-bold mb-0">{{ $promo['title'] }}</h3>
-                                    <span class="badge bg-danger">{{ $promo['discount'] }}</span>
+                                    <h3 class="h5 fw-bold mb-0">{{ $promotion->name }}</h3>
+                                    <span class="badge bg-danger">
+                                        {{ $promotion->discount_type === 'percent' ? $promotion->discount_value . '%' : number_format($promotion->discount_value) . 'đ' }}
+                                    </span>
                                 </div>
-                                <p class="text-muted mb-3">{{ $promo['description'] }}</p>
+                                <p class="text-muted mb-3">{{ $promotion->description }}</p>
                                 <div class="d-flex justify-content-between align-items-center">
                                     <div class="text-danger fw-bold">
                                         <i class="fas fa-clock me-1"></i>
-                                        {{ $promo['time_left'] }}
+                                        Còn {{ \Carbon\Carbon::now()->diffInDays($promotion->end_date) }} ngày
                                     </div>
-                                    <a href="{{ $promo['link'] }}" class="btn btn-outline-danger">
-                                        Chi tiết <i class="fas fa-arrow-right ms-1"></i>
+                                    <a href="{{ route('customer.products.index') }}" class="btn btn-outline-danger">
+                                        Mua ngay <i class="fas fa-arrow-right ms-1"></i>
                                     </a>
                                 </div>
                             </div>
@@ -102,7 +63,13 @@
                     </div>
                 </div>
             </div>
-            @endforeach
+            @empty
+            <div class="col-12">
+                <div class="text-center py-4">
+                    <p class="text-muted mb-0">Hiện tại không có khuyến mãi nào đang diễn ra.</p>
+                </div>
+            </div>
+            @endforelse
         </div>
     </div>
 </section>
@@ -116,58 +83,37 @@
         </h2>
         
         <div class="row g-4">
-            @php
-            $upcomingPromotions = [
-                [
-                    'id' => 5,
-                    'title' => 'Black Friday 2024',
-                    'discount' => 'Giảm đến 80%',
-                    'description' => 'Sự kiện Black Friday lớn nhất năm với hàng ngàn sản phẩm giảm giá.',
-                    'start_date' => '24/11/2024',
-                    'image' => asset('customer/images/promo.jpg')
-                ],
-                [
-                    'id' => 6,
-                    'title' => 'Tết Nguyên Đán 2025',
-                    'discount' => 'Quà tặng đặc biệt',
-                    'description' => 'Chương trình khuyến mãi đặc biệt nhân dịp Tết Nguyên Đán 2025.',
-                    'start_date' => '01/02/2025',
-                    'image' => asset('customer/images/promo.jpg')
-                ],
-                [
-                    'id' => 7,
-                    'title' => 'Hè Rực Rỡ 2025',
-                    'discount' => 'Giảm đến 40%',
-                    'description' => 'Chuỗi chương trình khuyến mãi hè với nhiều ưu đãi hấp dẫn.',
-                    'start_date' => '01/06/2025',
-                    'image' => asset('customer/images/promo.jpg')
-                ]
-            ];
-            @endphp
-
-            @foreach($upcomingPromotions as $promo)
+            @forelse($upcomingPromotions as $promotion)
             <div class="col-lg-4 col-md-6">
                 <div class="promo-card bg-white rounded-4 overflow-hidden shadow-sm h-100">
-                    <img src="{{ $promo['image'] }}" class="w-100" style="height: 200px; object-fit: cover;" alt="{{ $promo['title'] }}">
+                    <img src="{{ asset('customer/images/promo.jpg') }}" class="w-100" style="height: 200px; object-fit: cover;" alt="{{ $promotion->name }}">
                     <div class="p-4">
                         <div class="d-flex justify-content-between align-items-start mb-3">
-                            <h3 class="h5 fw-bold mb-0">{{ $promo['title'] }}</h3>
-                            <span class="badge bg-primary">{{ $promo['discount'] }}</span>
+                            <h3 class="h5 fw-bold mb-0">{{ $promotion->name }}</h3>
+                            <span class="badge bg-primary">
+                                {{ $promotion->discount_type === 'percent' ? $promotion->discount_value . '%' : number_format($promotion->discount_value) . 'đ' }}
+                            </span>
                         </div>
-                        <p class="text-muted mb-3">{{ $promo['description'] }}</p>
+                        <p class="text-muted mb-3">{{ $promotion->description }}</p>
                         <div class="d-flex justify-content-between align-items-center">
                             <div class="text-primary fw-bold">
                                 <i class="fas fa-calendar me-1"></i>
-                                Bắt đầu: {{ $promo['start_date'] }}
+                                Bắt đầu: {{ $promotion->start_date->format('d/m/Y') }}
                             </div>
-                            <button class="btn btn-outline-primary btn-sm" onclick="setReminder('{{ $promo['id'] }}')">
+                            <button class="btn btn-outline-primary btn-sm" onclick="setReminder('{{ $promotion->id }}')">
                                 <i class="fas fa-bell me-1"></i>Nhắc nhở
                             </button>
                         </div>
                     </div>
                 </div>
             </div>
-            @endforeach
+            @empty
+            <div class="col-12">
+                <div class="text-center py-4">
+                    <p class="text-muted mb-0">Không có khuyến mãi sắp diễn ra.</p>
+                </div>
+            </div>
+            @endforelse
         </div>
     </div>
 </section>

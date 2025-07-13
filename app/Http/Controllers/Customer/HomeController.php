@@ -18,19 +18,29 @@ class HomeController extends Controller
     public function index()
     {
 
-        // Lấy 8 sản phẩm mới nhất
+        // Lấy 8 sản phẩm mới nhất với logic khuyến mãi
         $featuredProducts = Product::orderBy('created_at', 'desc')
             ->take(8)
             ->get()
             ->map(function ($product) {
+                $discountedPrice = $product->getDiscountedPrice();
+                $hasDiscount = $discountedPrice < $product->price;
+                
+                // Tạo badges dựa trên khuyến mãi
+                $badges = [];
+                if ($hasDiscount) {
+                    $discountPercent = round((($product->price - $discountedPrice) / $product->price) * 100);
+                    $badges[] = "SALE -{$discountPercent}%";
+                }
+                
                 return [
                     'id' => $product->id,
                     'name' => $product->name,
                     'image' => $product->image ?? '/customer/images/default-product.jpg',
-                    'price' => $product->price,
+                    'price' => $discountedPrice, // Giá sau khuyến mãi
+                    'original_price' => $product->price, // Giá gốc
                     'discount' => $product->discount,
-                    // Nếu muốn test badge trên giao diện thì gán tạm cứng: 'badges' => ['NEW'],
-                    'badges' => [],
+                    'badges' => $badges,
                 ];
             });
         $wishlistProductIds = Auth::check()

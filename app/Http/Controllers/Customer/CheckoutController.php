@@ -27,8 +27,14 @@ class CheckoutController extends Controller
             return redirect()->route('customer.cart.index')->with('error', 'Giỏ hàng của bạn đang trống.');
         }
 
-        // Tính tổng tiền dựa trên giá biến thể!
-        $total = $cartItems->sum(fn($item) => $item->variant->price * $item->quantity) + 30000;
+        // Tính tổng tiền dựa trên giá sau khuyến mãi
+        $total = $cartItems->sum(function($item) {
+            if ($item->variant) {
+                $product = $item->variant->product;
+                return $product->getDiscountedPrice() * $item->quantity;
+            }
+            return 0;
+        }) + 30000;
 
         $order = Order::create([
             'user_id'        => $user->id,
@@ -42,12 +48,15 @@ class CheckoutController extends Controller
         ]);
 
         foreach ($cartItems as $item) {
-            OrderDetail::create([
-                'order_id'           => $order->id,
-                'product_variant_id' => $item->variant->id,
-                'quantity'           => $item->quantity,
-                'price'              => $item->variant->price,
-            ]);
+            if ($item->variant) {
+                $product = $item->variant->product;
+                OrderDetail::create([
+                    'order_id'           => $order->id,
+                    'product_variant_id' => $item->variant->id,
+                    'quantity'           => $item->quantity,
+                    'price'              => $product->getDiscountedPrice(), // Lưu giá sau khuyến mãi
+                ]);
+            }
         }
 
         Cart::where('user_id', $user->id)->delete();
