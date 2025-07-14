@@ -3,3 +3,6 @@
 - Nguyễn Bảo Hoàng
 - Nguyễn Mạnh Trung Hiếu
 - Phạm Duy Khánh
+## Tài khoản Admin
+- tk: bhoang1910@gmail.com  
+- mk: hoang123
