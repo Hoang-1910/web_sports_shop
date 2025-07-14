@@ -25,7 +25,7 @@
                         <th class="p-4 font-semibold text-gray-700">Tên</th>
                         <th class="p-4 font-semibold text-gray-700">Giá</th>
                         <th class="p-4 font-semibold text-gray-700">Giảm giá</th>
-                        <th class="p-4 font-semibold text-gray-700">Thao tác</th>
+                        <th class="p-4 font-semibold text-gray-700">Thao tác</th>  
                     </tr>
                 </thead>
                 <tbody>

@@ -35,11 +35,11 @@ class ProductController extends Controller
         $request->validate([
             'name'        => 'required|string|max:255',
             'category_id' => 'required|exists:categories,id',
-            'brand_id'    => 'nullable|exists:brands,id',
             'price'       => 'required|numeric|min:0',
             'discount'    => 'nullable|numeric|min:0|max:100',
             'description' => 'nullable|string',
             'image'       => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'brand_id'    => 'nullable|exists:brands,id',
         ]);
 
         $data = $request->only(['name', 'category_id', 'brand_id', 'price', 'discount', 'description']);
@@ -96,11 +96,15 @@ class ProductController extends Controller
     {
         if ($product->image) {
             Storage::disk('public')->delete($product->image);
-        }
+        }     
         $product->delete();
 
         return redirect()->route('admin.products.index')->with('success', 'Xóa sản phẩm thành công!');
     }
+
+
+
+    
 
     public function import(Request $request)
     {
