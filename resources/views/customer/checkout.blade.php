@@ -73,28 +73,32 @@
                                                 Size: {{ $item->variant->size ?? 'Không xác định' }} |
                                                 Màu: {{ $item->variant->color ?? 'Không xác định' }} |
                                                 Số lượng: {{ $item->quantity }} |
+                                                @php
+                                                    $product = $item->variant->product;
+                                                    $discountedPrice = $product->getDiscountedPrice();
+                                                @endphp
                                                 <span class="text-danger">
-                                                    {{ number_format($item->variant->old_price && $item->variant->old_price > $item->variant->price ? $item->variant->price : $item->variant->price) }}đ
+                                                    {{ number_format($discountedPrice) }}đ
                                                 </span>
-                                                @if ($item->variant->old_price && $item->variant->old_price > $item->variant->price)
+                                                @if ($discountedPrice < $product->price)
                                                     <span class="text-decoration-line-through ms-1">
-                                                        {{ number_format($item->variant->old_price) }}đ
+                                                        {{ number_format($product->price) }}đ
                                                     </span>
                                                 @endif
                                             </div>
-                                            @if ($item->variant->old_price && $item->variant->old_price > $item->variant->price)
+                                            @if ($discountedPrice < $product->price)
                                                 <div class="text-success small">
                                                     Tiết kiệm
-                                                    {{ number_format($item->variant->old_price - $item->variant->price) }}đ
+                                                    {{ number_format($product->price - $discountedPrice) }}đ
                                                 </div>
                                                 <div class="text-success small">
                                                     Tiết kiệm tổng:
-                                                    {{ number_format(($item->variant->old_price - $item->variant->price) * $item->quantity) }}đ
+                                                    {{ number_format(($product->price - $discountedPrice) * $item->quantity) }}đ
                                                 </div>
                                             @endif
                                         </div>
                                         <div class="fw-bold text-danger ms-2">
-                                            {{ number_format($item->variant->price * $item->quantity) }}đ
+                                            {{ number_format($discountedPrice * $item->quantity) }}đ
                                         </div>
                                     </div>
                                 @else
@@ -108,7 +112,13 @@
                         <div class="d-flex justify-content-between mb-2">
                             <span class="text-muted">Tạm tính:</span>
                             <span class="fw-semibold">
-                                {{ number_format($cartItems->sum(fn($item) => $item->variant ? $item->variant->price * $item->quantity : 0)) }}đ
+                                {{ number_format($cartItems->sum(function($item) {
+                                    if ($item->variant) {
+                                        $product = $item->variant->product;
+                                        return $product->getDiscountedPrice() * $item->quantity;
+                                    }
+                                    return 0;
+                                })) }}đ
                             </span>
                         </div>
                         <div class="d-flex justify-content-between mb-2">
@@ -120,9 +130,14 @@
                             <span class="text-danger">
                                 {{ number_format(
                                     $cartItems->sum(
-                                        fn($item) => $item->variant && $item->variant->old_price && $item->variant->old_price > $item->variant->price
-                                            ? ($item->variant->old_price - $item->variant->price) * $item->quantity
-                                            : 0,
+                                        function($item) {
+                                            if ($item->variant) {
+                                                $product = $item->variant->product;
+                                                $discountedPrice = $product->getDiscountedPrice();
+                                                return ($product->price - $discountedPrice) * $item->quantity;
+                                            }
+                                            return 0;
+                                        }
                                     ),
                                 ) }}đ
                             </span>
@@ -131,7 +146,13 @@
                         <div class="d-flex justify-content-between">
                             <span class="fw-bold">Tổng cộng:</span>
                             <span class="text-danger fw-bold fs-5">
-                                {{ number_format($cartItems->sum(fn($item) => $item->variant ? $item->variant->price * $item->quantity : 0) + 30000) }}đ
+                                {{ number_format($cartItems->sum(function($item) {
+                                    if ($item->variant) {
+                                        $product = $item->variant->product;
+                                        return $product->getDiscountedPrice() * $item->quantity;
+                                    }
+                                    return 0;
+                                }) + 30000) }}đ
                             </span>
                         </div>
                     </div>

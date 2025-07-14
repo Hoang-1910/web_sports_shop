@@ -146,6 +146,59 @@
 
 
 
+<!-- Khuyến mãi đang diễn ra -->
+<section class="active-promotions py-5" aria-labelledby="active-promotions-title">
+    <div class="container">
+        <h2 id="active-promotions-title" class="section-title text-center mb-5">
+            <i class="fas fa-fire text-danger me-2"></i>
+            Khuyến mãi đang diễn ra
+        </h2>
+        
+        <div class="row g-4">
+            @php
+                $activePromotions = \App\Models\Promotion::where('active', true)
+                    ->where('start_date', '<=', now())
+                    ->where('end_date', '>=', now())
+                    ->take(3)
+                    ->get();
+            @endphp
+            
+            @forelse($activePromotions as $promotion)
+            <div class="col-lg-4 col-md-6">
+                <div class="promo-card bg-white rounded-4 overflow-hidden shadow-sm h-100">
+                    <div class="promo-header p-4" style="background: linear-gradient(135deg, #e53935 0%, #c62828 100%);">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <h3 class="h5 fw-bold text-white mb-0">{{ $promotion->name }}</h3>
+                            <span class="badge bg-light text-danger">
+                                {{ $promotion->discount_type === 'percent' ? $promotion->discount_value . '%' : number_format($promotion->discount_value) . 'đ' }}
+                            </span>
+                        </div>
+                        <p class="text-white-50 mb-0 mt-2">{{ $promotion->description }}</p>
+                    </div>
+                    <div class="p-4">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="text-danger fw-bold">
+                                <i class="fas fa-clock me-1"></i>
+                                Còn {{ \Carbon\Carbon::now()->diffInDays($promotion->end_date) }} ngày
+                            </div>
+                            <a href="{{ route('customer.products.index') }}" class="btn btn-outline-danger btn-sm">
+                                Mua ngay <i class="fas fa-arrow-right ms-1"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @empty
+            <div class="col-12">
+                <div class="text-center py-4">
+                    <p class="text-muted mb-0">Hiện tại không có khuyến mãi nào đang diễn ra.</p>
+                </div>
+            </div>
+            @endforelse
+        </div>
+    </div>
+</section>
+
 <!-- Sản phẩm nổi bật -->
 <section class="featured-products py-5 bg-light" aria-labelledby="featured-products-title" id="Products">
     <div class="container">
@@ -160,7 +213,7 @@
             <div class="col-xl-3 col-lg-4 col-md-6 col-12">
                 <article class="product-card-custom position-relative bg-white rounded-4 overflow-hidden shadow-sm h-100 product-hover-effect">
                     <!-- Product Badges -->
-                    <div class="position-absolute top-0 start-0 m-2 z-3 d-flex flex-column gap-1">
+                    <div class="position-absolute top-0 start-0 m-2 z-2 d-flex flex-column gap-1" style="max-width: 60%;">
                         @foreach($product['badges'] as $badge)
                         <span class="badge {{ $badge === 'SALE' ? 'bg-danger' : 'bg-primary' }} animate-pulse">
                             {{ $badge }}
@@ -173,11 +226,10 @@
                         $isFavorite = in_array($product['id'], $wishlistProductIds ?? []);
                     @endphp
 
-                    <form method="POST" action="{{ route($isFavorite ? 'customer.wishlist.remove' : 'customer.wishlist.add') }}" class="d-inline" 
-                    style="position: absolute; top: 0; z-index: 2; right: 0;">
+                    <form method="POST" action="{{ route($isFavorite ? 'customer.wishlist.remove' : 'customer.wishlist.add') }}" class="position-absolute top-0 end-0 m-2 z-3">
                         @csrf
                         <input type="hidden" name="product_id" value="{{ $product['id'] }}">
-                        <button type="submit" class="btn btn-light btn-sm" aria-label="Yêu thích sản phẩm">
+                        <button type="submit" class="btn btn-light btn-sm wishlist-btn" aria-label="Yêu thích sản phẩm">
                             <i class="fa-heart {{ $isFavorite ? 'fas text-danger' : 'far' }}"></i>
                         </button>
                     </form>
@@ -204,13 +256,13 @@
                             <span class="text-danger fw-bold h6 mb-0">
                                 {{ number_format($product['price']) }}đ
                             </span>
-                            @if(isset($product['original_price']) && $product['original_price'])
+                            @if(isset($product['original_price']) && $product['original_price'] > $product['price'])
                             <span class="text-muted text-decoration-line-through small">
                                 {{ number_format($product['original_price']) }}đ
                             </span>
                             @endif
                         </div>
-                        @if(isset($product['original_price']) && $product['original_price'])
+                        @if(isset($product['original_price']) && $product['original_price'] > $product['price'])
                         <div class="text-success small">
                             Tiết kiệm {{ number_format($product['original_price'] - $product['price']) }}đ
                         </div>
@@ -393,6 +445,65 @@
 
 @push('styles')
 <link href="{{ asset('customer/css/homepage.css') }}" rel="stylesheet">
+<style>
+.promo-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.promo-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15) !important;
+}
+
+.promo-header {
+    position: relative;
+    overflow: hidden;
+}
+
+.promo-header::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 100%;
+    height: 100%;
+    background: rgba(255,255,255,0.1);
+    transform: rotate(45deg);
+    transition: transform 0.3s ease;
+}
+
+.promo-card:hover .promo-header::before {
+    transform: rotate(45deg) translate(20px, 20px);
+}
+
+.badge {
+    font-size: 0.8rem;
+    padding: 0.5rem 0.75rem;
+}
+
+/* Wishlist button styling */
+.wishlist-btn {
+    background: rgba(255, 255, 255, 0.9) !important;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(5px);
+    transition: all 0.3s ease;
+}
+
+.wishlist-btn:hover {
+    background: rgba(255, 255, 255, 1) !important;
+    transform: scale(1.1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Ensure badges and wishlist button don't overlap */
+.product-card-custom .position-absolute.top-0.start-0 {
+    z-index: 2;
+}
+
+.product-card-custom .position-absolute.top-0.end-0 {
+    z-index: 3;
+}
+</style>
 @endpush
 
 @push('scripts')

@@ -89,9 +89,9 @@
         <button class="btn btn-warning" onclick="importFile()">Tải từ file</button>
         <button class="btn btn-primary" onclick="window.print()"> In dữ liệu</button>
         <button class="btn btn-info" onclick="copyTable()"> Sao chép</button>
-        <a href="{{ route('orders.exportExcel') }}" class="btn btn-success"> Xuất Excel</a>
-        <a href="{{ route('orders.exportPdf') }}" class="btn btn-danger"> Xuất PDF</a>
-        <form action="{{ route('orders.deleteAll') }}" method="POST" onsubmit="return confirm('Xóa tất cả đơn hàng?')">
+        <a href="{{ route('admin.orders.exportExcel') }}" class="btn btn-success"> Xuất Excel</a>
+        <a href="{{ route('admin.orders.exportPdf') }}" class="btn btn-danger"> Xuất PDF</a>
+        <form action="{{ route('admin.orders.deleteAll') }}" method="POST" onsubmit="return confirm('Xóa tất cả đơn hàng?')">
             @csrf
             @method('DELETE')
             <button type="submit" class="btn btn-secondary"> Xóa tất cả</button>
@@ -183,7 +183,7 @@
                                 @method('DELETE')
                                 <button class="btn btn-sm btn-danger">Xóa</button>
                             </form>
-                            <a href="{{ route('orders.show', $order->id) }}" class="btn btn-sm btn-warning">Xem chi tiết</a>
+                            <a href="{{ route('admin.orders.show', $order->id) }}" class="btn btn-sm btn-warning">Xem chi tiết</a>
                         </td>
                     </tr>
                 @empty

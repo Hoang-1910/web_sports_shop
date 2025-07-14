@@ -66,11 +66,22 @@
                                 <span class="h3 text-danger fw-bold mb-0" id="variantPrice">
                                     {{ isset($product->variants[0]) ? number_format($product->variants[0]->price) : number_format($product->getDiscountedPrice()) }}đ
                                 </span>
-                                <span class="text-muted text-decoration-line-through" id="variantOldPrice"
-                                    style="display:none;"></span>
-                                <span class="badge bg-danger" id="variantDiscount" style="display:none;"></span>
+                                @if($product->getDiscountedPrice() < $product->price)
+                                    <span class="text-muted text-decoration-line-through h5">
+                                        {{ number_format($product->price) }}đ
+                                    </span>
+                                    @php
+                                        $discountPercent = round((($product->price - $product->getDiscountedPrice()) / $product->price) * 100);
+                                    @endphp
+                                    <span class="badge bg-danger fs-6">-{{ $discountPercent }}%</span>
+                                @endif
                             </div>
-                            <div class="text-success mt-2" id="variantSave" style="display:none;"></div>
+                            @if($product->getDiscountedPrice() < $product->price)
+                                <div class="text-success mt-2">
+                                    <i class="fas fa-tags me-1"></i>
+                                    Tiết kiệm {{ number_format($product->price - $product->getDiscountedPrice()) }}đ
+                                </div>
+                            @endif
                         </div>
 
                         <!-- Description -->
@@ -142,6 +153,55 @@
                                 <i class="fas fa-bolt me-2"></i>Mua ngay
                             </button>
                         </form>
+
+                        <!-- Active Promotions for this product -->
+                        @php
+                            $activePromotions = \App\Models\Promotion::where('active', true)
+                                ->where('start_date', '<=', now())
+                                ->where('end_date', '>=', now())
+                                ->where(function($query) use ($product) {
+                                    $query->where('type', 'global')
+                                          ->orWhere('type', 'product')
+                                          ->orWhere('type', 'category');
+                                })
+                                ->get();
+                        @endphp
+                        
+                        @if($activePromotions->count() > 0)
+                        <div class="active-promotions mt-4 pt-4 border-top">
+                            <h6 class="fw-bold mb-3 text-danger">
+                                <i class="fas fa-fire me-2"></i>Khuyến mãi đang áp dụng
+                            </h6>
+                            <div class="promotion-list">
+                                @foreach($activePromotions as $promotion)
+                                    @php
+                                        $isApplicable = false;
+                                        if ($promotion->type === 'global') {
+                                            $isApplicable = true;
+                                        } elseif ($promotion->type === 'product' && $promotion->products->contains($product->id)) {
+                                            $isApplicable = true;
+                                        } elseif ($promotion->type === 'category' && $promotion->categories->contains($product->category_id)) {
+                                            $isApplicable = true;
+                                        }
+                                    @endphp
+                                    
+                                    @if($isApplicable)
+                                    <div class="promotion-item bg-light rounded-3 p-3 mb-2">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <div class="fw-semibold">{{ $promotion->name }}</div>
+                                                <div class="text-muted small">{{ $promotion->description }}</div>
+                                            </div>
+                                            <span class="badge bg-danger">
+                                                {{ $promotion->discount_type === 'percent' ? $promotion->discount_value . '%' : number_format($promotion->discount_value) . 'đ' }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                    @endif
+                                @endforeach
+                            </div>
+                        </div>
+                        @endif
 
                         <!-- Product Meta -->
                         <div class="product-meta mt-4 pt-4 border-top">

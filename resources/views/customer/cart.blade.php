@@ -82,20 +82,24 @@
                                             <!-- Price -->
                                             <div class="col-2 text-center">
                                                 @if ($item->variant)
+                                                    @php
+                                                        $product = $item->variant->product;
+                                                        $discountedPrice = $product->getDiscountedPrice();
+                                                    @endphp
                                                     <div class="text-danger fw-bold item-price"
-                                                        data-price="{{ $item->variant->price }}">
-                                                        {{ number_format($item->variant->price) }}đ
-                                                        @if ($item->variant->old_price && $item->variant->old_price > $item->variant->price)
+                                                        data-price="{{ $discountedPrice }}">
+                                                        {{ number_format($discountedPrice) }}đ
+                                                        @if ($discountedPrice < $product->price)
                                                             <span
                                                                 class="text-muted text-decoration-line-through small ms-1">
-                                                                {{ number_format($item->variant->old_price) }}đ
+                                                                {{ number_format($product->price) }}đ
                                                             </span>
                                                         @endif
                                                     </div>
-                                                    @if ($item->variant->old_price && $item->variant->old_price > $item->variant->price)
+                                                    @if ($discountedPrice < $product->price)
                                                         <div class="text-success small">
                                                             Tiết kiệm
-                                                            {{ number_format($item->variant->old_price - $item->variant->price) }}đ
+                                                            {{ number_format($product->price - $discountedPrice) }}đ
                                                         </div>
                                                     @endif
                                                 @else
@@ -126,9 +130,17 @@
 
                                             <!-- Total -->
                                             <div class="col-2 text-center">
-                                                <div class="text-danger fw-bold item-total">
-                                                    {{ number_format($item->variant->price * $item->quantity) }}đ
-                                                </div>
+                                                @if ($item->variant)
+                                                    @php
+                                                        $product = $item->variant->product;
+                                                        $discountedPrice = $product->getDiscountedPrice();
+                                                    @endphp
+                                                    <div class="text-danger fw-bold item-total">
+                                                        {{ number_format($discountedPrice * $item->quantity) }}đ
+                                                    </div>
+                                                @else
+                                                    <div class="text-danger">Lỗi</div>
+                                                @endif
                                             </div>
 
                                         </div>
@@ -172,7 +184,13 @@
                             <div class="d-flex justify-content-between mb-2">
                                 <span class="text-muted">Tạm tính:</span>
                                 <span id="cartSubtotal" class="fw-semibold">
-                                    {{ number_format($cartItems->sum(fn($item) => $item->variant->price * $item->quantity)) }}đ
+                                    {{ number_format($cartItems->sum(function($item) {
+                                        if ($item->variant) {
+                                            $product = $item->variant->product;
+                                            return $product->getDiscountedPrice() * $item->quantity;
+                                        }
+                                        return 0;
+                                    })) }}đ
                                 </span>
                             </div>
                             <div class="d-flex justify-content-between mb-2">
@@ -183,7 +201,13 @@
                             <div class="d-flex justify-content-between">
                                 <span class="fw-bold">Tổng cộng:</span>
                                 <span id="cartTotal" class="text-danger fw-bold fs-5">
-                                    {{ number_format($cartItems->sum(fn($item) => $item->variant->price * $item->quantity) + 30000) }}đ
+                                    {{ number_format($cartItems->sum(function($item) {
+                                        if ($item->variant) {
+                                            $product = $item->variant->product;
+                                            return $product->getDiscountedPrice() * $item->quantity;
+                                        }
+                                        return 0;
+                                    }) + 30000) }}đ
                                 </span>
                             </div>
                         </div>
