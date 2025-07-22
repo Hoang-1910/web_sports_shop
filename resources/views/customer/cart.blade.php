@@ -48,7 +48,6 @@
                                 @foreach ($cartItems as $item)
                                     <div class="cart-item p-4 border-bottom">
                                         <div class="row align-items-center">
-                                            <!-- Product Info -->
                                             <div class="col-6">
                                                 <div class="d-flex align-items-center">
                                                     <div class="cart-item-img me-3" style="width: 80px; height: 80px;">
@@ -65,49 +64,33 @@
                                                             Size: {{ $item->variant->size ?? 'Không xác định' }} | Màu:
                                                             {{ $item->variant->color ?? 'Không xác định' }}
                                                         </div>
-                                                        <form action="{{ route('customer.cart.remove') }}" method="POST"
-                                                            class="d-inline remove-cart-form">
-                                                            @csrf
-                                                            <input type="hidden" name="cart_id"
-                                                                value="{{ $item->id }}">
-                                                            <button type="submit"
-                                                                class="btn btn-link text-danger p-0 mt-2 remove-item">
-                                                                <i class="fas fa-trash-alt me-1"></i>Xóa
-                                                            </button>
-                                                        </form>
+                                                        <button type="button"
+                                                            class="btn btn-link text-danger p-0 mt-2 remove-item"
+                                                            data-id="{{ $item->id }}">
+                                                            <i class="fas fa-trash-alt me-1"></i>Xóa
+                                                        </button>
                                                     </div>
                                                 </div>
                                             </div>
-
-                                            <!-- Price -->
                                             <div class="col-2 text-center">
-                                                @if ($item->variant)
-                                                    @php
-                                                        $product = $item->variant->product;
-                                                        $discountedPrice = $product->getDiscountedPrice();
-                                                    @endphp
-                                                    <div class="text-danger fw-bold item-price"
-                                                        data-price="{{ $discountedPrice }}">
-                                                        {{ number_format($discountedPrice) }}đ
-                                                        @if ($discountedPrice < $product->price)
-                                                            <span
-                                                                class="text-muted text-decoration-line-through small ms-1">
-                                                                {{ number_format($product->price) }}đ
-                                                            </span>
-                                                        @endif
-                                                    </div>
+                                                @php
+                                                    $product = $item->variant->product;
+                                                    $discountedPrice = $product->getDiscountedPrice();
+                                                @endphp
+                                                <div class="text-danger fw-bold item-price"
+                                                    data-price="{{ $discountedPrice }}">
+                                                    {{ number_format($discountedPrice) }}đ
                                                     @if ($discountedPrice < $product->price)
-                                                        <div class="text-success small">
-                                                            Tiết kiệm
-                                                            {{ number_format($product->price - $discountedPrice) }}đ
-                                                        </div>
+                                                        <span
+                                                            class="text-muted text-decoration-line-through small ms-1">{{ number_format($product->price) }}đ</span>
                                                     @endif
-                                                @else
-                                                    <span class="text-danger">Biến thể không tồn tại</span>
+                                                </div>
+                                                @if ($discountedPrice < $product->price)
+                                                    <div class="text-success small">
+                                                        Tiết kiệm {{ number_format($product->price - $discountedPrice) }}đ
+                                                    </div>
                                                 @endif
                                             </div>
-
-                                            <!-- Quantity -->
                                             <div class="col-2">
                                                 <div
                                                     class="quantity-control d-flex align-items-center justify-content-center">
@@ -118,8 +101,7 @@
                                                     </button>
                                                     <input type="number" name="quantities[{{ $item->id }}]"
                                                         class="form-control form-control-sm text-center mx-2 quantity-input"
-                                                        value="{{ $item->quantity }}" min="1"
-                                                        style="width: 60px; text-align: center;">
+                                                        value="{{ $item->quantity }}" min="1" style="width: 60px;">
                                                     <button type="button"
                                                         class="btn btn-outline-secondary btn-sm quantity-btn"
                                                         data-action="increase">
@@ -127,22 +109,11 @@
                                                     </button>
                                                 </div>
                                             </div>
-
-                                            <!-- Total -->
                                             <div class="col-2 text-center">
-                                                @if ($item->variant)
-                                                    @php
-                                                        $product = $item->variant->product;
-                                                        $discountedPrice = $product->getDiscountedPrice();
-                                                    @endphp
-                                                    <div class="text-danger fw-bold item-total">
-                                                        {{ number_format($discountedPrice * $item->quantity) }}đ
-                                                    </div>
-                                                @else
-                                                    <div class="text-danger">Lỗi</div>
-                                                @endif
+                                                <div class="text-danger fw-bold item-total">
+                                                    {{ number_format($discountedPrice * $item->quantity) }}đ
+                                                </div>
                                             </div>
-
                                         </div>
                                     </div>
                                 @endforeach
@@ -165,7 +136,6 @@
                             </div>
                         </div>
 
-                        <!-- Checkout Button - Mobile -->
                         <div class="d-block d-lg-none mt-4">
                             <button type="submit" class="btn btn-danger w-100 py-3 fw-semibold">
                                 <i class="fas fa-lock me-2"></i>Thanh toán ngay
@@ -178,19 +148,11 @@
                 <div class="col-lg-4">
                     <div class="order-summary bg-white rounded-4 shadow-sm p-4">
                         <h5 class="fw-bold mb-4">Tổng đơn hàng</h5>
-
-                        <!-- Summary Details -->
                         <div class="summary-details mb-4">
                             <div class="d-flex justify-content-between mb-2">
                                 <span class="text-muted">Tạm tính:</span>
                                 <span id="cartSubtotal" class="fw-semibold">
-                                    {{ number_format($cartItems->sum(function($item) {
-                                        if ($item->variant) {
-                                            $product = $item->variant->product;
-                                            return $product->getDiscountedPrice() * $item->quantity;
-                                        }
-                                        return 0;
-                                    })) }}đ
+                                    {{ number_format($cartItems->sum(fn($item) => $item->variant ? $item->variant->product->getDiscountedPrice() * $item->quantity : 0)) }}đ
                                 </span>
                             </div>
                             <div class="d-flex justify-content-between mb-2">
@@ -201,42 +163,27 @@
                             <div class="d-flex justify-content-between">
                                 <span class="fw-bold">Tổng cộng:</span>
                                 <span id="cartTotal" class="text-danger fw-bold fs-5">
-                                    {{ number_format($cartItems->sum(function($item) {
-                                        if ($item->variant) {
-                                            $product = $item->variant->product;
-                                            return $product->getDiscountedPrice() * $item->quantity;
-                                        }
-                                        return 0;
-                                    }) + 30000) }}đ
+                                    {{ number_format($cartItems->sum(fn($item) => $item->variant ? $item->variant->product->getDiscountedPrice() * $item->quantity : 0) + 30000) }}đ
                                 </span>
                             </div>
                         </div>
-
-                        <!-- Checkout Button - Desktop -->
                         <button type="submit" form="cartUpdateForm" class="btn btn-danger w-100 py-3 fw-semibold">
                             <i class="fas fa-lock me-2"></i>Thanh toán ngay
                         </button>
-
-                        <!-- Payment Methods -->
-                        <div class="payment-methods mt-4">
-                            <p class="text-muted small mb-2">Chấp nhận thanh toán:</p>
-                            <div class="d-flex gap-2">
-                                <div class="payment-method">
-                                    <i class="fab fa-cc-visa text-primary fs-4"></i>
-                                </div>
-                                <div class="payment-method">
-                                    <i class="fab fa-cc-mastercard text-warning fs-4"></i>
-                                </div>
-                                <div class="payment-method">
-                                    <i class="fas fa-mobile-alt text-success fs-4"></i>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
+
+    <!-- Các form xóa để bên ngoài form chính -->
+    @foreach ($cartItems as $item)
+        <form id="remove-cart-form-{{ $item->id }}" action="{{ route('customer.cart.remove') }}" method="POST"
+            style="display: none;">
+            @csrf
+            <input type="hidden" name="cart_id" value="{{ $item->id }}">
+        </form>
+    @endforeach
 @endsection
 
 @push('styles')
@@ -258,10 +205,17 @@
     <script src="{{ asset('customer/js/cart.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            document.querySelectorAll('.remove-cart-form').forEach(function(form) {
-                form.addEventListener('submit', function(e) {
-                    e.preventDefault();
+        document.addEventListener("DOMContentLoaded", function() {
+            document.querySelectorAll('.remove-item').forEach(function(btn) {
+                btn.addEventListener('click', function() {
+                    const cartId = this.dataset.id;
+                    const form = document.getElementById(`remove-cart-form-${cartId}`);
+
+                    if (!form) {
+                        console.error('Không tìm thấy form để xóa:', cartId);
+                        return;
+                    }
+
                     Swal.fire({
                         title: 'Bạn có chắc muốn xóa sản phẩm này khỏi giỏ hàng?',
                         icon: 'warning',

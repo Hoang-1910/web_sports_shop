@@ -55,8 +55,15 @@ class ProductController extends Controller
 
     public function show(Product $product)
     {
+        $variants = $product->variants->map(function ($v) {
+            return [
+                'size' => $v->size,
+                'color' => $v->color,
+                'images' => $v->images->pluck('image_path'),
+            ];
+        });
         $product = Product::with(['variants.images', 'brand'])->findOrFail($product->id);
-        return view('admin.products.show', compact('product'));
+        return view('admin.products.show', compact('product', 'variants'));
     }
 
     public function edit(Product $product)
@@ -96,7 +103,7 @@ class ProductController extends Controller
     {
         if ($product->image) {
             Storage::disk('public')->delete($product->image);
-        }     
+        }
         $product->delete();
 
         return redirect()->route('admin.products.index')->with('success', 'Xóa sản phẩm thành công!');
@@ -104,7 +111,7 @@ class ProductController extends Controller
 
 
 
-    
+
 
     public function import(Request $request)
     {
