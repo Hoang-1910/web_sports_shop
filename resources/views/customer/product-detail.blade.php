@@ -152,26 +152,27 @@
                             </div>
                         @endif
 
-                        <!-- Quantity -->
-                        <div class="quantity mb-4">
-                            <label class="form-label fw-medium">Số lượng</label>
-                            <div class="input-group" style="width: 150px;">
-                                <button class="btn btn-outline-secondary" type="button" id="decreaseQuantity">
-                                    <i class="fas fa-minus"></i>
-                                </button>
-                                <input type="number" class="form-control text-center" id="quantity" name="quantity"
-                                    value="1" min="1">
-                                <button class="btn btn-outline-secondary" type="button" id="increaseQuantity">
-                                    <i class="fas fa-plus"></i>
-                                </button>
-                            </div>
-                        </div>
+                        
 
                         <!-- Action Buttons -->
                         <form action="{{ route('customer.cart.add') }}" method="POST" id="addToCartForm">
                             @csrf
                             <input type="hidden" name="product_variant_id" id="variantInput" value="">
                             <input type="hidden" name="buy_now" id="buyNowInput" value="0">
+                            <!-- Quantity -->
+                            <div class="quantity mb-4">
+                                <label class="form-label fw-medium">Số lượng</label>
+                                <div class="input-group" style="width: 150px;">
+                                    <button class="btn btn-outline-secondary" type="button" id="decreaseQuantity">
+                                        <i class="fas fa-minus"></i>
+                                    </button>
+                                    <input type="number" class="form-control text-center" id="quantity" name="quantity"
+                                        value="1" min="1">
+                                    <button class="btn btn-outline-secondary" type="button" id="increaseQuantity">
+                                        <i class="fas fa-plus"></i>
+                                    </button>
+                                </div>
+                            </div>
                             <button type="submit" class="btn btn-danger btn-lg" id="addToCart" disabled>
                                 <i class="fas fa-shopping-cart me-2"></i>Thêm vào giỏ
                             </button>

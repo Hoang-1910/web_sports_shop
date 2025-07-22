@@ -109,4 +109,12 @@ class CartController extends Controller
         $cartItems = Cart::with('variant.product')->where('user_id', Auth::id())->get();
         return view('customer.checkout', compact('customer', 'cartItems'));
     }
+    public function clear(Request $request)
+    {
+        $user = auth()->user();
+        Cart::where('user_id', $user->id)->delete();
+
+        return redirect()->route('customer.cart.index')->with('success', 'Đã xóa toàn bộ giỏ hàng.');
+    }
+
 }

@@ -126,9 +126,10 @@
                             <div class="cart-footer p-4">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <div>
-                                        <button class="btn btn-outline-danger" id="clearCart">
+                                        <button type="button" class="btn btn-outline-danger" id="clearCart">
                                             <i class="fas fa-trash-alt me-2"></i>Xóa tất cả
                                         </button>
+                                        
                                     </div>
                                     <div>
                                         <a href="{{ route('customer.products.index') }}" class="btn btn-outline-secondary">
@@ -145,6 +146,9 @@
                             </button>
                         </div>
                     </form>
+                    <form id="clearCartForm" action="{{ route('customer.cart.clear') }}" method="POST" style="display: none;">
+                                            @csrf
+                                        </form>
                 </div>
 
                 <!-- Order Summary -->
@@ -208,9 +212,10 @@
     <script src="{{ asset('customer/js/cart.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            document.querySelectorAll('.remove-item').forEach(function(btn) {
-                btn.addEventListener('click', function() {
+        document.addEventListener("DOMContentLoaded", function () {
+            // Xử lý xóa từng sản phẩm
+            document.querySelectorAll('.remove-item').forEach(function (btn) {
+                btn.addEventListener('click', function () {
                     const cartId = this.dataset.id;
                     const form = document.getElementById(`remove-cart-form-${cartId}`);
 
@@ -233,6 +238,30 @@
                     });
                 });
             });
+
+            // Xử lý xóa toàn bộ giỏ hàng
+            const clearCartBtn = document.getElementById('clearCart');
+            const clearForm = document.getElementById('clearCartForm');
+
+            if (clearCartBtn && clearForm) {
+                clearCartBtn.addEventListener('click', function () {
+                    Swal.fire({
+                        title: 'Bạn có chắc muốn xóa toàn bộ giỏ hàng?',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonText: 'Xóa tất cả',
+                        cancelButtonText: 'Hủy',
+                        confirmButtonColor: '#d33'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            clearForm.submit();
+                        }
+                    });
+                });
+            } else {
+                console.error('Không tìm thấy nút hoặc form xóa toàn bộ giỏ hàng');
+            }
         });
     </script>
 @endpush
+

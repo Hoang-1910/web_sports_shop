@@ -58,7 +58,7 @@ Route::middleware(['auth:admin', 'is_admin'])->prefix('admin')->as('admin.')->gr
     Route::post('/products/{product}/variants', [ProductVariantController::class, 'store'])->name('variants.store');
     Route::get('/variants/{variant}/edit', [ProductVariantController::class, 'edit'])->name('variants.edit');
     Route::put('/variants/{variant}', [ProductVariantController::class, 'update'])->name('variants.update');
-    Route::delete('/variants/{variant}', [ProductVariantController::class, 'destroy'])->name('variants.destroy');
+    Route::delete('/variants/{variant}', [ProductVariantController::class, 'destroy_variant'])->name('variants.destroy');
     Route::post('/variants/{variant}/images', [ProductVariantImageController::class, 'store'])->name('variants.images.store');
     Route::delete('/variants/images/{id}', [ProductVariantImageController::class, 'destroy'])->name('variants.images.destroy');
     Route::get('/variants/{variant}/images', [ProductVariantImageController::class, 'index'])->name('variants.images.index');
@@ -66,7 +66,7 @@ Route::middleware(['auth:admin', 'is_admin'])->prefix('admin')->as('admin.')->gr
     Route::post('/variants/{variant}/images/store', [ProductVariantImageController::class, 'store'])->name('variants.images.store');
     Route::get('/variants/{variant}/images/{image}/edit', [ProductVariantImageController::class, 'edit'])->name('variants.images.edit');
     Route::put('/variants/images/{image}', [ProductVariantImageController::class, 'update'])->name('variants.images.update');
-    Route::delete('/variants/images/{image}', [ProductVariantImageController::class, 'destroy'])->name('variants.images.destroy');
+    Route::delete('/variants/images/{image}', [ProductVariantImageController::class, 'destroy'])->name('variants_image.images.destroy');
     Route::get('/variants/{variant}/images/{image}/show', [ProductVariantImageController::class, 'show'])->name('variants.images.show');
     Route::get('/variants/{variant}/images/{image}/edit', [ProductVariantImageController::class, 'edit'])->name('variants.images.edit');
     Route::delete('/variants/{variant}/images/{image}', [ProductVariantImageController::class, 'destroy'])->name('variants.images.destroy');
@@ -162,6 +162,7 @@ Route::middleware(['auth', 'role:customer'])->group(function () {
     Route::post('/cart/checkout', [CartController::class, 'checkout'])->name('customer.cart.checkout');
     Route::get('/checkout', [CartController::class, 'showCheckout'])->name('customer.checkout');
     Route::post('/checkout/process', [CheckoutController::class, 'process'])->name('customer.checkout.process');
+    Route::post('/cart/clear', [CartController::class, 'clear'])->name('customer.cart.clear');
     // Customer Orders
     Route::get('/orders', [OrderController::class, 'index'])->name('customer.orders');
     Route::get('/orders/{order}', [OrderController::class, 'show'])->name('customer.orders.show');

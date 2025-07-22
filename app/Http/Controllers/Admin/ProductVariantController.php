@@ -83,7 +83,7 @@ class ProductVariantController extends Controller
     }
 
     // Xóa biến thể
-    public function destroy($id)
+    public function destroy_variant($id)
     {
         $variant = ProductVariant::with('images')->findOrFail($id);
 
