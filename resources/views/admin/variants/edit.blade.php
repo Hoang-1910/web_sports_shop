@@ -31,7 +31,14 @@
             <label class="block font-semibold mb-1">Tồn kho</label>
             <input type="number" name="stock" value="{{ old('stock', $variant->stock) }}" class="w-full border rounded px-4 py-2">
         </div>
-        <div>
+        <input type="file" name="images[]" multiple accept="image/*" class="w-full border rounded px-4 py-2">
+        <small class="text-gray-500">Chọn để thêm ảnh mới (có thể chọn nhiều)</small>
+        <div class="flex justify-end" style="position: absolute;top: 720px;">
+            <a href="{{ route('admin.products.edit', $variant->product_id) }}" class="mr-4 px-5 py-2 rounded bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold">Quay lại</a>
+            <button type="submit" class="bg-gradient-to-r from-purple-500 to-blue-500 text-white px-6 py-2 rounded-lg font-semibold shadow">Lưu thay đổi</button>
+        </div>
+    </form>
+        <div style="padding-bottom: 70px">
             <label class="block font-semibold mb-1">Ảnh hiện tại</label>
             <div class="flex gap-2 mb-2">
                 @forelse($variant->images as $img)
@@ -47,13 +54,7 @@
                     <span class="text-gray-400 italic">Không có ảnh</span>
                 @endforelse
             </div>
-            <input type="file" name="images[]" multiple accept="image/*" class="w-full border rounded px-4 py-2">
-            <small class="text-gray-500">Chọn để thêm ảnh mới (có thể chọn nhiều)</small>
+            
         </div>
-        <div class="flex justify-end">
-            <a href="{{ route('admin.products.edit', $variant->product_id) }}" class="mr-4 px-5 py-2 rounded bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold">Quay lại</a>
-            <button type="submit" class="bg-gradient-to-r from-purple-500 to-blue-500 text-white px-6 py-2 rounded-lg font-semibold shadow">Lưu thay đổi</button>
-        </div>
-    </form>
 </div>
 @endsection
