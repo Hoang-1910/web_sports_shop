@@ -70,6 +70,7 @@
                                                                 @if ($variant->productVariant->color)
                                                                     - Màu: {{ $variant->productVariant->color }}
                                                                 @endif
+                                                                <span class="ms-2 text-danger">{{ number_format($variant->price) }}đ</span>
                                                             </div>
                                                         @endforeach
                                                     </div>

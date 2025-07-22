@@ -63,6 +63,10 @@
                         <div class="mb-3">
                             @foreach ($cartItems as $item)
                                 @if ($item->variant)
+                                    @php
+                                        $variant = $item->variant;
+                                        $discountedPrice = $variant->getBestPromotionDiscountedPrice();
+                                    @endphp
                                     <div class="d-flex align-items-center mb-2">
                                         <img src="{{ asset('storage/' . $item->product->image) }}"
                                             alt="{{ $item->product->name }}" width="48" height="48"
@@ -73,27 +77,23 @@
                                                 Size: {{ $item->variant->size ?? 'Không xác định' }} |
                                                 Màu: {{ $item->variant->color ?? 'Không xác định' }} |
                                                 Số lượng: {{ $item->quantity }} |
-                                                @php
-                                                    $product = $item->variant->product;
-                                                    $discountedPrice = $product->getDiscountedPrice();
-                                                @endphp
                                                 <span class="text-danger">
                                                     {{ number_format($discountedPrice) }}đ
                                                 </span>
-                                                @if ($discountedPrice < $product->price)
+                                                @if ($discountedPrice < $variant->price)
                                                     <span class="text-decoration-line-through ms-1">
-                                                        {{ number_format($product->price) }}đ
+                                                        {{ number_format($variant->price) }}đ
                                                     </span>
                                                 @endif
                                             </div>
-                                            @if ($discountedPrice < $product->price)
+                                            @if ($discountedPrice < $variant->price)
                                                 <div class="text-success small">
                                                     Tiết kiệm
-                                                    {{ number_format($product->price - $discountedPrice) }}đ
+                                                    {{ number_format($variant->price - $discountedPrice) }}đ
                                                 </div>
                                                 <div class="text-success small">
                                                     Tiết kiệm tổng:
-                                                    {{ number_format(($product->price - $discountedPrice) * $item->quantity) }}đ
+                                                    {{ number_format(($variant->price - $discountedPrice) * $item->quantity) }}đ
                                                 </div>
                                             @endif
                                         </div>
@@ -114,8 +114,8 @@
                             <span class="fw-semibold">
                                 {{ number_format($cartItems->sum(function($item) {
                                     if ($item->variant) {
-                                        $product = $item->variant->product;
-                                        return $product->getDiscountedPrice() * $item->quantity;
+                                        $variant = $item->variant;
+                                        return $variant->getBestPromotionDiscountedPrice() * $item->quantity;
                                     }
                                     return 0;
                                 })) }}đ
@@ -132,9 +132,9 @@
                                     $cartItems->sum(
                                         function($item) {
                                             if ($item->variant) {
-                                                $product = $item->variant->product;
-                                                $discountedPrice = $product->getDiscountedPrice();
-                                                return ($product->price - $discountedPrice) * $item->quantity;
+                                                $variant = $item->variant;
+                                                $discountedPrice = $variant->getBestPromotionDiscountedPrice();
+                                                return ($variant->price - $discountedPrice) * $item->quantity;
                                             }
                                             return 0;
                                         }
@@ -148,8 +148,8 @@
                             <span class="text-danger fw-bold fs-5">
                                 {{ number_format($cartItems->sum(function($item) {
                                     if ($item->variant) {
-                                        $product = $item->variant->product;
-                                        return $product->getDiscountedPrice() * $item->quantity;
+                                        $variant = $item->variant;
+                                        return $variant->getBestPromotionDiscountedPrice() * $item->quantity;
                                     }
                                     return 0;
                                 }) + 30000) }}đ

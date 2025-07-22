@@ -74,20 +74,23 @@
                                             </div>
                                             <div class="col-2 text-center">
                                                 @php
-                                                    $product = $item->variant->product;
-                                                    $discountedPrice = $product->getDiscountedPrice();
+                                                    $variant = $item->variant;
+                                                    $discountedPrice = $variant->getBestPromotionDiscountedPrice();
                                                 @endphp
                                                 <div class="text-danger fw-bold item-price"
                                                     data-price="{{ $discountedPrice }}">
-                                                    {{ number_format($discountedPrice) }}đ
-                                                    @if ($discountedPrice < $product->price)
-                                                        <span
-                                                            class="text-muted text-decoration-line-through small ms-1">{{ number_format($product->price) }}đ</span>
+                                                    <span class="text-danger">
+                                                        {{ number_format($discountedPrice) }}đ
+                                                    </span>
+                                                    @if ($discountedPrice < $variant->price)
+                                                        <span class="text-decoration-line-through ms-1">
+                                                            {{ number_format($variant->price) }}đ
+                                                        </span>
                                                     @endif
                                                 </div>
-                                                @if ($discountedPrice < $product->price)
+                                                @if ($discountedPrice < $variant->price)
                                                     <div class="text-success small">
-                                                        Tiết kiệm {{ number_format($product->price - $discountedPrice) }}đ
+                                                        Tiết kiệm {{ number_format($variant->price - $discountedPrice) }}đ
                                                     </div>
                                                 @endif
                                             </div>

@@ -95,7 +95,8 @@ class ProductController extends Controller
             'variants',
             'category',
             'reviews.user',
-            'variants.images'
+            'variants.images',
+            'brand' // Thêm dòng này để eager load brand
         ])->findOrFail($id);
 
         // Đủ fields

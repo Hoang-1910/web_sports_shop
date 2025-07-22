@@ -62,29 +62,52 @@
 
                         <!-- Price -->
                         <div class="price-info mb-4">
+                            @php
+                                $now = now();
+                                $activePromotions = \App\Models\Promotion::where('active', true)
+                                    ->where('start_date', '<=', $now)
+                                    ->where('end_date', '>=', $now)
+                                    ->get();
+                                $maxDiscount = 0;
+                                $bestPromotion = null;
+                                foreach ($activePromotions as $promo) {
+                                    $isApplicable = false;
+                                    if ($promo->type === 'global') {
+                                        $isApplicable = true;
+                                    } elseif ($promo->type === 'product' && $promo->products->contains($product->id)) {
+                                        $isApplicable = true;
+                                    } elseif ($promo->type === 'category' && $promo->categories->contains($product->category_id)) {
+                                        $isApplicable = true;
+                                    }
+                                    if ($isApplicable) {
+                                        $discount = $promo->discount_type === 'percent'
+                                            ? $product->price * $promo->discount_value / 100
+                                            : $promo->discount_value;
+                                        if ($discount > $maxDiscount) {
+                                            $maxDiscount = $discount;
+                                            $bestPromotion = $promo;
+                                        }
+                                    }
+                                }
+                                $discountedPrice = max(0, $product->price - $maxDiscount);
+                            @endphp
                             <div class="d-flex align-items-center gap-3">
                                 <span class="h3 text-danger fw-bold mb-0" id="variantPrice">
-                                    {{ isset($product->variants[0]) ? number_format($product->variants[0]->price) : number_format($product->getDiscountedPrice()) }}đ
+                                    {{ number_format($discountedPrice) }}đ
                                 </span>
-                                @if ($product->getDiscountedPrice() < $product->price)
-                                    <span class="text-muted text-decoration-line-through h5">
-                                        {{ number_format($product->price) }}đ
-                                    </span>
-                                    @php
-                                        $discountPercent = round(
-                                            (($product->price - $product->getDiscountedPrice()) / $product->price) *
-                                                100,
-                                        );
-                                    @endphp
-                                    <span class="badge bg-danger fs-6">-{{ $discountPercent }}%</span>
-                                @endif
+                                <span class="text-muted text-decoration-line-through h5" id="variantOldPrice" @if($discountedPrice >= $product->price) style="display:none;" @endif>
+                                    {{ number_format($product->price) }}đ
+                                </span>
+                                <span class="badge bg-danger fs-6" id="variantDiscount" @if($discountedPrice >= $product->price) style="display:none;" @endif>
+                                    @if($bestPromotion)
+                                        {{ $bestPromotion->discount_type === 'percent' ? '-' . $bestPromotion->discount_value . '%' : '-' . number_format($bestPromotion->discount_value) . 'đ' }}
+                                    @endif
+                                </span>
                             </div>
-                            @if ($product->getDiscountedPrice() < $product->price)
-                                <div class="text-success mt-2">
-                                    <i class="fas fa-tags me-1"></i>
-                                    Tiết kiệm {{ number_format($product->price - $product->getDiscountedPrice()) }}đ
-                                </div>
-                            @endif
+                            <div class="text-success mt-2" id="variantSave" @if($discountedPrice >= $product->price) style="display:none;" @endif>
+                                <i class="fas fa-tags me-1"></i>
+                                Tiết kiệm {{ $discountedPrice < $product->price ? number_format($product->price - $discountedPrice) : 0 }}đ
+                            </div>
                         </div>
 
                         <!-- Description -->
@@ -218,7 +241,9 @@
                             <div class="d-flex flex-wrap gap-4">
                                 <div class="meta-item">
                                     <span class="text-muted">Thương hiệu:</span>
-                                    <span class="fw-medium">{{ $product->brand->name }}</span>
+                                    <span class="fw-medium">
+                                        {{ is_object($product->brand) ? $product->brand->name : 'Không xác định' }}
+                                    </span>
                                 </div>
                                 <div class="meta-item">
                                     <span class="text-muted">Danh mục:</span>
@@ -659,15 +684,47 @@
                 if (selectedSize && selectedColor) {
                     const found = variants.find(v => v.size === selectedSize && v.color === selectedColor);
                     if (found) {
-                        priceEl.textContent = Number(found.price).toLocaleString() + 'đ';
-                        if (found.old_price && found.old_price > found.price) {
-                            oldPriceEl.textContent = Number(found.old_price).toLocaleString() + 'đ';
+                        let discounted = found.price;
+                        let oldPrice = found.old_price && found.old_price > found.price ? found.old_price : null;
+                        let basePrice = oldPrice ? oldPrice : found.price;
+                        // Tìm khuyến mãi tốt nhất
+                        let maxDiscount = 0;
+                        let bestPromotion = null;
+                        @php
+                        foreach ($activePromotions as $promo) {
+                            $isApplicable = false;
+                            if ($promo->type === 'global') {
+                                $isApplicable = true;
+                            } elseif ($promo->type === 'product' && $promo->products->contains($product->id)) {
+                                $isApplicable = true;
+                            } elseif ($promo->type === 'category' && $promo->categories->contains($product->category_id)) {
+                                $isApplicable = true;
+                            }
+                            if ($isApplicable) {
+                                $discount = $promo->discount_type === 'percent'
+                                    ? 'PERCENT:' . $promo->discount_value
+                                    : 'AMOUNT:' . $promo->discount_value;
+                                echo "if ('$discount'.startsWith('PERCENT')) { var d = basePrice * " . $promo->discount_value . " / 100; if (d > maxDiscount) { maxDiscount = d; bestPromotion = {type: 'percent', value: " . $promo->discount_value . "}; } } ";
+                                echo "if ('$discount'.startsWith('AMOUNT')) { var d = " . $promo->discount_value . "; if (d > maxDiscount) { maxDiscount = d; bestPromotion = {type: 'amount', value: " . $promo->discount_value . "}; } } ";
+                            }
+                        }
+                        @endphp
+                        discounted = Math.max(0, basePrice - maxDiscount);
+                        priceEl.textContent = Number(discounted).toLocaleString() + 'đ';
+                        if (basePrice > discounted) {
+                            oldPriceEl.textContent = Number(basePrice).toLocaleString() + 'đ';
                             oldPriceEl.style.display = '';
-                            const percent = Math.round(100 - (found.price / found.old_price) * 100);
-                            discountEl.textContent = '-' + percent + '%';
-                            discountEl.style.display = '';
-                            saveEl.textContent = 'Tiết kiệm ' + Number(found.old_price - found.price)
-                                .toLocaleString() + 'đ';
+                            if (bestPromotion) {
+                                if (bestPromotion.type === 'percent') {
+                                    discountEl.textContent = '-' + bestPromotion.value + '%';
+                                } else {
+                                    discountEl.textContent = '-' + Number(bestPromotion.value).toLocaleString() + 'đ';
+                                }
+                                discountEl.style.display = '';
+                            } else {
+                                discountEl.style.display = 'none';
+                            }
+                            saveEl.textContent = 'Tiết kiệm ' + Number(basePrice - discounted).toLocaleString() + 'đ';
                             saveEl.style.display = '';
                         } else {
                             oldPriceEl.style.display = 'none';
@@ -677,12 +734,24 @@
                         return;
                     }
                 }
-                // Nếu chưa chọn đủ, hiển thị giá mặc định
-                priceEl.textContent =
-                    '{{ isset($product->variants[0]) ? number_format($product->variants[0]->price) : number_format($product->getDiscountedPrice()) }}đ';
-                oldPriceEl.style.display = 'none';
-                discountEl.style.display = 'none';
-                saveEl.style.display = 'none';
+                // Nếu chưa chọn đủ, hiển thị giá gốc sản phẩm với khuyến mãi tốt nhất
+                priceEl.textContent = '{{ number_format($discountedPrice) }}đ';
+                if ({{ $discountedPrice }} < {{ $product->price }}) {
+                    oldPriceEl.textContent = '{{ number_format($product->price) }}đ';
+                    oldPriceEl.style.display = '';
+                    @if($bestPromotion)
+                        discountEl.textContent = '{{ $bestPromotion->discount_type === 'percent' ? '-' . $bestPromotion->discount_value . '%' : '-' . number_format($bestPromotion->discount_value) . 'đ' }}';
+                        discountEl.style.display = '';
+                    @else
+                        discountEl.style.display = 'none';
+                    @endif
+                    saveEl.textContent = 'Tiết kiệm {{ number_format($product->price - $discountedPrice) }}đ';
+                    saveEl.style.display = '';
+                } else {
+                    oldPriceEl.style.display = 'none';
+                    discountEl.style.display = 'none';
+                    saveEl.style.display = 'none';
+                }
             }
 
             // Gọi khi load trang

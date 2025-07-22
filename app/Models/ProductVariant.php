@@ -41,4 +41,34 @@ class ProductVariant extends Model
     {
         return $this->stockImportItems()->sum('quantity');
     }
+
+    public function getBestPromotionDiscountedPrice()
+    {
+        $basePrice = $this->price;
+        $now = now();
+        $promotions = \App\Models\Promotion::where('active', true)
+            ->where('start_date', '<=', $now)
+            ->where('end_date', '>=', $now)
+            ->get();
+        $maxDiscount = 0;
+        foreach ($promotions as $promo) {
+            $isApplicable = false;
+            if ($promo->type === 'global') {
+                $isApplicable = true;
+            } elseif ($promo->type === 'product' && $promo->products->contains($this->product_id)) {
+                $isApplicable = true;
+            } elseif ($promo->type === 'category' && $promo->categories->contains($this->product->category_id)) {
+                $isApplicable = true;
+            }
+            if ($isApplicable) {
+                $discount = $promo->discount_type === 'percent'
+                    ? $basePrice * $promo->discount_value / 100
+                    : $promo->discount_value;
+                if ($discount > $maxDiscount) {
+                    $maxDiscount = $discount;
+                }
+            }
+        }
+        return max(0, $basePrice - $maxDiscount);
+    }
 }

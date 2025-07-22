@@ -27,14 +27,13 @@ class CheckoutController extends Controller
             return redirect()->route('customer.cart.index')->with('error', 'Giỏ hàng của bạn đang trống.');
         }
 
-        // Tính tổng tiền dựa trên giá sau khuyến mãi
+        // Tính tổng tiền dựa trên giá sau khuyến mãi của từng biến thể
         $total = $cartItems->sum(function($item) {
             if ($item->variant) {
-                $product = $item->variant->product;
-                return $product->getDiscountedPrice() * $item->quantity;
+                return $item->variant->getBestPromotionDiscountedPrice() * $item->quantity;
             }
             return 0;
-        }) + 30000;
+        }) + 30000; // Phí vận chuyển
 
         $order = Order::create([
             'user_id'        => $user->id,
@@ -54,7 +53,7 @@ class CheckoutController extends Controller
                     'order_id'           => $order->id,
                     'product_variant_id' => $item->variant->id,
                     'quantity'           => $item->quantity,
-                    'price'              => $product->getDiscountedPrice(), // Lưu giá sau khuyến mãi
+                    'price'              => $item->variant->getBestPromotionDiscountedPrice(), // Lưu giá đúng theo biến thể và khuyến mãi
                 ]);
             }
         }
