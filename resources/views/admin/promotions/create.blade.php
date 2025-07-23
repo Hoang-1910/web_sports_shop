@@ -134,7 +134,7 @@
                 </div>
 
                 {{-- Giá trị đơn tối thiểu --}}
-                <div class="mb-6">
+                {{--<div class="mb-6">
                     <label class="block text-gray-700 font-semibold mb-2">
                         Giá trị đơn tối thiểu (VNĐ)
                     </label>
@@ -142,7 +142,7 @@
                            class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-purple-400 focus:ring focus:ring-purple-100 transition duration-200" 
                            min="0" value="{{ old('min_order_value') }}" placeholder="0">
                     <p class="text-sm text-gray-500 mt-2">Áp dụng khi chọn "Toàn shop"</p>
-                </div>
+                </div>--}}
 
                 {{-- Trạng thái --}}
                 <div class="mb-8">

@@ -96,17 +96,54 @@ class ProductController extends Controller
             'category',
             'reviews.user',
             'variants.images',
-            'brand' // Thêm dòng này để eager load brand
+            'brand'
         ])->findOrFail($id);
 
-        // Đủ fields
-        $variants = $product->variants->map(function ($v) {
+        // Lấy các khuyến mãi đang áp dụng
+        $now = now();
+        $activePromotions = \App\Models\Promotion::where('active', true)
+            ->where('start_date', '<=', $now)
+            ->where('end_date', '>=', $now)
+            ->get();
+
+        $variants = $product->variants->map(function ($v) use ($product, $activePromotions) {
+            $basePrice = $v->price;
+            $oldPrice = $v->old_price;
+            $maxDiscount = 0;
+            $bestPromotion = null;
+            foreach ($activePromotions as $promo) {
+                $isApplicable = false;
+                if ($promo->type === 'global') {
+                    $isApplicable = true;
+                } elseif ($promo->type === 'product' && $promo->products->contains($product->id)) {
+                    $isApplicable = true;
+                } elseif ($promo->type === 'category' && $promo->categories->contains($product->category_id)) {
+                    $isApplicable = true;
+                }
+                if ($isApplicable) {
+                    $discount = $promo->discount_type === 'percent'
+                        ? $basePrice * $promo->discount_value / 100
+                        : $promo->discount_value;
+                    if ($discount > $maxDiscount) {
+                        $maxDiscount = $discount;
+                        $bestPromotion = $promo;
+                    }
+                }
+            }
+            $discountedPrice = max(0, $basePrice - $maxDiscount);
+            $promotionLabel = $bestPromotion
+                ? ($bestPromotion->discount_type === 'percent'
+                    ? '-' . $bestPromotion->discount_value . '%'
+                    : '-' . number_format($bestPromotion->discount_value) . 'đ')
+                : null;
             return [
-                'id'        => $v->id,
-                'size'      => $v->size,
-                'color'     => $v->color,
-                'price'     => $v->price,
-                'old_price' => $v->old_price, // nhớ phải có field này trong DB
+                'id' => $v->id,
+                'size' => $v->size,
+                'color' => $v->color,
+                'price' => $basePrice,
+                'old_price' => $oldPrice,
+                'discounted_price' => $discountedPrice,
+                'promotion_label' => $promotionLabel,
             ];
         })->values();
 
@@ -136,7 +173,7 @@ class ProductController extends Controller
     public function productsByAllBrands()
     {
         $brand = Brand::with(['products' => function ($query) {
-            $query->latest(); // hoặc thêm paginate nếu muốn phân trang từng brand
+            $query->latest(); // hoặc thêm paginate nếu m   uốn phân trang từng brand
         }])->get();
 
         return view('customer.brand-product', compact('brand'));
